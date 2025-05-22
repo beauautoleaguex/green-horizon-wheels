@@ -28,7 +28,7 @@ const BrandList: React.FC<BrandListProps> = ({
   }
 
   return (
-    <div className="border-border">
+    <div className="border border-border rounded-md">
       {brands.map((brand, index) => (
         <React.Fragment key={brand.id}>
           <BrandCard
