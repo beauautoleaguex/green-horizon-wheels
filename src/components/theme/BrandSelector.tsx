@@ -34,7 +34,6 @@ export const BrandSelector: React.FC<BrandSelectorProps> = ({
         <Select
           value={currentBrand.id}
           onValueChange={onBrandChange}
-          defaultValue={currentBrand.id}
         >
           <SelectTrigger className="w-full" id="brand-selector">
             <SelectValue placeholder="Select a brand" />
@@ -77,7 +76,6 @@ export const BrandSelector: React.FC<BrandSelectorProps> = ({
         <Select
           value={currentBrand.font}
           onValueChange={onFontChange}
-          defaultValue={currentBrand.font}
         >
           <SelectTrigger className="w-full" id="brand-font">
             <SelectValue placeholder="Select a font" />

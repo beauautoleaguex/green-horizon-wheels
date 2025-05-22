@@ -70,7 +70,6 @@ export const useBrandManagement = ({
           updateColorRamp('brand', selectedBrand.primaryColor);
           
           // Store the generated colors for this brand
-          const newBrandColors = { ...brandColors };
           // We'll populate this in updateBrandColor when the ramp is generated
         }
       }
@@ -85,6 +84,9 @@ export const useBrandManagement = ({
     };
     
     setBrands(prev => [...prev, newBrand]);
+    
+    // Save brands to localStorage immediately after adding a new brand
+    localStorage.setItem('themeStorageBrands', JSON.stringify([...brands, newBrand]));
   };
 
   // Delete brand
@@ -104,12 +106,16 @@ export const useBrandManagement = ({
     }
     
     // Remove the brand
-    setBrands(prev => prev.filter(brand => brand.id !== brandId));
+    const updatedBrands = brands.filter(brand => brand.id !== brandId);
+    setBrands(updatedBrands);
     
     // Remove stored colors for this brand
     const newBrandColors = { ...brandColors };
     delete newBrandColors[brandId];
     setBrandColors(newBrandColors);
+    
+    // Save brands to localStorage immediately after deleting a brand
+    localStorage.setItem('themeStorageBrands', JSON.stringify(updatedBrands));
   };
 
   // Update brand color
@@ -124,10 +130,16 @@ export const useBrandManagement = ({
     );
     setBrands(updatedBrands);
     
+    // Save brands to localStorage immediately after updating a brand color
+    localStorage.setItem('themeStorageBrands', JSON.stringify(updatedBrands));
+    
     // If updating current brand, also update current brand state and color scales
     if (isCurrentBrand && brand) {
       // Update current brand state
       setCurrentBrand(prev => ({ ...prev, primaryColor: color }));
+      
+      // Save current brand to localStorage
+      localStorage.setItem('themeStorageCurrentBrand', JSON.stringify({...currentBrand, primaryColor: color}));
       
       // Special handling for "MyMoto" brand
       if (brand.name === 'MyMoto') {
@@ -157,9 +169,16 @@ export const useBrandManagement = ({
     );
     setBrands(updatedBrands);
     
+    // Save brands to localStorage immediately after updating a brand logo
+    localStorage.setItem('themeStorageBrands', JSON.stringify(updatedBrands));
+    
     // If updating current brand, also update current brand state
     if (isCurrentBrand) {
-      setCurrentBrand(prev => ({ ...prev, logo }));
+      const updatedCurrentBrand = { ...currentBrand, logo };
+      setCurrentBrand(updatedCurrentBrand);
+      
+      // Save current brand to localStorage
+      localStorage.setItem('themeStorageCurrentBrand', JSON.stringify(updatedCurrentBrand));
     }
   };
 
@@ -206,10 +225,16 @@ export const useBrandManagement = ({
     );
     setBrands(updatedBrands);
     
+    // Save brands to localStorage immediately after updating a brand font
+    localStorage.setItem('themeStorageBrands', JSON.stringify(updatedBrands));
+    
     // If updating current brand, also update current font
     if (isCurrentBrand) {
       setCurrentBrand(prev => ({ ...prev, font }));
       setCurrentFont(font);
+      
+      // Save current brand to localStorage
+      localStorage.setItem('themeStorageCurrentBrand', JSON.stringify({...currentBrand, font}));
     }
   };
 

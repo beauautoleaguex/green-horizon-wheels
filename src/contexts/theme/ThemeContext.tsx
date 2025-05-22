@@ -100,7 +100,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   // Wrap saveTheme to include current brand state
   const saveThemeWithBrands = () => {
-    // Save brand state
+    // Ensure we save the latest brands and current brand data
     localStorage.setItem('themeStorageBrands', JSON.stringify(brandManagement.brands));
     localStorage.setItem('themeStorageCurrentBrand', JSON.stringify(brandManagement.currentBrand));
     
