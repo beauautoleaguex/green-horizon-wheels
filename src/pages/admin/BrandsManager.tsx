@@ -178,9 +178,16 @@ const BrandsManager: React.FC = () => {
               </Select>
               
               <div className="mt-3 p-3 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-                <p className="text-lg" style={{ fontFamily: newBrand.font }}>
-                  The quick brown fox jumps over the lazy dog.
-                </p>
+                <div style={{ fontFamily: newBrand.font }}>
+                  <h3 className="text-xl font-bold mb-2">Brand Typography</h3>
+                  <p className="mb-3">The quick brown fox jumps over the lazy dog. This text demonstrates how paragraphs will appear using this font family.</p>
+                  <div className="flex gap-2">
+                    <Button style={{ backgroundColor: newBrand.primaryColor }}>Primary Button</Button>
+                    <Button variant="outline" style={{ borderColor: newBrand.primaryColor, color: newBrand.primaryColor }}>
+                      Outline Button
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
             
@@ -266,10 +273,17 @@ const BrandsManager: React.FC = () => {
                         </SelectContent>
                       </Select>
                       
-                      <div className="mt-2 p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-                        <p className="text-sm" style={{ fontFamily: brand.font }}>
-                          The quick brown fox jumps over the lazy dog.
-                        </p>
+                      <div className="mt-2 p-3 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                        <div style={{ fontFamily: brand.font }}>
+                          <h3 className="text-xl font-bold mb-2">Brand Typography</h3>
+                          <p className="mb-3">The quick brown fox jumps over the lazy dog. This sample text shows how your content will appear using this font family.</p>
+                          <div className="flex gap-2">
+                            <Button style={{ backgroundColor: brand.primaryColor }}>Primary Button</Button>
+                            <Button variant="outline" style={{ borderColor: brand.primaryColor, color: brand.primaryColor }}>
+                              Outline Button
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
