@@ -18,12 +18,16 @@ export interface FontWeights {
   [key: string]: number;
 }
 
+export type ThemeMode = 'light' | 'dark';
+
 interface ThemeContextType {
   colors: ThemeColors;
   fonts: string[];
   currentFont: string;
   fontSizes: FontSizes;
   fontWeights: FontWeights;
+  mode: ThemeMode;
+  toggleMode: () => void;
   updateColor: (colorName: string, step: number, value: string) => void;
   updateColorRamp: (colorName: string, baseColor: string) => void;
   updateFont: (font: string) => void;
@@ -251,6 +255,17 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const savedFontWeights = localStorage.getItem('themeFontWeights');
     return savedFontWeights ? JSON.parse(savedFontWeights) : initialFontWeights;
   });
+  
+  // Add theme mode state
+  const [mode, setMode] = useState<ThemeMode>(() => {
+    const savedMode = localStorage.getItem('themeMode');
+    return (savedMode as ThemeMode) || 'light';
+  });
+
+  // Toggle theme mode
+  const toggleMode = () => {
+    setMode(prevMode => prevMode === 'light' ? 'dark' : 'light');
+  };
 
   // Apply theme to document when it changes
   useEffect(() => {
@@ -277,6 +292,18 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       document.documentElement.style.setProperty(`--font-weight-${name}`, weight.toString());
     });
   }, [colors, currentFont, fontSizes, fontWeights]);
+  
+  // Apply dark/light mode changes
+  useEffect(() => {
+    if (mode === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    
+    // Save theme mode preference to localStorage
+    localStorage.setItem('themeMode', mode);
+  }, [mode]);
 
   // Update functions
   const updateColor = (colorName: string, step: number, value: string) => {
@@ -321,6 +348,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     localStorage.setItem('themeFont', currentFont);
     localStorage.setItem('themeFontSizes', JSON.stringify(fontSizes));
     localStorage.setItem('themeFontWeights', JSON.stringify(fontWeights));
+    localStorage.setItem('themeMode', mode);
   };
 
   // Reset theme to initial values
@@ -338,6 +366,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       currentFont,
       fontSizes,
       fontWeights,
+      mode,
+      toggleMode,
       updateColor,
       updateColorRamp,
       updateFont,

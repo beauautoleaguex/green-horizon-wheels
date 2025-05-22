@@ -39,19 +39,19 @@ export const FontSizesEditor: React.FC<FontSizesEditorProps> = ({
   const sortedFontSizes = fontSizesEntries.sort((a, b) => b.numericValue - a.numericValue);
 
   return (
-    <div className="p-4 border rounded-lg bg-white">
-      <h3 className="font-semibold mb-3 text-lg">Font Sizes</h3>
+    <div className="p-4 border rounded-lg bg-white dark:bg-gray-800 dark:border-gray-700">
+      <h3 className="font-semibold mb-3 text-lg text-gray-900 dark:text-gray-100">Font Sizes</h3>
       <div className="grid gap-4">
         {sortedFontSizes.map(({ name, size }) => (
           <div key={name} className="grid grid-cols-12 gap-2 items-center">
-            <Label className="col-span-2">{name}:</Label>
+            <Label className="col-span-2 text-gray-800 dark:text-gray-200">{name}:</Label>
             <Input
               type="text"
               value={size}
               onChange={(e) => handleInputChange(name, e.target.value)}
-              className="col-span-3"
+              className="col-span-3 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
             />
-            <div className="col-span-7 overflow-hidden whitespace-nowrap text-ellipsis" style={{ 
+            <div className="col-span-7 overflow-hidden whitespace-nowrap text-ellipsis text-gray-900 dark:text-gray-100" style={{ 
               fontFamily: currentFont, 
               fontSize: size 
             }}>

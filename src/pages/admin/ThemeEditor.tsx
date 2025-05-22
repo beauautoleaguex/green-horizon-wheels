@@ -4,6 +4,7 @@ import { ColorRampEditor } from '@/components/theme/ColorRampEditor';
 import { FontSelector } from '@/components/theme/FontSelector';
 import { FontSizesEditor } from '@/components/theme/FontSizesEditor';
 import { FontWeightsEditor } from '@/components/theme/FontWeightsEditor';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -43,17 +44,18 @@ const ThemeEditor: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-10">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-10">
       {/* Header */}
-      <header className="bg-white shadow-sm py-4">
+      <header className="bg-white dark:bg-gray-800 shadow-sm py-4">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Palette className="h-5 w-5 text-brand-green" />
-              <h1 className="text-xl font-semibold text-gray-800">Theme Editor</h1>
+              <h1 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Theme Editor</h1>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={handleReset} className="gap-1">
+            <div className="flex gap-2 items-center">
+              <ThemeToggle />
+              <Button variant="outline" onClick={handleReset} className="gap-1 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700">
                 <RotateCcw className="h-4 w-4" />
                 Reset
               </Button>
@@ -68,7 +70,7 @@ const ThemeEditor: React.FC = () => {
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6">
-          <Link to="/" className="text-blue-600 hover:text-blue-800 flex items-center gap-1">
+          <Link to="/" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center gap-1">
             <ArrowLeft className="h-4 w-4" />
             Back to Homepage
           </Link>
@@ -76,7 +78,7 @@ const ThemeEditor: React.FC = () => {
 
         {/* Color Ramps Section */}
         <section className="mb-10">
-          <h2 className="text-2xl font-bold mb-5">Color Ramps</h2>
+          <h2 className="text-2xl font-bold mb-5 text-gray-900 dark:text-gray-100">Color Ramps</h2>
           <div className="grid grid-cols-1 gap-6">
             {Object.entries(colors).map(([colorName, scale]) => (
               <ColorRampEditor
@@ -92,7 +94,7 @@ const ThemeEditor: React.FC = () => {
 
         {/* Typography Section */}
         <section className="mb-10">
-          <h2 className="text-2xl font-bold mb-5">Typography</h2>
+          <h2 className="text-2xl font-bold mb-5 text-gray-900 dark:text-gray-100">Typography</h2>
           <div className="grid grid-cols-1 gap-6">
             <FontSelector 
               fonts={fonts}

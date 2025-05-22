@@ -124,14 +124,14 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
   };
 
   return (
-    <div className="p-4 border bg-white">
+    <div className="p-4 border bg-white dark:bg-gray-800 dark:border-gray-700">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold text-lg capitalize">{colorName}</h3>
+        <h3 className="font-semibold text-lg capitalize text-gray-900 dark:text-gray-100">{colorName}</h3>
         <div className="flex items-center gap-2">
-          <Label htmlFor={`${colorName}-base`} className="text-sm">Base Color:</Label>
+          <Label htmlFor={`${colorName}-base`} className="text-sm text-gray-700 dark:text-gray-300">Base Color:</Label>
           <div className="flex items-center gap-1">
             <div 
-              className="w-6 h-6 border border-gray-200 cursor-pointer flex items-center justify-center"
+              className="w-6 h-6 border border-gray-200 dark:border-gray-600 cursor-pointer flex items-center justify-center"
               style={{ backgroundColor: baseColor }}
               onClick={() => {
                 // Use the hidden input's click event
@@ -176,7 +176,7 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
                 <Palette className="w-4 h-4 text-white" />
               </div>
             </div>
-            <div className="text-xs text-gray-600 mt-1">{step}</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{step}</div>
             <Input
               id={`${colorName}-color-${step}`}
               type="color"

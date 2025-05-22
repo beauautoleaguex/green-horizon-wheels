@@ -172,4 +172,28 @@
   small {
     font-size: var(--font-size-sm);
   }
+  
+  .dark .bg-white {
+    @apply bg-gray-800;
+  }
+  
+  .dark .border-gray-200 {
+    @apply border-gray-700;
+  }
+  
+  .dark .text-gray-900 {
+    @apply text-gray-100;
+  }
+  
+  .dark .text-gray-800 {
+    @apply text-gray-200;
+  }
+  
+  .dark .text-gray-600 {
+    @apply text-gray-400;
+  }
+  
+  .dark .hover\:bg-gray-50:hover {
+    @apply hover:bg-gray-700;
+  }
 }
