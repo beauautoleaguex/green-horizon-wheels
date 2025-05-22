@@ -2,7 +2,15 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from '@/components/ui/use-toast';
-import { VehicleFilters, SortOption, getVehicles, initializeDatabase, getVehicleMakes, getVehicleModels, getBodyTypes } from '@/services/vehicleService';
+import { 
+  VehicleFilters, 
+  SortOption, 
+  getVehicles, 
+  initializeDatabase, 
+  getVehicleMakes, 
+  getVehicleModels, 
+  getBodyTypes 
+} from '@/services/vehicleService';
 import { mockVehicles } from '@/data/mockVehicles';
 
 export const useVehicleSearch = () => {
