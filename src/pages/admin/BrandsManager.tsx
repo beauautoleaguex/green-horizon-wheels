@@ -18,7 +18,8 @@ const BrandsManager: React.FC = () => {
     addBrand, 
     deleteBrand, 
     updateBrandColor, 
-    updateBrandFont, 
+    updateBrandFont,
+    updateBrandLogo,
     saveTheme,
     resetBrandColorRamp 
   } = useTheme();
@@ -92,6 +93,17 @@ const BrandsManager: React.FC = () => {
     updateBrandFont(brandId, font);
   };
 
+  // Handle brand logo update
+  const handleBrandLogoChange = (brandId: string, logo: string) => {
+    if (updateBrandLogo) {
+      updateBrandLogo(brandId, logo);
+      toast({
+        title: "Logo updated",
+        description: "Brand logo has been updated successfully."
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-10">
       <Header onSave={handleSave} />
@@ -123,6 +135,7 @@ const BrandsManager: React.FC = () => {
             onHexInputChange={handleHexInputChange}
             onBrandFontChange={handleBrandFontChange}
             onResetBrand={handleResetBrand}
+            onBrandLogoChange={handleBrandLogoChange}
           />
         </div>
       </div>

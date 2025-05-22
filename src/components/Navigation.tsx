@@ -5,8 +5,11 @@ import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuL
 import { Heart, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTheme } from '@/contexts/theme/ThemeContext';
 
 export const Navigation = () => {
+  const { currentBrand } = useTheme();
+
   return (
     <div className="w-full bg-white border-b border-gray-100 shadow-sm sticky top-0 z-50">
       <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -14,11 +17,19 @@ export const Navigation = () => {
           {/* Logo and left navigation */}
           <div className="flex items-center gap-8">
             <Link to="/" className="flex items-center">
-              <img 
-                src="/lovable-uploads/d99fbaef-645b-46ba-975c-5b747c2667b9.png" 
-                alt="mymoto" 
-                className="h-8" 
-              />
+              {currentBrand.logo ? (
+                <img 
+                  src={currentBrand.logo} 
+                  alt={`${currentBrand.name} logo`} 
+                  className="h-8" 
+                />
+              ) : (
+                <img 
+                  src="/lovable-uploads/d99fbaef-645b-46ba-975c-5b747c2667b9.png" 
+                  alt="mymoto" 
+                  className="h-8" 
+                />
+              )}
             </Link>
             <NavigationMenu className="hidden md:flex">
               <NavigationMenuList>

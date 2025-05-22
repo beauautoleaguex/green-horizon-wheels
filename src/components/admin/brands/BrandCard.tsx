@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Trash, RotateCcw } from 'lucide-react';
+import { Trash, RotateCcw, Upload, Plus } from 'lucide-react';
 import BrandPreview from './BrandPreview';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface BrandCardProps {
   brand: Brand;
@@ -16,6 +17,7 @@ interface BrandCardProps {
   onHexInputChange: (brandId: string, hex: string) => void;
   onFontChange: (brandId: string, font: string) => void;
   onReset?: (brandId: string, brandName: string) => void;
+  onLogoChange?: (brandId: string, logo: string) => void;
 }
 
 const BrandCard: React.FC<BrandCardProps> = ({
@@ -25,7 +27,8 @@ const BrandCard: React.FC<BrandCardProps> = ({
   onColorChange,
   onHexInputChange,
   onFontChange,
-  onReset
+  onReset,
+  onLogoChange
 }) => {
   // Handle color picker change
   const handleColorChange = (color: string) => {
@@ -33,13 +36,63 @@ const BrandCard: React.FC<BrandCardProps> = ({
     onColorChange(brand.id, color);
   };
 
+  // Handle logo upload
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0] && onLogoChange) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      
+      reader.onloadend = () => {
+        // When file is loaded, pass the data URL to the handler
+        if (typeof reader.result === 'string') {
+          onLogoChange(brand.id, reader.result);
+        }
+      };
+      
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="py-4 px-6">
       <div className="grid grid-cols-12 gap-4 items-center">
-        {/* Brand name - expanded column */}
-        <h3 className="font-medium text-gray-900 dark:text-gray-100 text-lg col-span-4">{brand.name}</h3>
+        {/* Logo - new column */}
+        <div className="col-span-1">
+          {brand.logo ? (
+            <Avatar className="h-10 w-10 cursor-pointer border border-gray-200 dark:border-gray-600" onClick={() => {
+              const logoInput = document.getElementById(`logo-upload-${brand.id}`);
+              if (logoInput) logoInput.click();
+            }}>
+              <AvatarImage src={brand.logo} alt={`${brand.name} logo`} />
+              <AvatarFallback>{brand.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-10 w-10 p-0"
+              onClick={() => {
+                const logoInput = document.getElementById(`logo-upload-${brand.id}`);
+                if (logoInput) logoInput.click();
+              }}
+            >
+              <Plus className="h-4 w-4" />
+              <span className="sr-only">Add logo</span>
+            </Button>
+          )}
+          <Input
+            id={`logo-upload-${brand.id}`}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleLogoUpload}
+          />
+        </div>
         
-        {/* Color picker - aligned to right */}
+        {/* Brand name - adjusted column */}
+        <h3 className="font-medium text-gray-900 dark:text-gray-100 text-lg col-span-3">{brand.name}</h3>
+        
+        {/* Color picker - adjusted to align right */}
         <div className="col-span-3 flex items-center gap-2 justify-end">
           <Label htmlFor={`color-${brand.id}`} className="whitespace-nowrap">Color:</Label>
           <div className="flex items-center space-x-2">
@@ -68,7 +121,7 @@ const BrandCard: React.FC<BrandCardProps> = ({
           </div>
         </div>
         
-        {/* Font selector - aligned to right */}
+        {/* Font selector - adjusted to align right */}
         <div className="col-span-4 flex items-center gap-2 justify-end">
           <Label htmlFor={`font-${brand.id}`} className="whitespace-nowrap">Font:</Label>
           <Select

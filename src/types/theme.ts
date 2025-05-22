@@ -33,6 +33,7 @@ export interface Brand {
   name: string;
   primaryColor: string;
   font: string;
+  logo?: string; // Added logo field
 }
 
 export interface ThemeContextType {

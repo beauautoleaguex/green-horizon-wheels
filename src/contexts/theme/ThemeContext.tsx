@@ -130,6 +130,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       switchBrand: brandManagement.switchBrand,
       updateBrandColor: brandManagement.updateBrandColor,
       updateBrandFont: brandManagement.updateBrandFont,
+      updateBrandLogo: brandManagement.updateBrandLogo,
       addBrand: brandManagement.addBrand,
       deleteBrand: brandManagement.deleteBrand,
       storeBrandColorRamp: brandManagement.storeBrandColorRamp,

@@ -128,6 +128,23 @@ export const useBrandManagement = ({
     }
   };
 
+  // Update brand logo
+  const updateBrandLogo = (brandId: string, logo: string) => {
+    // Check if updating current brand
+    const isCurrentBrand = brandId === currentBrand.id;
+    
+    // Update brands array
+    const updatedBrands = brands.map(brand => 
+      brand.id === brandId ? { ...brand, logo } : brand
+    );
+    setBrands(updatedBrands);
+    
+    // If updating current brand, also update current brand state
+    if (isCurrentBrand) {
+      setCurrentBrand(prev => ({ ...prev, logo }));
+    }
+  };
+
   // Store brand color ramp after generation
   const storeBrandColorRamp = (brandId: string, colorRamp: Record<number, string>) => {
     setBrandColors(prev => ({
@@ -188,6 +205,7 @@ export const useBrandManagement = ({
     deleteBrand,
     updateBrandColor,
     updateBrandFont,
+    updateBrandLogo,
     storeBrandColorRamp,
     resetBrandColorRamp,
     brandColors

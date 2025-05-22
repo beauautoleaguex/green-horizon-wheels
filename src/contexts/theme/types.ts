@@ -27,6 +27,7 @@ export interface ThemeContextValue {
   switchBrand: (brandId: string) => void;
   updateBrandColor: (brandId: string, color: string) => void;
   updateBrandFont: (brandId: string, font: string) => void;
+  updateBrandLogo?: (brandId: string, logo: string) => void;
   addBrand: (brand: Omit<Brand, 'id'>) => void;
   deleteBrand: (brandId: string) => void;
   storeBrandColorRamp?: (brandId: string, colorRamp: Record<number, string>) => void;

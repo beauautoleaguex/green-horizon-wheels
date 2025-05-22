@@ -12,6 +12,7 @@ interface BrandListProps {
   onHexInputChange: (brandId: string, hex: string) => void;
   onBrandFontChange: (brandId: string, font: string) => void;
   onResetBrand?: (brandId: string, brandName: string) => void;
+  onBrandLogoChange?: (brandId: string, logo: string) => void;
 }
 
 const BrandList: React.FC<BrandListProps> = ({
@@ -21,7 +22,8 @@ const BrandList: React.FC<BrandListProps> = ({
   onBrandColorChange,
   onHexInputChange,
   onBrandFontChange,
-  onResetBrand
+  onResetBrand,
+  onBrandLogoChange
 }) => {
   if (brands.length === 0) {
     return <p className="text-gray-500 dark:text-gray-400">No brands added yet.</p>;
@@ -39,6 +41,7 @@ const BrandList: React.FC<BrandListProps> = ({
             onHexInputChange={onHexInputChange}
             onFontChange={onBrandFontChange}
             onReset={onResetBrand}
+            onLogoChange={onBrandLogoChange}
           />
           {index < brands.length - 1 && <Separator />}
         </React.Fragment>
