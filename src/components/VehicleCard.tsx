@@ -67,14 +67,14 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
         {/* Vehicle Trim */}
         <p className="text-xs text-gray-500 mb-2">{vehicle.trim || 'Base Model'}</p>
         
-        {/* Price information */}
+        {/* Price information - updated to have same font size */}
         <div className="flex justify-between items-end mb-3">
           <div>
-            <p className="text-brand-green font-bold text-lg">${vehicle.price.toLocaleString()}</p>
+            <p className="text-brand-green font-bold text-base">${vehicle.price.toLocaleString()}</p>
             <p className="text-xs text-gray-500">Drive away</p>
           </div>
           <div className="text-right">
-            <p className="text-brand-green font-semibold">${weeklyPrice}/week</p>
+            <p className="text-brand-green font-bold text-base">${weeklyPrice}/week</p>
             <p className="text-xs text-gray-500">with finance</p>
           </div>
         </div>

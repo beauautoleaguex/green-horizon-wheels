@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { SearchFilters } from './SearchFilters';
@@ -126,15 +125,15 @@ export const VehicleSearch = () => {
           <div className="w-full md:hidden px-4 py-4 bg-white">
             <form onSubmit={handleSearch} className="flex gap-2">
               <div className="flex-1 relative">
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                  <Search className="h-4 w-4 text-gray-400" />
+                </div>
                 <Input 
-                  className="pr-10 rounded-md border border-gray-300 w-full"
+                  className="pl-10 rounded-md border border-gray-300 w-full"
                   placeholder="Search makes, models, or keywords"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                  <Search className="h-4 w-4 text-gray-400" />
-                </div>
               </div>
               <Button 
                 type="submit" 
@@ -164,15 +163,15 @@ export const VehicleSearch = () => {
             <div className="hidden md:block p-4 border-b border-gray-100">
               <form onSubmit={handleSearch} className="flex gap-2">
                 <div className="flex-1 relative">
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                    <Search className="h-4 w-4 text-gray-400" />
+                  </div>
                   <Input 
-                    className="pr-10 rounded-md border border-gray-300 w-full"
+                    className="pl-10 rounded-md border border-gray-300 w-full"
                     placeholder="Search makes, models, or keywords"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <Search className="h-4 w-4 text-gray-400" />
-                  </div>
                 </div>
                 <Button 
                   type="submit" 
