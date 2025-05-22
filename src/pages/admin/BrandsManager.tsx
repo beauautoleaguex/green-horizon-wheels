@@ -12,7 +12,16 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import AddBrandForm from '@/components/admin/brands/AddBrandForm';
 
 const BrandsManager: React.FC = () => {
-  const { brands, fonts, addBrand, deleteBrand, updateBrandColor, updateBrandFont, saveTheme } = useTheme();
+  const { 
+    brands, 
+    fonts, 
+    addBrand, 
+    deleteBrand, 
+    updateBrandColor, 
+    updateBrandFont, 
+    saveTheme,
+    resetBrandColorRamp 
+  } = useTheme();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleAddBrand = (newBrand: Omit<Brand, 'id'>) => {
@@ -42,6 +51,16 @@ const BrandsManager: React.FC = () => {
       title: "Brand deleted",
       description: `${brandName} has been removed from your brands`,
     });
+  };
+
+  const handleResetBrand = (brandId: string, brandName: string) => {
+    if (resetBrandColorRamp) {
+      resetBrandColorRamp(brandId);
+      toast({
+        title: "Brand reset",
+        description: `${brandName} has been reset to its default colors`,
+      });
+    }
   };
 
   const handleSave = () => {
@@ -113,6 +132,7 @@ const BrandsManager: React.FC = () => {
             onBrandColorChange={handleBrandColorChange}
             onHexInputChange={handleHexInputChange}
             onBrandFontChange={handleBrandFontChange}
+            onResetBrand={handleResetBrand}
           />
         </div>
       </div>

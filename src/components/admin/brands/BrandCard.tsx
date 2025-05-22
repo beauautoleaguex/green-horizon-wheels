@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Trash } from 'lucide-react';
+import { Trash, RotateCcw } from 'lucide-react';
 import BrandPreview from './BrandPreview';
 
 interface BrandCardProps {
@@ -15,6 +15,7 @@ interface BrandCardProps {
   onColorChange: (brandId: string, color: string) => void;
   onHexInputChange: (brandId: string, hex: string) => void;
   onFontChange: (brandId: string, font: string) => void;
+  onReset?: (brandId: string, brandName: string) => void;
 }
 
 const BrandCard: React.FC<BrandCardProps> = ({
@@ -23,7 +24,8 @@ const BrandCard: React.FC<BrandCardProps> = ({
   onDelete,
   onColorChange,
   onHexInputChange,
-  onFontChange
+  onFontChange,
+  onReset
 }) => {
   // Handle color picker change
   const handleColorChange = (color: string) => {
@@ -86,16 +88,34 @@ const BrandCard: React.FC<BrandCardProps> = ({
           </Select>
         </div>
         
-        {/* Delete button - 1 column */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => onDelete(brand.id, brand.name)}
-          className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 col-span-1 justify-self-end"
-        >
-          <Trash className="h-4 w-4" />
-          <span className="sr-only">Delete {brand.name}</span>
-        </Button>
+        {/* Actions - 1 column */}
+        <div className="col-span-1 flex justify-end gap-1">
+          {/* Reset button */}
+          {onReset && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onReset(brand.id, brand.name)}
+              className="text-blue-500 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+              title="Reset brand"
+            >
+              <RotateCcw className="h-4 w-4" />
+              <span className="sr-only">Reset {brand.name}</span>
+            </Button>
+          )}
+          
+          {/* Delete button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onDelete(brand.id, brand.name)}
+            className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+            title="Delete brand"
+          >
+            <Trash className="h-4 w-4" />
+            <span className="sr-only">Delete {brand.name}</span>
+          </Button>
+        </div>
       </div>
     </div>
   );
