@@ -1,16 +1,19 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '@/contexts/theme/ThemeContext';
 import { Brand } from '@/types/theme';
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Plus } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 import Header from '@/components/admin/brands/Header';
-import AddBrandForm from '@/components/admin/brands/AddBrandForm';
 import BrandList from '@/components/admin/brands/BrandList';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import AddBrandForm from '@/components/admin/brands/AddBrandForm';
 
 const BrandsManager: React.FC = () => {
   const { brands, fonts, addBrand, deleteBrand, updateBrandColor, updateBrandFont, saveTheme } = useTheme();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleAddBrand = (newBrand: Omit<Brand, 'id'>) => {
     if (!newBrand.name.trim()) {
@@ -28,6 +31,9 @@ const BrandsManager: React.FC = () => {
       title: "Brand added",
       description: `${newBrand.name} has been added to your brands`,
     });
+    
+    // Close the dialog after adding the brand
+    setIsDialogOpen(false);
   };
 
   const handleDeleteBrand = (brandId: string, brandName: string) => {
@@ -80,8 +86,22 @@ const BrandsManager: React.FC = () => {
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Add New Brand</h2>
-          <AddBrandForm fonts={fonts} onAddBrand={handleAddBrand} />
+          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Brands</h2>
+          <Button 
+            onClick={() => setIsDialogOpen(true)}
+            className="mb-4"
+          >
+            <Plus className="h-4 w-4 mr-1" />
+            Add a new brand
+          </Button>
+          
+          {/* Modal Dialog for adding a new brand */}
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogContent>
+              <DialogTitle className="mb-4">Add New Brand</DialogTitle>
+              <AddBrandForm fonts={fonts} onAddBrand={handleAddBrand} />
+            </DialogContent>
+          </Dialog>
         </div>
         
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">

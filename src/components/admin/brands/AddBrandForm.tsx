@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus } from 'lucide-react';
 import BrandPreview from './BrandPreview';
+import { DialogClose } from '@/components/ui/dialog';
 
 interface AddBrandFormProps {
   fonts: string[];
@@ -23,6 +24,7 @@ const AddBrandForm: React.FC<AddBrandFormProps> = ({ fonts, onAddBrand }) => {
   const handleSubmit = () => {
     if (newBrand.name.trim()) {
       onAddBrand(newBrand);
+      // Reset form
       setNewBrand({
         name: '',
         primaryColor: '#3B82F6',
@@ -96,10 +98,15 @@ const AddBrandForm: React.FC<AddBrandFormProps> = ({ fonts, onAddBrand }) => {
         </div>
       </div>
       
-      <Button onClick={handleSubmit} className="gap-1 mt-2">
-        <Plus className="h-4 w-4" />
-        Add Brand
-      </Button>
+      <div className="flex justify-end space-x-2 pt-2">
+        <DialogClose asChild>
+          <Button variant="outline">Cancel</Button>
+        </DialogClose>
+        <Button onClick={handleSubmit}>
+          <Plus className="h-4 w-4 mr-1" />
+          Add Brand
+        </Button>
+      </div>
     </div>
   );
 };
