@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { SearchFilters } from './SearchFilters';
 import { VehicleCard } from './VehicleCard';
 import { Pagination } from './Pagination';
@@ -8,18 +9,58 @@ import { Navigation } from './Navigation';
 import { Footer } from './Footer';
 import { Vehicle } from '@/types/vehicle';
 import { mockVehicles } from '@/data/mockVehicles';
+import { 
+  getVehicles, 
+  initializeDatabase, 
+  VehicleFilters, 
+  SortOption,
+  getVehicleMakes,
+  getVehicleModels,
+  getBodyTypes
+} from '@/services/vehicleService';
+import { toast } from '@/components/ui/use-toast';
 
 export const VehicleSearch = () => {
-  const [vehicles, setVehicles] = useState<Vehicle[]>(mockVehicles);
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filters, setFilters] = useState<VehicleFilters>({});
+  const [sortOption, setSortOption] = useState<SortOption>({ column: 'id', order: 'asc' });
   const vehiclesPerPage = 12;
-
-  const indexOfLastVehicle = currentPage * vehiclesPerPage;
-  const indexOfFirstVehicle = indexOfLastVehicle - vehiclesPerPage;
-  const currentVehicles = vehicles.slice(indexOfFirstVehicle, indexOfLastVehicle);
   
-  const totalPages = Math.ceil(vehicles.length / vehiclesPerPage);
+  // Initialize database with mock data on component mount
+  useEffect(() => {
+    initializeDatabase(mockVehicles).catch(console.error);
+  }, []);
+
+  // Fetch available filter options
+  const { data: makes = [] } = useQuery({
+    queryKey: ['vehicleMakes'],
+    queryFn: () => getVehicleMakes(),
+  });
+
+  const { data: models = [] } = useQuery({
+    queryKey: ['vehicleModels', filters.make],
+    queryFn: () => getVehicleModels(filters.make),
+  });
+
+  const { data: bodyTypes = [] } = useQuery({
+    queryKey: ['bodyTypes'],
+    queryFn: () => getBodyTypes(),
+  });
+
+  // Fetch vehicles with filters and pagination
+  const { 
+    data: vehiclesData = { data: [], count: 0 },
+    isLoading,
+    isError,
+    refetch
+  } = useQuery({
+    queryKey: ['vehicles', currentPage, vehiclesPerPage, filters, sortOption],
+    queryFn: () => getVehicles(currentPage, vehiclesPerPage, filters, sortOption),
+  });
+
+  const { data: vehicles = [], count: totalVehicles = 0 } = vehiclesData;
+  const totalPages = Math.ceil(totalVehicles / vehiclesPerPage);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -27,66 +68,44 @@ export const VehicleSearch = () => {
   };
 
   const handleSort = (sortType: string) => {
-    let sortedVehicles = [...vehicles];
+    let newSortOption: SortOption;
     
     switch (sortType) {
       case 'price-asc':
-        sortedVehicles.sort((a, b) => a.price - b.price);
+        newSortOption = { column: 'price', order: 'asc' };
         break;
       case 'price-desc':
-        sortedVehicles.sort((a, b) => b.price - a.price);
+        newSortOption = { column: 'price', order: 'desc' };
         break;
       case 'year-desc':
-        sortedVehicles.sort((a, b) => b.year - a.year);
+        newSortOption = { column: 'year', order: 'desc' };
         break;
       case 'mileage-asc':
-        sortedVehicles.sort((a, b) => a.mileage - b.mileage);
+        newSortOption = { column: 'mileage', order: 'asc' };
         break;
       default:
+        newSortOption = { column: 'id', order: 'asc' };
         break;
     }
     
-    setVehicles(sortedVehicles);
+    setSortOption(newSortOption);
   };
 
-  const handleFilter = (filters: any) => {
-    let filteredVehicles = [...mockVehicles];
-    
-    if (filters.make && filters.make !== 'all') {
-      filteredVehicles = filteredVehicles.filter(vehicle => vehicle.make === filters.make);
-    }
-    
-    if (filters.model && filters.model !== 'all') {
-      filteredVehicles = filteredVehicles.filter(vehicle => vehicle.model === filters.model);
-    }
-
-    if (filters.minPrice) {
-      filteredVehicles = filteredVehicles.filter(vehicle => vehicle.price >= filters.minPrice);
-    }
-
-    if (filters.maxPrice) {
-      filteredVehicles = filteredVehicles.filter(vehicle => vehicle.price <= filters.maxPrice);
-    }
-
-    if (filters.minYear) {
-      filteredVehicles = filteredVehicles.filter(vehicle => vehicle.year >= filters.minYear);
-    }
-
-    if (filters.maxYear) {
-      filteredVehicles = filteredVehicles.filter(vehicle => vehicle.year <= filters.maxYear);
-    }
-
-    if (filters.bodyType && filters.bodyType !== 'all') {
-      filteredVehicles = filteredVehicles.filter(vehicle => vehicle.bodyType === filters.bodyType);
-    }
-
-    if (filters.condition && filters.condition !== 'all') {
-      filteredVehicles = filteredVehicles.filter(vehicle => vehicle.condition === filters.condition);
-    }
-
-    setVehicles(filteredVehicles);
+  const handleFilter = (newFilters: VehicleFilters) => {
+    setFilters(newFilters);
     setCurrentPage(1);
   };
+
+  // Show error toast if query fails
+  useEffect(() => {
+    if (isError) {
+      toast({
+        title: "Error",
+        description: "Failed to load vehicles. Please try again later.",
+        variant: "destructive"
+      });
+    }
+  }, [isError]);
 
   return (
     <div className="bg-white min-h-screen flex flex-col">
@@ -106,7 +125,12 @@ export const VehicleSearch = () => {
 
           {/* Filters sidebar - hidden on mobile unless toggled */}
           <div className={`w-full md:w-64 md:block ${isFilterOpen ? 'block' : 'hidden'}`}>
-            <SearchFilters onFilter={handleFilter} />
+            <SearchFilters 
+              onFilter={handleFilter} 
+              availableMakes={makes}
+              availableModels={models}
+              availableBodyTypes={bodyTypes}
+            />
           </div>
 
           {/* Main content */}
@@ -114,21 +138,27 @@ export const VehicleSearch = () => {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
               <div>
                 <h1 className="text-2xl font-semibold text-gray-900">Browse Vehicles</h1>
-                <p className="text-gray-500 mt-1">Showing {vehicles.length} results</p>
+                <p className="text-gray-500 mt-1">Showing {totalVehicles} results</p>
               </div>
               <div className="mt-3 sm:mt-0">
                 <SortDropdown onSort={handleSort} />
               </div>
             </div>
 
-            {vehicles.length === 0 ? (
+            {isLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, index) => (
+                  <div key={index} className="bg-gray-100 animate-pulse rounded-lg h-64"></div>
+                ))}
+              </div>
+            ) : vehicles.length === 0 ? (
               <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 text-center">
                 <h3 className="text-lg font-medium text-gray-900">No vehicles found</h3>
                 <p className="mt-1 text-gray-500">Try adjusting your filters for more results.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
-                {currentVehicles.map((vehicle) => (
+                {vehicles.map((vehicle) => (
                   <VehicleCard key={vehicle.id} vehicle={vehicle} />
                 ))}
               </div>
