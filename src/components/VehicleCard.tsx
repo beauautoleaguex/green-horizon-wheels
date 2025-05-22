@@ -84,19 +84,19 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
           </div>
         </div>
         
-        {/* Vehicle Specs */}
+        {/* Vehicle Specs - using bg-gray-200 instead of bg-gray-50 for more visible contrast */}
         <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100 text-xs text-gray-600">
-          <span className="px-2 py-1 bg-gray-50 rounded">
+          <span className="px-2 py-1 bg-gray-200 rounded">
             {normalizedFuelType()}
           </span>
-          <span className="px-2 py-1 bg-gray-50 rounded">
+          <span className="px-2 py-1 bg-gray-200 rounded">
             {vehicle.transmission}
           </span>
-          <span className="px-2 py-1 bg-gray-50 rounded">
+          <span className="px-2 py-1 bg-gray-200 rounded">
             {vehicle.bodyType}
           </span>
           {vehicle.condition !== 'New' && (
-            <span className="px-2 py-1 bg-gray-50 rounded">
+            <span className="px-2 py-1 bg-gray-200 rounded">
               {vehicle.mileage.toLocaleString()} miles
             </span>
           )}
