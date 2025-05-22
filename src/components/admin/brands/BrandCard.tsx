@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Brand } from '@/types/theme';
 import { Button } from '@/components/ui/button';
@@ -9,6 +10,7 @@ import BrandPreview from './BrandPreview';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 interface BrandCardProps {
   brand: Brand;
@@ -66,18 +68,26 @@ const BrandCard: React.FC<BrandCardProps> = ({
     <div className="py-4 px-6">
       <div className="grid grid-cols-12 gap-4 items-center">
         {/* Logo - with hover edit functionality */}
-        <div className="col-span-1">
+        <div className="col-span-1 flex justify-center">
           {brand.logo ? (
             <HoverCard>
               <HoverCardTrigger>
-                <div className="relative group">
-                  <Avatar className="h-10 w-10 border border-gray-200 dark:border-gray-600" onClick={() => {
-                    const logoInput = document.getElementById(`logo-upload-${brand.id}`);
-                    if (logoInput) logoInput.click();
-                  }}>
-                    <AvatarImage src={brand.logo} alt={`${brand.name} logo`} />
-                    <AvatarFallback>{brand.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
+                <div className="relative group w-10 h-10">
+                  <AspectRatio ratio={1/1} className="rounded-full overflow-hidden border border-gray-200 dark:border-gray-600">
+                    <div 
+                      className="h-full w-full cursor-pointer"
+                      onClick={() => {
+                        const logoInput = document.getElementById(`logo-upload-${brand.id}`);
+                        if (logoInput) logoInput.click();
+                      }}
+                    >
+                      <img 
+                        src={brand.logo} 
+                        alt={`${brand.name} logo`} 
+                        className="h-full w-full object-contain"
+                      />
+                    </div>
+                  </AspectRatio>
                   
                   {/* Edit overlay that appears on hover */}
                   <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
@@ -113,15 +123,15 @@ const BrandCard: React.FC<BrandCardProps> = ({
           />
         </div>
         
-        {/* Brand name - adjusted column */}
+        {/* Brand name */}
         <h3 className="font-medium text-gray-900 dark:text-gray-100 text-lg col-span-3">{brand.name}</h3>
         
-        {/* Color picker - adjusted to align right */}
-        <div className="col-span-3 flex items-center gap-2 justify-end">
-          <Label htmlFor={`color-${brand.id}`} className="whitespace-nowrap">Color:</Label>
-          <div className="flex items-center space-x-2">
+        {/* Color picker - optimized width */}
+        <div className="col-span-2 flex items-center gap-2">
+          <Label htmlFor={`color-${brand.id}`} className="whitespace-nowrap text-sm">Color:</Label>
+          <div className="flex items-center gap-2">
             <div 
-              className="w-6 h-6 rounded-md cursor-pointer border border-gray-200 dark:border-gray-600"
+              className="w-5 h-5 rounded-md cursor-pointer border border-gray-200 dark:border-gray-600"
               style={{ backgroundColor: brand.primaryColor }}
               onClick={() => {
                 const colorInput = document.getElementById(`color-${brand.id}`);
@@ -132,7 +142,7 @@ const BrandCard: React.FC<BrandCardProps> = ({
               id={`hex-${brand.id}`}
               value={brand.primaryColor}
               onChange={(e) => onHexInputChange(brand.id, e.target.value)}
-              className="w-24 font-mono text-sm"
+              className="w-20 font-mono text-xs px-2"
               maxLength={7}
             />
             <Input
@@ -145,14 +155,14 @@ const BrandCard: React.FC<BrandCardProps> = ({
           </div>
         </div>
         
-        {/* Font selector - adjusted to align right */}
-        <div className="col-span-4 flex items-center gap-2 justify-end">
-          <Label htmlFor={`font-${brand.id}`} className="whitespace-nowrap">Font:</Label>
+        {/* Font selector - adjusted column width */}
+        <div className="col-span-5 flex items-center gap-2">
+          <Label htmlFor={`font-${brand.id}`} className="whitespace-nowrap text-sm">Font:</Label>
           <Select
             value={brand.font}
             onValueChange={(value) => onFontChange(brand.id, value)}
           >
-            <SelectTrigger id={`font-${brand.id}`} className="w-[180px]">
+            <SelectTrigger id={`font-${brand.id}`} className="w-full">
               <SelectValue placeholder="Select a font" />
             </SelectTrigger>
             <SelectContent>
@@ -165,15 +175,15 @@ const BrandCard: React.FC<BrandCardProps> = ({
           </Select>
         </div>
         
-        {/* Actions - neutral colors */}
-        <div className="col-span-1 flex justify-end gap-2">
+        {/* Actions */}
+        <div className="col-span-1 flex justify-end gap-1">
           {/* Reset button */}
           {onReset && (
             <Button
               variant="ghost"
               size="icon"
               onClick={() => onReset(brand.id, brand.name)}
-              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800/20"
+              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800/20 h-8 w-8"
               title="Reset brand"
             >
               <RotateCcw className="h-4 w-4" />
@@ -186,7 +196,7 @@ const BrandCard: React.FC<BrandCardProps> = ({
             variant="ghost"
             size="icon"
             onClick={() => onDelete(brand.id, brand.name)}
-            className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800/20"
+            className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800/20 h-8 w-8"
             title="Delete brand"
           >
             <Trash className="h-4 w-4" />
