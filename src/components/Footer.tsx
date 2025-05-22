@@ -2,9 +2,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Tag, Wrench, DollarSign, Shield, Info, MapPin } from 'lucide-react';
+import { useTheme } from '@/contexts/theme/ThemeContext';
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { currentBrand } = useTheme();
 
   return (
     <footer className="bg-gray-50 border-t border-gray-100 w-full">
@@ -13,11 +15,19 @@ export const Footer = () => {
           {/* Logo */}
           <div className="lg:col-span-2">
             <Link to="/" className="inline-block mb-6">
-              <img 
-                src="/lovable-uploads/d99fbaef-645b-46ba-975c-5b747c2667b9.png" 
-                alt="mymoto" 
-                className="h-8" 
-              />
+              {currentBrand.logo ? (
+                <img 
+                  src={currentBrand.logo} 
+                  alt={`${currentBrand.name} logo`} 
+                  className="h-8" 
+                />
+              ) : (
+                <img 
+                  src="/lovable-uploads/d99fbaef-645b-46ba-975c-5b747c2667b9.png" 
+                  alt="mymoto" 
+                  className="h-8" 
+                />
+              )}
             </Link>
             <p className="text-gray-500 text-sm mt-4">
               Find your perfect ride with mymoto, your trusted partner in automotive excellence.
@@ -106,7 +116,7 @@ export const Footer = () => {
         <div className="border-t border-gray-200 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-500 text-sm">
-              © {currentYear} mymoto. All rights reserved.
+              © {currentYear} {currentBrand.name}. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link to="/privacy" className="text-gray-500 hover:text-brand-green text-sm">
