@@ -22,6 +22,7 @@ export interface VehicleFilters {
   engineSize?: string;
   features?: string[];
   seats?: string;
+  search?: string; // Add the search property to fix the TypeScript error
 }
 
 export interface SortOption {
@@ -119,6 +120,11 @@ export async function getVehicles(
       query = query.eq('seats', filters.seats);
     }
     
+    // Add support for the search field
+    if (filters.search && filters.search.trim() !== '') {
+      query = query.or(`make.ilike.%${filters.search}%,model.ilike.%${filters.search}%`);
+    }
+    
     // Apply sorting
     if (sort) {
       query = query.order(sort.column, { ascending: sort.order === 'asc' });
@@ -206,7 +212,7 @@ function getMockVehicles(
     }
     
     if (filters.color && filters.color !== 'all') {
-      filteredData = filteredData.filter(v => v.exteriorColor === filters.color);
+      filteredData = filteredData.filter(v => v.color === filters.color);
     }
     
     if (filters.engineSize && filters.engineSize !== 'all') {
@@ -222,6 +228,17 @@ function getMockVehicles(
     if (filters.seats && filters.seats !== 'all') {
       // This assumes that seats might be stored as a string in your mock data
       filteredData = filteredData.filter(v => v.features.includes(filters.seats + " Seats"));
+    }
+    
+    // Add support for the search field
+    if (filters.search && filters.search.trim() !== '') {
+      const searchTerm = filters.search.toLowerCase();
+      filteredData = filteredData.filter(v => 
+        v.make.toLowerCase().includes(searchTerm) ||
+        v.model.toLowerCase().includes(searchTerm) ||
+        v.description?.toLowerCase().includes(searchTerm) ||
+        v.features.some(feature => feature.toLowerCase().includes(searchTerm))
+      );
     }
     
     // Apply sorting
