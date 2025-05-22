@@ -28,6 +28,13 @@ export interface TypographyScaleDefinition {
   sizes: FontSizes;
 }
 
+export interface Brand {
+  id: string;
+  name: string;
+  primaryColor: string;
+  font: string;
+}
+
 export interface ThemeContextType {
   colors: ThemeColors;
   fonts: string[];
@@ -36,6 +43,8 @@ export interface ThemeContextType {
   fontWeights: FontWeights;
   mode: ThemeMode;
   currentTypographyScale: TypographyScale;
+  brands: Brand[];
+  currentBrand: Brand;
   toggleMode: () => void;
   updateColor: (colorName: string, step: number, value: string) => void;
   updateColorRamp: (colorName: string, baseColor: string, curveType?: CurveType) => void;
@@ -43,6 +52,9 @@ export interface ThemeContextType {
   updateFontSize: (name: string, value: string) => void;
   updateFontWeight: (name: string, value: number) => void;
   updateTypographyScale: (scale: TypographyScale) => void;
+  switchBrand: (brandId: string) => void;
+  updateBrandColor: (color: string) => void;
+  updateBrandFont: (font: string) => void;
   saveTheme: () => void;
   resetTheme: () => void;
 }

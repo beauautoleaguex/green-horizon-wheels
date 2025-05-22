@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useEffect, FC } from 'react';
-import { ThemeContextType, ThemeMode, TypographyScale } from '../types/theme';
+import { ThemeContextType, ThemeMode, TypographyScale, Brand } from '../types/theme';
 import { generateColorRamp, CurveType } from '../utils/colorUtils';
 import { useThemeStorage } from '../hooks/useThemeStorage';
 import { typographyScales } from '../constants/themeDefaults';
@@ -23,6 +23,10 @@ export const ThemeProvider: FC<{ children: React.ReactNode }> = ({ children }) =
     setMode,
     currentTypographyScale,
     setCurrentTypographyScale,
+    brands,
+    setBrands,
+    currentBrand,
+    setCurrentBrand,
     saveTheme,
     resetTheme
   } = useThemeStorage();
@@ -30,6 +34,60 @@ export const ThemeProvider: FC<{ children: React.ReactNode }> = ({ children }) =
   // Toggle theme mode
   const toggleMode = () => {
     setMode(prevMode => prevMode === 'light' ? 'dark' : 'light');
+  };
+
+  // Switch brand
+  const switchBrand = (brandId: string) => {
+    const selectedBrand = brands.find(brand => brand.id === brandId);
+    if (selectedBrand) {
+      setCurrentBrand(selectedBrand);
+      
+      // Update primary color in brand color scale
+      const newColors = {...colors};
+      if (newColors.brand && newColors.brand[9]) {
+        newColors.brand[9] = selectedBrand.primaryColor;
+      }
+      setColors(newColors);
+      
+      // Update font
+      setCurrentFont(selectedBrand.font);
+    }
+  };
+
+  // Update brand color
+  const updateBrandColor = (color: string) => {
+    // Update current brand
+    const updatedBrand = { ...currentBrand, primaryColor: color };
+    setCurrentBrand(updatedBrand);
+    
+    // Update brands array
+    const updatedBrands = brands.map(brand => 
+      brand.id === currentBrand.id ? updatedBrand : brand
+    );
+    setBrands(updatedBrands);
+    
+    // Update brand color in color scales
+    const newColors = {...colors};
+    if (newColors.brand && newColors.brand[9]) {
+      newColors.brand[9] = color;
+    }
+    setColors(newColors);
+  };
+
+  // Update brand font
+  const updateBrandFont = (font: string) => {
+    // Update current brand
+    const updatedBrand = { ...currentBrand, font };
+    setCurrentBrand(updatedBrand);
+    
+    // Update brands array
+    const updatedBrands = brands.map(brand => 
+      brand.id === currentBrand.id ? updatedBrand : brand
+    );
+    setBrands(updatedBrands);
+    
+    // Update current font
+    setCurrentFont(font);
   };
 
   // Detect user's preferred color scheme on initial load
@@ -168,6 +226,8 @@ export const ThemeProvider: FC<{ children: React.ReactNode }> = ({ children }) =
       fontWeights,
       mode,
       currentTypographyScale,
+      brands,
+      currentBrand,
       toggleMode,
       updateColor,
       updateColorRamp,
@@ -175,6 +235,9 @@ export const ThemeProvider: FC<{ children: React.ReactNode }> = ({ children }) =
       updateFontSize,
       updateFontWeight,
       updateTypographyScale,
+      switchBrand,
+      updateBrandColor,
+      updateBrandFont,
       saveTheme,
       resetTheme
     }}>

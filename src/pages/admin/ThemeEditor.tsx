@@ -5,11 +5,18 @@ import { FontSelector } from '@/components/theme/FontSelector';
 import { FontSizesEditor } from '@/components/theme/FontSizesEditor';
 import { FontWeightsEditor } from '@/components/theme/FontWeightsEditor';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { BrandSelector } from '@/components/theme/BrandSelector';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Palette, Save, RotateCcw } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 
 const ThemeEditor: React.FC = () => {
   const { 
@@ -19,12 +26,17 @@ const ThemeEditor: React.FC = () => {
     fontSizes, 
     fontWeights,
     currentTypographyScale,
+    brands,
+    currentBrand,
     updateColor,
     updateColorRamp,
     updateFont,
     updateFontSize,
     updateFontWeight,
     updateTypographyScale,
+    switchBrand,
+    updateBrandColor,
+    updateBrandFont,
     saveTheme,
     resetTheme
   } = useTheme();
@@ -78,47 +90,62 @@ const ThemeEditor: React.FC = () => {
           </Link>
         </div>
 
-        {/* Color Ramps Section */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold mb-5 text-gray-900 dark:text-gray-100">Color Ramps</h2>
-          <div className="grid grid-cols-1 gap-6">
-            {Object.entries(colors).map(([colorName, scale]) => (
-              <ColorRampEditor
-                key={colorName}
-                colorName={colorName}
-                scale={scale}
-                onColorChange={updateColor}
-                onRampChange={updateColorRamp}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* Typography Section */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold mb-5 text-gray-900 dark:text-gray-100">Typography</h2>
-          <div className="grid grid-cols-1 gap-6">
-            <FontSelector 
+        <Tabs defaultValue="brand">
+          <TabsList className="mb-6">
+            <TabsTrigger value="brand">Brand</TabsTrigger>
+            <TabsTrigger value="colors">Color Ramps</TabsTrigger>
+            <TabsTrigger value="typography">Typography</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="brand">
+            <BrandSelector
+              brands={brands}
+              currentBrand={currentBrand}
               fonts={fonts}
-              currentFont={currentFont}
-              onFontChange={updateFont}
+              onBrandChange={switchBrand}
+              onColorChange={updateBrandColor}
+              onFontChange={updateBrandFont}
             />
-            
-            <FontSizesEditor
-              fontSizes={fontSizes}
-              onFontSizeChange={updateFontSize}
-              currentFont={currentFont}
-              currentTypographyScale={currentTypographyScale}
-              onTypographyScaleChange={updateTypographyScale}
-            />
-            
-            <FontWeightsEditor
-              fontWeights={fontWeights}
-              onFontWeightChange={updateFontWeight}
-              currentFont={currentFont}
-            />
-          </div>
-        </section>
+          </TabsContent>
+          
+          <TabsContent value="colors">
+            <div className="grid grid-cols-1 gap-6">
+              {Object.entries(colors).map(([colorName, scale]) => (
+                <ColorRampEditor
+                  key={colorName}
+                  colorName={colorName}
+                  scale={scale}
+                  onColorChange={updateColor}
+                  onRampChange={updateColorRamp}
+                />
+              ))}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="typography">
+            <div className="grid grid-cols-1 gap-6">
+              <FontSelector 
+                fonts={fonts}
+                currentFont={currentFont}
+                onFontChange={updateFont}
+              />
+              
+              <FontSizesEditor
+                fontSizes={fontSizes}
+                onFontSizeChange={updateFontSize}
+                currentFont={currentFont}
+                currentTypographyScale={currentTypographyScale}
+                onTypographyScaleChange={updateTypographyScale}
+              />
+              
+              <FontWeightsEditor
+                fontWeights={fontWeights}
+                onFontWeightChange={updateFontWeight}
+                currentFont={currentFont}
+              />
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

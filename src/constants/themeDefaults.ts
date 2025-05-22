@@ -1,5 +1,5 @@
 
-import { ThemeColors, FontSizes, FontWeights, ThemeMode, TypographyScale, TypographyScaleDefinition } from '../types/theme';
+import { ThemeColors, FontSizes, FontWeights, ThemeMode, TypographyScale, TypographyScaleDefinition, Brand } from '../types/theme';
 
 // Initial theme values
 export const initialColors: ThemeColors = {
@@ -187,6 +187,28 @@ export const typographyScales: TypographyScaleDefinition[] = [
 
 export const initialTypographyScale: TypographyScale = 'classic';
 
+// Define initial brands
+export const initialBrands: Brand[] = [
+  {
+    id: 'default',
+    name: 'Default Brand',
+    primaryColor: '#008077', // Current brand color
+    font: 'Lexend, sans-serif',
+  },
+  {
+    id: 'secondary',
+    name: 'Secondary Brand',
+    primaryColor: '#3B82F6', // Blue color
+    font: 'Poppins, sans-serif',
+  },
+  {
+    id: 'tertiary',
+    name: 'Tertiary Brand',
+    primaryColor: '#F59E0B', // Amber color
+    font: 'Montserrat, sans-serif',
+  }
+];
+
 export const THEME_STORAGE_KEYS = {
   COLORS: 'themeColors',
   FONT: 'themeFont',
@@ -194,4 +216,6 @@ export const THEME_STORAGE_KEYS = {
   FONT_WEIGHTS: 'themeFontWeights',
   MODE: 'themeMode',
   TYPOGRAPHY_SCALE: 'themeTypographyScale',
+  BRANDS: 'themebrands',
+  CURRENT_BRAND: 'themeCurrentBrand',
 };

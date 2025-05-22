@@ -1,12 +1,13 @@
 
 import { useState } from 'react';
-import { ThemeColors, FontSizes, FontWeights, ThemeMode, TypographyScale } from '../types/theme';
+import { ThemeColors, FontSizes, FontWeights, ThemeMode, TypographyScale, Brand } from '../types/theme';
 import { 
   initialColors, 
   initialFonts, 
   initialFontSizes, 
   initialFontWeights, 
   initialTypographyScale,
+  initialBrands,
   THEME_STORAGE_KEYS 
 } from '../constants/themeDefaults';
 
@@ -46,6 +47,21 @@ export const useThemeStorage = () => {
     return (savedScale as TypographyScale) || initialTypographyScale;
   });
 
+  // Add brands state
+  const [brands, setBrands] = useState<Brand[]>(() => {
+    const savedBrands = localStorage.getItem(THEME_STORAGE_KEYS.BRANDS);
+    return savedBrands ? JSON.parse(savedBrands) : initialBrands;
+  });
+
+  // Add current brand state
+  const [currentBrand, setCurrentBrand] = useState<Brand>(() => {
+    const savedCurrentBrand = localStorage.getItem(THEME_STORAGE_KEYS.CURRENT_BRAND);
+    if (savedCurrentBrand) {
+      return JSON.parse(savedCurrentBrand);
+    }
+    return initialBrands[0];
+  });
+
   // Save theme to localStorage
   const saveTheme = () => {
     localStorage.setItem(THEME_STORAGE_KEYS.COLORS, JSON.stringify(colors));
@@ -54,6 +70,8 @@ export const useThemeStorage = () => {
     localStorage.setItem(THEME_STORAGE_KEYS.FONT_WEIGHTS, JSON.stringify(fontWeights));
     localStorage.setItem(THEME_STORAGE_KEYS.MODE, mode);
     localStorage.setItem(THEME_STORAGE_KEYS.TYPOGRAPHY_SCALE, currentTypographyScale);
+    localStorage.setItem(THEME_STORAGE_KEYS.BRANDS, JSON.stringify(brands));
+    localStorage.setItem(THEME_STORAGE_KEYS.CURRENT_BRAND, JSON.stringify(currentBrand));
   };
 
   // Reset theme to initial values
@@ -63,6 +81,8 @@ export const useThemeStorage = () => {
     setFontSizes(initialFontSizes);
     setFontWeights(initialFontWeights);
     setCurrentTypographyScale(initialTypographyScale);
+    setBrands(initialBrands);
+    setCurrentBrand(initialBrands[0]);
   };
 
   return {
@@ -79,6 +99,10 @@ export const useThemeStorage = () => {
     setMode,
     currentTypographyScale,
     setCurrentTypographyScale,
+    brands,
+    setBrands,
+    currentBrand,
+    setCurrentBrand,
     saveTheme,
     resetTheme
   };
