@@ -107,7 +107,7 @@ export const Footer = () => {
               Need help finding your ideal vehicle?
             </p>
             <p className="text-gray-500 text-sm">
-              Email: <a href={`mailto:contact@${brandDomain}.com`} className="text-brand-green hover:underline">contact@{brandDomain}.com</a>
+              Email: <a href={`mailto:contact@${brandDomain}.com.au`} className="text-brand-green hover:underline">contact@{brandDomain}.com.au</a>
             </p>
             <p className="text-gray-500 text-sm mt-1">
               Phone: <a href="tel:+1234567890" className="text-brand-green hover:underline">+1 (234) 567-890</a>
