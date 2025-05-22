@@ -20,8 +20,26 @@ export const useBrandManagement = ({
   updateColorRamp,
   setCurrentFont
 }: UseBrandManagementProps) => {
-  const [brands, setBrands] = useState<Brand[]>(initialBrands);
-  const [currentBrand, setCurrentBrand] = useState<Brand>(initialCurrentBrand);
+  // Check if the MyMoto brand has a logo. If not, add it
+  const brandsWithMyMotoLogo = initialBrands.map(brand => {
+    if (brand.name === 'MyMoto' && !brand.logo) {
+      return {
+        ...brand,
+        logo: '/lovable-uploads/d99fbaef-645b-46ba-975c-5b747c2667b9.png'
+      };
+    }
+    return brand;
+  });
+
+  const [brands, setBrands] = useState<Brand[]>(brandsWithMyMotoLogo);
+  
+  // Make sure the current brand also has the logo if it's MyMoto
+  const currentBrandWithLogo = initialCurrentBrand.name === 'MyMoto' && !initialCurrentBrand.logo
+    ? { ...initialCurrentBrand, logo: '/lovable-uploads/d99fbaef-645b-46ba-975c-5b747c2667b9.png' }
+    : initialCurrentBrand;
+  
+  const [currentBrand, setCurrentBrand] = useState<Brand>(currentBrandWithLogo);
+  
   // Store the original color ramps for each brand
   const [brandColors, setBrandColors] = useState<Record<string, Record<number, string>>>({});
 

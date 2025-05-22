@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '@/contexts/theme/ThemeContext';
 import { Brand } from '@/types/theme';
 import { Link } from 'react-router-dom';
@@ -24,6 +23,13 @@ const BrandsManager: React.FC = () => {
     resetBrandColorRamp 
   } = useTheme();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // Log to debug if the MyMoto brand has a logo
+  React.useEffect(() => {
+    console.log("Brands in BrandsManager:", brands);
+    const myMotoBrand = brands.find(b => b.name === 'MyMoto');
+    console.log("MyMoto brand:", myMotoBrand);
+  }, [brands]);
 
   const handleAddBrand = (newBrand: Omit<Brand, 'id'>) => {
     if (!newBrand.name.trim()) {

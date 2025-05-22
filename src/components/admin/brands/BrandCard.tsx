@@ -31,6 +31,14 @@ const BrandCard: React.FC<BrandCardProps> = ({
   onReset,
   onLogoChange
 }) => {
+  // Log to debug the brand information
+  React.useEffect(() => {
+    if (brand.name === 'MyMoto') {
+      console.log("MyMoto brand in BrandCard:", brand);
+      console.log("MyMoto logo URL:", brand.logo);
+    }
+  }, [brand]);
+
   // Handle color picker change
   const handleColorChange = (color: string) => {
     // Use the color change handler which now uses updateColorRamp internally
