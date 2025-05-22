@@ -28,7 +28,7 @@ export const VehicleSearch = () => {
   const [filters, setFilters] = useState<VehicleFilters>({});
   const [sortOption, setSortOption] = useState<SortOption>({ column: 'id', order: 'asc' });
   const [searchQuery, setSearchQuery] = useState('');
-  const vehiclesPerPage = 12;
+  const vehiclesPerPage = 48; // Changed from 12 to 48
   
   // Initialize database with mock data on component mount
   useEffect(() => {

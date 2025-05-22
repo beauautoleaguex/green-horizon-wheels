@@ -1,4 +1,3 @@
-
 import { createClient } from '@supabase/supabase-js';
 import { Vehicle } from '@/types/vehicle';
 import { Database } from '@/types/supabase';
@@ -281,7 +280,7 @@ export const _getVehiclesFromMock = (
   filters: VehicleFilters = {},
   sortOption: SortOption = { column: 'id', order: 'asc' }
 ): { data: Vehicle[]; count: number } => {
-  // If mockVehicleData is empty, generate some mock data
+  // If mockVehicleData is empty, generate 100 mock vehicles
   if (mockVehicleData.length === 0) {
     mockVehicleData = [...Array(100)].map((_, i) => ({
       id: (i + 1).toString(),
