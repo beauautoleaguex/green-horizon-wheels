@@ -166,7 +166,7 @@ export const VehicleSearch = () => {
               )}
 
               {vehicles.length > 0 && (
-                <div className="mt-8 mb-8 bg-white p-4 border border-gray-200 rounded-md">
+                <div className="mt-8 mb-8">
                   <Pagination 
                     currentPage={currentPage} 
                     totalPages={totalPages} 
