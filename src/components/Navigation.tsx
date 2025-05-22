@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 export const Navigation = () => {
   return (
     <div className="w-full bg-white border-b border-gray-100 shadow-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           {/* Logo and left navigation */}
           <div className="flex items-center gap-8">
@@ -56,15 +56,15 @@ export const Navigation = () => {
 
           {/* Right navigation */}
           <div className="hidden md:flex items-center gap-4">
-            <Link to="/favorites" className="flex items-center gap-1 py-2 px-3 text-sm font-medium text-gray-700 hover:text-brand-green transition-colors">
-              <Heart className="h-4 w-4" />
-              <span>Favourites</span>
-            </Link>
             <Link to="/tradein" className="flex items-center">
               <Button variant="outline" className="border-brand-green text-brand-green hover:bg-brand-light hover:text-brand-green">
                 <Plus className="h-4 w-4" />
                 <span>Add trade-in</span>
               </Button>
+            </Link>
+            <Link to="/favorites" className="flex items-center gap-1 py-2 px-3 text-sm font-medium text-gray-700 hover:text-brand-green transition-colors">
+              <Heart className="h-4 w-4" />
+              <span>Favourites</span>
             </Link>
             <Link to="/locations" className="flex items-center gap-1 py-2 px-3 text-sm font-medium text-gray-700 hover:text-brand-green transition-colors">
               <MapPin className="h-4 w-4" />
