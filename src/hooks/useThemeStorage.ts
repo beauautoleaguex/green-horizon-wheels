@@ -1,7 +1,14 @@
 
 import { useState, useEffect } from 'react';
-import { ThemeColors, FontSizes, FontWeights, ThemeMode } from '../types/theme';
-import { initialColors, initialFonts, initialFontSizes, initialFontWeights, THEME_STORAGE_KEYS } from '../constants/themeDefaults';
+import { ThemeColors, FontSizes, FontWeights, ThemeMode, TypographyScale } from '../types/theme';
+import { 
+  initialColors, 
+  initialFonts, 
+  initialFontSizes, 
+  initialFontWeights, 
+  initialTypographyScale,
+  THEME_STORAGE_KEYS 
+} from '../constants/themeDefaults';
 
 export const useThemeStorage = () => {
   // Load from localStorage or use initial values
@@ -33,6 +40,12 @@ export const useThemeStorage = () => {
     return (savedMode as ThemeMode) || 'light';
   });
 
+  // Add current typography scale state
+  const [currentTypographyScale, setCurrentTypographyScale] = useState<TypographyScale>(() => {
+    const savedScale = localStorage.getItem(THEME_STORAGE_KEYS.TYPOGRAPHY_SCALE);
+    return (savedScale as TypographyScale) || initialTypographyScale;
+  });
+
   // Save theme to localStorage
   const saveTheme = () => {
     localStorage.setItem(THEME_STORAGE_KEYS.COLORS, JSON.stringify(colors));
@@ -40,6 +53,7 @@ export const useThemeStorage = () => {
     localStorage.setItem(THEME_STORAGE_KEYS.FONT_SIZES, JSON.stringify(fontSizes));
     localStorage.setItem(THEME_STORAGE_KEYS.FONT_WEIGHTS, JSON.stringify(fontWeights));
     localStorage.setItem(THEME_STORAGE_KEYS.MODE, mode);
+    localStorage.setItem(THEME_STORAGE_KEYS.TYPOGRAPHY_SCALE, currentTypographyScale);
   };
 
   // Reset theme to initial values
@@ -48,6 +62,7 @@ export const useThemeStorage = () => {
     setCurrentFont(initialFonts[0]);
     setFontSizes(initialFontSizes);
     setFontWeights(initialFontWeights);
+    setCurrentTypographyScale(initialTypographyScale);
   };
 
   return {
@@ -62,6 +77,8 @@ export const useThemeStorage = () => {
     setFontWeights,
     mode,
     setMode,
+    currentTypographyScale,
+    setCurrentTypographyScale,
     saveTheme,
     resetTheme
   };

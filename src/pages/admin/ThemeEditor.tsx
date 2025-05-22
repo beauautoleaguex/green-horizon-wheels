@@ -18,11 +18,13 @@ const ThemeEditor: React.FC = () => {
     currentFont, 
     fontSizes, 
     fontWeights,
+    currentTypographyScale,
     updateColor,
     updateColorRamp,
     updateFont,
     updateFontSize,
     updateFontWeight,
+    updateTypographyScale,
     saveTheme,
     resetTheme
   } = useTheme();
@@ -106,6 +108,8 @@ const ThemeEditor: React.FC = () => {
               fontSizes={fontSizes}
               onFontSizeChange={updateFontSize}
               currentFont={currentFont}
+              currentTypographyScale={currentTypographyScale}
+              onTypographyScaleChange={updateTypographyScale}
             />
             
             <FontWeightsEditor

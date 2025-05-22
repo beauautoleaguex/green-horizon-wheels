@@ -1,8 +1,9 @@
 
 import React, { createContext, useContext, useEffect } from 'react';
-import { ThemeContextType, ThemeMode } from '../types/theme';
+import { ThemeContextType, ThemeMode, TypographyScale, FontSizes } from '../types/theme';
 import { generateColorRamp, CurveType } from '../utils/colorUtils';
 import { useThemeStorage } from '../hooks/useThemeStorage';
+import { typographyScales } from '../constants/themeDefaults';
 
 // Create the context
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -20,6 +21,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setFontWeights,
     mode,
     setMode,
+    currentTypographyScale,
+    setCurrentTypographyScale,
     saveTheme,
     resetTheme
   } = useThemeStorage();
@@ -145,6 +148,17 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }));
   };
 
+  const updateTypographyScale = (scale: TypographyScale) => {
+    // Find the selected scale definition
+    const selectedScale = typographyScales.find(s => s.name === scale);
+    
+    if (selectedScale) {
+      // Update font sizes with the selected scale's sizes
+      setFontSizes(selectedScale.sizes);
+      setCurrentTypographyScale(scale);
+    }
+  };
+
   return (
     <ThemeContext.Provider value={{
       colors,
@@ -153,12 +167,14 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       fontSizes,
       fontWeights,
       mode,
+      currentTypographyScale,
       toggleMode,
       updateColor,
       updateColorRamp,
       updateFont,
       updateFontSize,
       updateFontWeight,
+      updateTypographyScale,
       saveTheme,
       resetTheme
     }}>

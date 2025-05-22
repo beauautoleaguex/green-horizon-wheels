@@ -1,5 +1,5 @@
 
-import { ThemeColors, FontSizes, FontWeights, ThemeMode } from '../types/theme';
+import { ThemeColors, FontSizes, FontWeights, ThemeMode, TypographyScale, TypographyScaleDefinition } from '../types/theme';
 
 // Initial theme values
 export const initialColors: ThemeColors = {
@@ -86,18 +86,63 @@ export const initialFonts = [
   "Playfair Display, serif",
 ];
 
-export const initialFontSizes: FontSizes = {
-  xs: "0.75rem",
-  sm: "0.875rem",
-  base: "1rem",
-  lg: "1.125rem",
-  xl: "1.25rem",
-  "2xl": "1.5rem",
-  "3xl": "1.875rem",
-  "4xl": "2.25rem",
-  "5xl": "3rem",
-  "6xl": "3.75rem",
+// Classic scale - based on traditional typography with a 1.2 ratio
+export const classicScale: FontSizes = {
+  xs: "0.75rem",    // 12px
+  sm: "0.875rem",   // 14px
+  base: "1rem",     // 16px
+  lg: "1.125rem",   // 18px
+  xl: "1.25rem",    // 20px
+  "2xl": "1.5rem",  // 24px
+  "3xl": "1.875rem", // 30px
+  "4xl": "2.25rem", // 36px
+  "5xl": "3rem",    // 48px
+  "6xl": "3.75rem", // 60px
 };
+
+// Modern scale - based on a 1.333 ratio (perfect fourth)
+export const modernScale: FontSizes = {
+  xs: "0.75rem",     // 12px
+  sm: "0.875rem",    // 14px
+  base: "1rem",      // 16px
+  lg: "1.333rem",    // ~21px
+  xl: "1.777rem",    // ~28px
+  "2xl": "2.369rem", // ~38px
+  "3xl": "3.157rem", // ~51px
+  "4xl": "4.209rem", // ~67px
+  "5xl": "5.61rem",  // ~90px
+  "6xl": "7.478rem", // ~120px
+};
+
+// Compact scale - closer increments for dense UIs, using 1.125 ratio
+export const compactScale: FontSizes = {
+  xs: "0.75rem",     // 12px
+  sm: "0.875rem",    // 14px
+  base: "1rem",      // 16px
+  lg: "1.125rem",    // 18px
+  xl: "1.266rem",    // ~20px
+  "2xl": "1.424rem", // ~23px
+  "3xl": "1.602rem", // ~26px
+  "4xl": "1.802rem", // ~29px
+  "5xl": "2.027rem", // ~32px
+  "6xl": "2.281rem", // ~37px
+};
+
+// Comfortable scale - based on 1.5 ratio (perfect fifth)
+export const comfortableScale: FontSizes = {
+  xs: "0.75rem",    // 12px
+  sm: "0.875rem",   // 14px
+  base: "1rem",     // 16px
+  lg: "1.5rem",     // 24px
+  xl: "2.25rem",    // 36px
+  "2xl": "3.375rem", // 54px
+  "3xl": "5.063rem", // ~81px
+  "4xl": "7.594rem", // ~121px
+  "5xl": "11.391rem", // ~182px
+  "6xl": "17.086rem", // ~273px
+};
+
+export const initialFontSizes: FontSizes = classicScale;
 
 export const initialFontWeights: FontWeights = {
   thin: 100,
@@ -111,10 +156,42 @@ export const initialFontWeights: FontWeights = {
   black: 900,
 };
 
+// Typography scale definitions
+export const typographyScales: TypographyScaleDefinition[] = [
+  {
+    name: 'classic',
+    description: 'Traditional typography with a 1.2 ratio',
+    sizes: classicScale,
+  },
+  {
+    name: 'modern',
+    description: 'Contemporary scale with a 1.333 ratio (perfect fourth)',
+    sizes: modernScale,
+  },
+  {
+    name: 'compact',
+    description: 'Closer increments for dense UIs, using 1.125 ratio',
+    sizes: compactScale,
+  },
+  {
+    name: 'comfortable',
+    description: 'Dramatic scale with a 1.5 ratio (perfect fifth)',
+    sizes: comfortableScale,
+  },
+  {
+    name: 'custom',
+    description: 'Custom typography scale with manual settings',
+    sizes: initialFontSizes,
+  },
+];
+
+export const initialTypographyScale: TypographyScale = 'classic';
+
 export const THEME_STORAGE_KEYS = {
   COLORS: 'themeColors',
   FONT: 'themeFont',
   FONT_SIZES: 'themeFontSizes',
   FONT_WEIGHTS: 'themeFontWeights',
-  MODE: 'themeMode'
+  MODE: 'themeMode',
+  TYPOGRAPHY_SCALE: 'themeTypographyScale',
 };
