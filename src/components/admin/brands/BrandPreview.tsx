@@ -13,7 +13,7 @@ const BrandPreview: React.FC<BrandPreviewProps> = ({ font, color }) => {
         className="w-4 h-4 rounded-full"
         style={{ backgroundColor: color }}
       />
-      <span style={{ fontFamily: font }}>
+      <span style={{ fontFamily: font }} className="truncate">
         {font.split(',')[0]}
       </span>
     </div>
