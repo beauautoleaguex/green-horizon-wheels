@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Brand } from '@/types/theme';
@@ -21,6 +22,8 @@ export const useBrandManagement = ({
 }: UseBrandManagementProps) => {
   const [brands, setBrands] = useState<Brand[]>(initialBrands);
   const [currentBrand, setCurrentBrand] = useState<Brand>(initialCurrentBrand);
+  // Store the original color ramps for each brand
+  const [brandColors, setBrandColors] = useState<Record<string, Record<number, string>>>({});
 
   // Switch brand
   const switchBrand = (brandId: string) => {
@@ -38,8 +41,20 @@ export const useBrandManagement = ({
           updateColors('brand', Number(step), color);
         });
       } else {
-        // For other brands, generate a new color ramp based on primary color
-        updateColorRamp('brand', selectedBrand.primaryColor);
+        // For other brands, check if we have stored colors for this brand
+        if (brandColors[selectedBrand.id]) {
+          // Use the stored colors for this brand
+          Object.entries(brandColors[selectedBrand.id]).forEach(([step, color]) => {
+            updateColors('brand', Number(step), color);
+          });
+        } else {
+          // Generate a new color ramp based on primary color
+          updateColorRamp('brand', selectedBrand.primaryColor);
+          
+          // Store the generated colors for this brand
+          const newBrandColors = { ...brandColors };
+          // We'll populate this in updateBrandColor when the ramp is generated
+        }
       }
     }
   };
@@ -72,6 +87,11 @@ export const useBrandManagement = ({
     
     // Remove the brand
     setBrands(prev => prev.filter(brand => brand.id !== brandId));
+    
+    // Remove stored colors for this brand
+    const newBrandColors = { ...brandColors };
+    delete newBrandColors[brandId];
+    setBrandColors(newBrandColors);
   };
 
   // Update brand color
@@ -95,11 +115,49 @@ export const useBrandManagement = ({
       if (brand.name === 'MyMoto') {
         // For MyMoto, only update the primary color (step 9) but keep other colors from default ramp
         updateColors('brand', 9, color);
+        
+        // Store the updated MyMoto colors
+        const myMotoColors = { ...initialColors.brand, 9: color };
+        setBrandColors(prev => ({ ...prev, [brandId]: myMotoColors }));
       } else {
         // For other brands, regenerate the entire color ramp
         updateColorRamp('brand', color);
+        
+        // Store the new color ramp for this brand (we'll capture it in the ColorRampEditor)
       }
     }
+  };
+
+  // Store brand color ramp after generation
+  const storeBrandColorRamp = (brandId: string, colorRamp: Record<number, string>) => {
+    setBrandColors(prev => ({
+      ...prev,
+      [brandId]: colorRamp
+    }));
+  };
+
+  // Reset brand color ramp to the brand's original color
+  const resetBrandColorRamp = (brandId: string) => {
+    const brand = brands.find(b => b.id === brandId);
+    if (!brand) return;
+    
+    // If it's the current brand, update the UI
+    if (brandId === currentBrand.id) {
+      if (brand.name === 'MyMoto') {
+        // Reset to MyMoto's initial colors
+        Object.entries(initialColors.brand).forEach(([step, color]) => {
+          updateColors('brand', Number(step), color);
+        });
+      } else {
+        // For other brands, regenerate the ramp from their primary color
+        updateColorRamp('brand', brand.primaryColor);
+      }
+    }
+    
+    // Remove any stored custom colors for this brand to reset to default
+    const newBrandColors = { ...brandColors };
+    delete newBrandColors[brandId];
+    setBrandColors(newBrandColors);
   };
 
   // Update brand font
@@ -129,6 +187,9 @@ export const useBrandManagement = ({
     addBrand,
     deleteBrand,
     updateBrandColor,
-    updateBrandFont
+    updateBrandFont,
+    storeBrandColorRamp,
+    resetBrandColorRamp,
+    brandColors
   };
 };

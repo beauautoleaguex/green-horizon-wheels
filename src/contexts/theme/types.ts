@@ -16,6 +16,7 @@ export interface ThemeContextValue {
   currentTypographyScale: TypographyScale;
   brands: Brand[];
   currentBrand: Brand;
+  brandColors?: Record<string, Record<number, string>>;
   toggleMode: () => void;
   updateColor: (colorName: string, step: number, value: string) => void;
   updateColorRamp: (colorName: string, baseColor: string, curveType?: CurveType) => void;
@@ -28,6 +29,8 @@ export interface ThemeContextValue {
   updateBrandFont: (brandId: string, font: string) => void;
   addBrand: (brand: Omit<Brand, 'id'>) => void;
   deleteBrand: (brandId: string) => void;
+  storeBrandColorRamp?: (brandId: string, colorRamp: Record<number, string>) => void;
+  resetBrandColorRamp?: (brandId: string) => void;
   saveTheme: () => void;
   resetTheme: () => void;
 }

@@ -56,7 +56,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     initialBrands,
     initialCurrentBrand,
     updateColors: updateColor,
-    updateColorRamp, // Pass updateColorRamp to the brand management hook
+    updateColorRamp,
     setCurrentFont,
   });
 
@@ -119,6 +119,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       currentTypographyScale,
       brands: brandManagement.brands,
       currentBrand: brandManagement.currentBrand,
+      brandColors: brandManagement.brandColors,
       toggleMode,
       updateColor,
       updateColorRamp,
@@ -131,6 +132,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       updateBrandFont: brandManagement.updateBrandFont,
       addBrand: brandManagement.addBrand,
       deleteBrand: brandManagement.deleteBrand,
+      storeBrandColorRamp: brandManagement.storeBrandColorRamp,
+      resetBrandColorRamp: brandManagement.resetBrandColorRamp,
       saveTheme: saveThemeWithBrands,
       resetTheme
     }}>

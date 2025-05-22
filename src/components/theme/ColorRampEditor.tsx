@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ColorScale } from '@/types/theme';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +17,7 @@ import { ColorRampDisplay } from './ColorRampDisplay';
 import { ContrastChecker } from './ContrastChecker';
 import { initialColors } from '@/constants/themeDefaults';
 import { toast } from '@/components/ui/use-toast';
+import { useTheme } from '@/contexts/theme/ThemeContext';
 
 // Available curve types with descriptive labels
 const curveOptions: Array<{value: CurveType, label: string, description: string}> = [
@@ -42,6 +43,9 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
   onColorChange,
   onRampChange,
 }) => {
+  // Get access to theme context for brand information
+  const { currentBrand, resetBrandColorRamp, storeBrandColorRamp } = useTheme();
+  
   // Create a sorted array of entries to ensure they display from 1-12
   const sortedEntries = Object.entries(scale)
     .map(([step, color]) => ({
@@ -55,6 +59,13 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
   
   // State for the selected curve type
   const [selectedCurve, setSelectedCurve] = useState<CurveType>('linear');
+  
+  // Store the current color ramp in the brand colors when it changes
+  useEffect(() => {
+    if (colorName === 'brand' && currentBrand) {
+      storeBrandColorRamp(currentBrand.id, scale);
+    }
+  }, [scale, colorName, currentBrand]);
 
   const handleBaseColorChange = (newBaseColor: string) => {
     if (onRampChange) {
@@ -83,9 +94,16 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
 
   // Reset current color ramp to initial values
   const handleResetRamp = () => {
-    // Use the initial colors if they exist for this color ramp
-    if (initialColors[colorName]) {
-      // Reset using the initial colors
+    if (colorName === 'brand' && currentBrand) {
+      // For the brand color ramp, use brand-specific reset
+      resetBrandColorRamp(currentBrand.id);
+      
+      toast({
+        title: `Reset ${currentBrand.name} brand colors`,
+        description: "Brand colors have been reset to default values."
+      });
+    } else if (initialColors[colorName]) {
+      // For other color ramps, use the initial colors
       Object.entries(initialColors[colorName]).forEach(([step, color]) => {
         onColorChange(colorName, Number(step), color as string);
       });
@@ -106,7 +124,9 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
   return (
     <div className="p-4 border bg-white dark:bg-gray-800 dark:border-gray-700 rounded-md shadow-sm">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold text-lg capitalize text-gray-900 dark:text-gray-100">{colorName}</h3>
+        <h3 className="font-semibold text-lg capitalize text-gray-900 dark:text-gray-100">
+          {colorName === 'brand' ? `${currentBrand.name} Brand` : colorName}
+        </h3>
         <div className="flex items-center gap-2">
           <Button 
             variant="outline" 
