@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Sell, Wrench, DollarSign, Shield, Info, MapPin } from 'lucide-react';
+import { ShoppingCart, Tag, Wrench, DollarSign, Shield, Info, MapPin } from 'lucide-react';
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -36,7 +36,7 @@ export const Footer = () => {
               </li>
               <li>
                 <Link to="/sell" className="text-gray-500 hover:text-brand-green text-sm flex items-center gap-2">
-                  <Sell className="h-4 w-4" />
+                  <Tag className="h-4 w-4" />
                   <span>Sell</span>
                 </Link>
               </li>
