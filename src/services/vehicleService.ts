@@ -1,3 +1,4 @@
+
 import { createClient } from '@supabase/supabase-js';
 import { Vehicle } from '@/types/vehicle';
 import { Database } from '@/types/supabase';
@@ -301,72 +302,89 @@ export const _getVehiclesFromMock = (
   
   // We'll use mockVehicleData directly now
   let filteredData = [...mockVehicleData];
+  console.log("Starting filter with", filteredData.length, "vehicles");
   
   // Handle the "all" values correctly for string-based filters
   if (filters.make && filters.make !== 'all') {
     filteredData = filteredData.filter(v => v.make === filters.make);
+    console.log(`After make filter (${filters.make}):`, filteredData.length);
   }
   
   if (filters.model && filters.model !== 'all') {
     filteredData = filteredData.filter(v => v.model === filters.model);
+    console.log(`After model filter (${filters.model}):`, filteredData.length);
   }
   
   if (filters.bodyType && filters.bodyType !== 'all') {
     filteredData = filteredData.filter(v => v.bodyType === filters.bodyType);
+    console.log(`After bodyType filter (${filters.bodyType}):`, filteredData.length);
   }
   
   if (filters.minYear) {
-    filteredData = filteredData.filter(v => v.year >= filters.minYear);
+    filteredData = filteredData.filter(v => v.year >= filters.minYear!);
+    console.log(`After minYear filter (${filters.minYear}):`, filteredData.length);
   }
   
   if (filters.maxYear) {
-    filteredData = filteredData.filter(v => v.year <= filters.maxYear);
+    filteredData = filteredData.filter(v => v.year <= filters.maxYear!);
+    console.log(`After maxYear filter (${filters.maxYear}):`, filteredData.length);
   }
   
   if (filters.minPrice) {
-    filteredData = filteredData.filter(v => v.price >= filters.minPrice);
+    filteredData = filteredData.filter(v => v.price >= filters.minPrice!);
+    console.log(`After minPrice filter (${filters.minPrice}):`, filteredData.length);
   }
   
   if (filters.maxPrice) {
-    filteredData = filteredData.filter(v => v.price <= filters.maxPrice);
+    filteredData = filteredData.filter(v => v.price <= filters.maxPrice!);
+    console.log(`After maxPrice filter (${filters.maxPrice}):`, filteredData.length);
   }
   
-  if (filters.transmission) {
+  if (filters.transmission && filters.transmission !== 'all') {
     filteredData = filteredData.filter(v => v.transmission === filters.transmission);
+    console.log(`After transmission filter (${filters.transmission}):`, filteredData.length);
   }
   
-  if (filters.fuelType) {
+  if (filters.fuelType && filters.fuelType !== 'all') {
     filteredData = filteredData.filter(v => v.fuelType === filters.fuelType);
+    console.log(`After fuelType filter (${filters.fuelType}):`, filteredData.length);
   }
   
   if (filters.color && filters.color !== 'all') {
     filteredData = filteredData.filter(v => v.exteriorColor === filters.color);
+    console.log(`After color filter (${filters.color}):`, filteredData.length);
   }
   
-  if (filters.engineSize) {
+  if (filters.engineSize && filters.engineSize !== 'all') {
     filteredData = filteredData.filter(v => v.engineSize === filters.engineSize);
+    console.log(`After engineSize filter (${filters.engineSize}):`, filteredData.length);
   }
   
   if (filters.features && filters.features.length > 0) {
     filteredData = filteredData.filter(v =>
-      v.features && filters.features.every(feature => v.features.includes(feature))
+      v.features && filters.features!.every(feature => v.features.includes(feature))
     );
+    console.log(`After features filter (${filters.features}):`, filteredData.length);
   }
   
-  if (filters.seats) {
+  if (filters.seats && filters.seats !== 'all') {
     filteredData = filteredData.filter(v => v.seats === filters.seats);
+    console.log(`After seats filter (${filters.seats}):`, filteredData.length);
   }
 
   if (filters.condition && filters.condition !== 'all') {
     filteredData = filteredData.filter(v => v.condition === filters.condition);
+    console.log(`After condition filter (${filters.condition}):`, filteredData.length);
   }
 
   if (filters.minMileage !== undefined) {
     filteredData = filteredData.filter(v => v.mileage >= filters.minMileage!);
+    console.log(`After minMileage filter (${filters.minMileage}):`, filteredData.length);
   }
 
   if (filters.maxMileage !== undefined) {
     filteredData = filteredData.filter(v => v.mileage <= filters.maxMileage!);
+    console.log(`After maxMileage filter (${filters.maxMileage}):`, filteredData.length);
   }
   
   // Add support for the search field
@@ -377,6 +395,7 @@ export const _getVehiclesFromMock = (
       v.model.toLowerCase().includes(searchTerm) ||
       (v.features && v.features.some(feature => feature.toLowerCase().includes(searchTerm)))
     );
+    console.log(`After search filter (${filters.search}):`, filteredData.length);
   }
   
   // Apply sorting first

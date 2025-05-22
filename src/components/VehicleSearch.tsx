@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { SearchFilters } from './SearchFilters';
@@ -25,7 +26,24 @@ import { Button } from '@/components/ui/button';
 export const VehicleSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState<VehicleFilters>({});
+  const [filters, setFilters] = useState<VehicleFilters>({
+    make: 'all',
+    model: 'all',
+    minPrice: 0,
+    maxPrice: 200000,
+    minYear: 2000,
+    maxYear: new Date().getFullYear(),
+    bodyType: 'all',
+    condition: 'all',
+    minMileage: 0,
+    maxMileage: 200000,
+    transmission: 'all',
+    fuelType: 'all',
+    color: 'all',
+    features: [],
+    seats: 'all',
+    search: ''
+  });
   const [sortOption, setSortOption] = useState<SortOption>({ column: 'id', order: 'asc' });
   const [searchQuery, setSearchQuery] = useState('');
   const [isInitialized, setIsInitialized] = useState(false);
@@ -131,12 +149,21 @@ export const VehicleSearch = () => {
   };
 
   const handleFilter = (newFilters: VehicleFilters) => {
-    setFilters(newFilters);
+    console.log("Handling new filters:", newFilters);
+    setFilters(prev => ({
+      ...newFilters,
+      search: prev.search // Preserve search value
+    }));
     setCurrentPage(1);
   };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Search submitted with query:", searchQuery);
+    setFilters(prev => ({
+      ...prev,
+      search: searchQuery
+    }));
     setCurrentPage(1);
     refetch();
   };

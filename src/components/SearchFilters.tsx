@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Slider } from "@/components/ui/slider";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -53,6 +54,12 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
   const [filters, setFilters] = useState<VehicleFilters>(defaultFilters);
   const [hasActiveFilters, setHasActiveFilters] = useState(false);
 
+  // Initialize with default filters when component mounts
+  useEffect(() => {
+    console.log("SearchFilters initialized with defaults:", defaultFilters);
+    onFilter(defaultFilters);
+  }, []);
+
   // Check if any filter is active (not default)
   useEffect(() => {
     const isActive = Object.entries(filters).some(([key, value]) => {
@@ -78,8 +85,9 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
     setHasActiveFilters(isActive);
   }, [filters]);
 
-  // Apply filters immediately whenever they change
+  // Apply filters whenever they change
   useEffect(() => {
+    console.log("Filters changed, applying:", filters);
     onFilter(filters);
   }, [filters, onFilter]);
 
@@ -135,6 +143,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
   };
 
   const clearAllFilters = () => {
+    console.log("Clearing all filters to defaults");
     setFilters(defaultFilters);
   };
 
