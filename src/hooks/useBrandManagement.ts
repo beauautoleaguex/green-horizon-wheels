@@ -1,8 +1,8 @@
-
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Brand } from '@/types/theme';
 import { CurveType } from '@/utils/colorUtils';
+import { initialColors } from '@/constants/themeDefaults';
 
 interface UseBrandManagementProps {
   initialBrands: Brand[];
@@ -31,8 +31,16 @@ export const useBrandManagement = ({
       // Update font
       setCurrentFont(selectedBrand.font);
       
-      // Update primary color in brand color ramp (using updateColorRamp instead of updateColors)
-      updateColorRamp('brand', selectedBrand.primaryColor);
+      // Special handling for "MyMoto" brand - use the original predefined color ramp
+      if (selectedBrand.name === 'MyMoto') {
+        // Apply each color from the default brand color scale
+        Object.entries(initialColors.brand).forEach(([step, color]) => {
+          updateColors('brand', Number(step), color);
+        });
+      } else {
+        // For other brands, generate a new color ramp based on primary color
+        updateColorRamp('brand', selectedBrand.primaryColor);
+      }
     }
   };
 
@@ -70,6 +78,7 @@ export const useBrandManagement = ({
   const updateBrandColor = (brandId: string, color: string) => {
     // Check if updating current brand
     const isCurrentBrand = brandId === currentBrand.id;
+    const brand = brands.find(b => b.id === brandId);
     
     // Update brands array
     const updatedBrands = brands.map(brand => 
@@ -78,12 +87,18 @@ export const useBrandManagement = ({
     setBrands(updatedBrands);
     
     // If updating current brand, also update current brand state and color scales
-    if (isCurrentBrand) {
+    if (isCurrentBrand && brand) {
       // Update current brand state
       setCurrentBrand(prev => ({ ...prev, primaryColor: color }));
       
-      // Update brand color in color scales (using updateColorRamp instead of updateColors)
-      updateColorRamp('brand', color);
+      // Special handling for "MyMoto" brand
+      if (brand.name === 'MyMoto') {
+        // For MyMoto, only update the primary color (step 9) but keep other colors from default ramp
+        updateColors('brand', 9, color);
+      } else {
+        // For other brands, regenerate the entire color ramp
+        updateColorRamp('brand', color);
+      }
     }
   };
 
