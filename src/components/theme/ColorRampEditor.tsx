@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { ColorScale } from '@/types/theme';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Palette, CheckCircle2 } from "lucide-react";
+import { Palette, CheckCircle2, RotateCcw } from "lucide-react";
 import { CurveType, generateColorRamp } from '@/utils/colorUtils';
 import { 
   Select,
@@ -12,8 +12,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { ColorRampDisplay } from './ColorRampDisplay';
 import { ContrastChecker } from './ContrastChecker';
+import { initialColors } from '@/constants/themeDefaults';
+import { toast } from '@/components/ui/use-toast';
 
 // Available curve types with descriptive labels
 const curveOptions: Array<{value: CurveType, label: string, description: string}> = [
@@ -78,11 +81,42 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
     }
   };
 
+  // Reset current color ramp to initial values
+  const handleResetRamp = () => {
+    // Use the initial colors if they exist for this color ramp
+    if (initialColors[colorName]) {
+      // Reset using the initial colors
+      Object.entries(initialColors[colorName]).forEach(([step, color]) => {
+        onColorChange(colorName, Number(step), color as string);
+      });
+      
+      toast({
+        title: `Reset ${colorName} color ramp`,
+        description: "Colors have been reset to default values."
+      });
+    } else {
+      toast({
+        title: "Cannot reset colors",
+        description: `No default colors found for ${colorName}.`,
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <div className="p-4 border bg-white dark:bg-gray-800 dark:border-gray-700 rounded-md shadow-sm">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-semibold text-lg capitalize text-gray-900 dark:text-gray-100">{colorName}</h3>
         <div className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleResetRamp}
+            className="flex items-center gap-1 text-xs"
+          >
+            <RotateCcw className="w-3 h-3" />
+            Reset
+          </Button>
           <Label htmlFor={`${colorName}-base`} className="text-sm text-gray-700 dark:text-gray-300">Base Color:</Label>
           <div className="flex items-center gap-1">
             <div 
