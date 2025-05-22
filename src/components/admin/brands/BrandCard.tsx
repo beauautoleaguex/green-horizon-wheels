@@ -112,11 +112,11 @@ const BrandCard: React.FC<BrandCardProps> = ({
           />
         </div>
         
-        {/* Brand name */}
-        <h3 className="font-medium text-gray-900 dark:text-gray-100 text-lg col-span-2">{brand.name}</h3>
+        {/* Brand name - expanded to fill more space */}
+        <h3 className="font-medium text-gray-900 dark:text-gray-100 text-lg col-span-4">{brand.name}</h3>
         
-        {/* Color picker - optimized width */}
-        <div className="col-span-2 flex items-center gap-3">
+        {/* Color picker - right aligned */}
+        <div className="col-span-3 flex items-center gap-3 justify-end">
           <Label htmlFor={`color-${brand.id}`} className="whitespace-nowrap text-sm shrink-0">Color:</Label>
           <div className="flex items-center gap-2">
             <div 
@@ -144,14 +144,14 @@ const BrandCard: React.FC<BrandCardProps> = ({
           </div>
         </div>
         
-        {/* Font selector - reduced column width */}
-        <div className="col-span-6 flex items-center gap-3">
+        {/* Font selector - reduced width and right aligned */}
+        <div className="col-span-3 flex items-center gap-3 justify-end">
           <Label htmlFor={`font-${brand.id}`} className="whitespace-nowrap text-sm shrink-0">Font:</Label>
           <Select
             value={brand.font}
             onValueChange={(value) => onFontChange(brand.id, value)}
           >
-            <SelectTrigger id={`font-${brand.id}`} className="max-w-xs">
+            <SelectTrigger id={`font-${brand.id}`} className="max-w-[150px]">
               <SelectValue placeholder="Select a font" />
             </SelectTrigger>
             <SelectContent>
