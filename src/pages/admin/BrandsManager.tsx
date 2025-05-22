@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useTheme } from '@/contexts/theme/ThemeContext';
 import { Brand } from '@/types/theme';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Plus } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 import Header from '@/components/admin/brands/Header';
 import BrandList from '@/components/admin/brands/BrandList';
@@ -104,14 +104,14 @@ const BrandsManager: React.FC = () => {
           </Link>
         </div>
         
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+        <div>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Brands</h2>
             <Button 
               onClick={() => setIsDialogOpen(true)}
               size="sm"
+              variant="outline"
             >
-              <Plus className="h-4 w-4 mr-1" />
               Add a new brand
             </Button>
           </div>
