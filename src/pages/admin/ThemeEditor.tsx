@@ -103,6 +103,7 @@ const ThemeEditor: React.FC = () => {
               <Select
                 value={currentBrand.id}
                 onValueChange={switchBrand}
+                defaultValue={currentBrand.id}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a brand" />
