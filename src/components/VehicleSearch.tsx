@@ -4,6 +4,7 @@ import { SearchFilters } from './SearchFilters';
 import { VehicleCard } from './VehicleCard';
 import { Pagination } from './Pagination';
 import { SortDropdown } from './SortDropdown';
+import { Navigation } from './Navigation';
 import { Vehicle } from '@/types/vehicle';
 import { mockVehicles } from '@/data/mockVehicles';
 
@@ -88,6 +89,7 @@ export const VehicleSearch = () => {
 
   return (
     <div className="bg-white min-h-screen">
+      <Navigation />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col md:flex-row gap-6">
           {/* Mobile filter toggle */}
