@@ -46,6 +46,7 @@ export const initializeDatabase = async (vehicles: Vehicle[]): Promise<void> => 
   
   // Always populate the mock data for fallback
   mockVehicleData = [...vehicles];
+  console.log("Mock data has been initialized with", mockVehicleData.length, "vehicles");
   
   if (useSupabase) {
     try {
@@ -301,31 +302,39 @@ export const _getVehiclesFromMock = (
   // We'll use mockVehicleData directly now
   let filteredData = [...mockVehicleData];
   
-  // Apply all filters
-  if (filters.make) {
+  // Handle the "all" values correctly for string-based filters
+  if (filters.make && filters.make !== 'all') {
     filteredData = filteredData.filter(v => v.make === filters.make);
   }
-  if (filters.model) {
+  
+  if (filters.model && filters.model !== 'all') {
     filteredData = filteredData.filter(v => v.model === filters.model);
   }
-  if (filters.bodyType) {
+  
+  if (filters.bodyType && filters.bodyType !== 'all') {
     filteredData = filteredData.filter(v => v.bodyType === filters.bodyType);
   }
+  
   if (filters.minYear) {
     filteredData = filteredData.filter(v => v.year >= filters.minYear);
   }
+  
   if (filters.maxYear) {
     filteredData = filteredData.filter(v => v.year <= filters.maxYear);
   }
+  
   if (filters.minPrice) {
     filteredData = filteredData.filter(v => v.price >= filters.minPrice);
   }
+  
   if (filters.maxPrice) {
     filteredData = filteredData.filter(v => v.price <= filters.maxPrice);
   }
+  
   if (filters.transmission) {
     filteredData = filteredData.filter(v => v.transmission === filters.transmission);
   }
+  
   if (filters.fuelType) {
     filteredData = filteredData.filter(v => v.fuelType === filters.fuelType);
   }

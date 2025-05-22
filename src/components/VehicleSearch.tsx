@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { SearchFilters } from './SearchFilters';
@@ -89,6 +88,7 @@ export const VehicleSearch = () => {
     enabled: isInitialized,
   });
 
+  // Force a refetch when initialization completes
   useEffect(() => {
     if (isInitialized) {
       console.log("Fetching vehicles with filters:", filters);
@@ -220,7 +220,7 @@ export const VehicleSearch = () => {
               </form>
             </div>
             <SearchFilters 
-              onFilter={handleFilter} 
+              onFilter={setFilters} 
               availableMakes={makes}
               availableModels={models}
               availableBodyTypes={bodyTypes}
@@ -239,7 +239,13 @@ export const VehicleSearch = () => {
                 </div>
               </div>
             
-              {isLoading ? (
+              {!isInitialized ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+                  {[...Array(8)].map((_, index) => (
+                    <div key={index} className="bg-gray-100 animate-pulse rounded-md h-64"></div>
+                  ))}
+                </div>
+              ) : isLoading ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
                   {[...Array(8)].map((_, index) => (
                     <div key={index} className="bg-gray-100 animate-pulse rounded-md h-64"></div>
