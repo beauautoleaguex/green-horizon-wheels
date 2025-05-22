@@ -110,7 +110,7 @@ export const VehicleSearch = () => {
   return (
     <div className="bg-white min-h-screen flex flex-col">
       <Navigation />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+      <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
         <div className="flex flex-col md:flex-row gap-6">
           {/* Mobile filter toggle */}
           <button 
@@ -123,8 +123,8 @@ export const VehicleSearch = () => {
             {isFilterOpen ? 'Hide Filters' : 'Show Filters'}
           </button>
 
-          {/* Filters sidebar - hidden on mobile unless toggled */}
-          <div className={`w-full md:w-64 md:block ${isFilterOpen ? 'block' : 'hidden'}`}>
+          {/* Filters sidebar - fixed width and position on desktop */}
+          <div className={`md:sticky md:top-6 md:self-start md:w-72 md:flex-shrink-0 md:block ${isFilterOpen ? 'block' : 'hidden'}`}>
             <SearchFilters 
               onFilter={handleFilter} 
               availableMakes={makes}
@@ -133,8 +133,8 @@ export const VehicleSearch = () => {
             />
           </div>
 
-          {/* Main content */}
-          <div className="flex-1">
+          {/* Main content - expanded to fill available space */}
+          <div className="flex-1 w-full">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
               <div>
                 <h1 className="text-2xl font-semibold text-gray-900">Browse Vehicles</h1>
@@ -146,8 +146,8 @@ export const VehicleSearch = () => {
             </div>
 
             {isLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, index) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {[...Array(8)].map((_, index) => (
                   <div key={index} className="bg-gray-100 animate-pulse rounded-lg h-64"></div>
                 ))}
               </div>
@@ -157,7 +157,7 @@ export const VehicleSearch = () => {
                 <p className="mt-1 text-gray-500">Try adjusting your filters for more results.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-fade-in">
                 {vehicles.map((vehicle) => (
                   <VehicleCard key={vehicle.id} vehicle={vehicle} />
                 ))}
