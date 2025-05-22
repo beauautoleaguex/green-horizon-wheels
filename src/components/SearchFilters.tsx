@@ -495,21 +495,6 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-        
-        <div className="flex flex-col space-y-2 p-4">
-          <button
-            onClick={applyFilters}
-            className="w-full bg-brand-green hover:bg-brand-dark text-white py-2 px-4 rounded-md transition duration-150 ease-in-out"
-          >
-            Apply Filters
-          </button>
-          <button
-            onClick={resetFilters}
-            className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-4 rounded-md transition duration-150 ease-in-out"
-          >
-            Reset
-          </button>
-        </div>
       </div>
     </div>
   );
