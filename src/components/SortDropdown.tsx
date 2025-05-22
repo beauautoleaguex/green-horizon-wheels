@@ -1,34 +1,37 @@
 
-import React, { useState } from 'react';
+import React from 'react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface SortDropdownProps {
   onSort: (sortType: string) => void;
 }
 
 export const SortDropdown: React.FC<SortDropdownProps> = ({ onSort }) => {
-  const [sortType, setSortType] = useState('default');
-
-  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    setSortType(value);
+  const handleSortChange = (value: string) => {
     onSort(value);
   };
 
   return (
     <div className="flex items-center">
       <label htmlFor="sort" className="mr-2 text-sm text-gray-700">Sort by:</label>
-      <select
-        id="sort"
-        value={sortType}
-        onChange={handleSortChange}
-        className="rounded-md border border-gray-300 py-2 px-3 pr-8 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-brand-green focus:border-brand-green"
-      >
-        <option value="default">Featured</option>
-        <option value="price-asc">Price: Low to High</option>
-        <option value="price-desc">Price: High to Low</option>
-        <option value="year-desc">Newest First</option>
-        <option value="mileage-asc">Lowest Mileage</option>
-      </select>
+      <Select onValueChange={handleSortChange} defaultValue="default">
+        <SelectTrigger className="w-[180px] py-2">
+          <SelectValue placeholder="Featured" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="default">Featured</SelectItem>
+          <SelectItem value="price-asc">Price: Low to High</SelectItem>
+          <SelectItem value="price-desc">Price: High to Low</SelectItem>
+          <SelectItem value="year-desc">Newest First</SelectItem>
+          <SelectItem value="mileage-asc">Lowest Mileage</SelectItem>
+        </SelectContent>
+      </Select>
     </div>
   );
 };
