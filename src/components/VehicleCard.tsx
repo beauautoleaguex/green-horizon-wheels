@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Vehicle } from '@/types/vehicle';
 import { Button } from '@/components/ui/button';
@@ -24,7 +23,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
     }
     return 'Petrol'; // Default fallback
   };
-
+  
   // Format weekly price (just for demo)
   const weeklyPrice = Math.round(vehicle.price / 52);
 
