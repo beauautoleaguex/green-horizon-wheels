@@ -5,7 +5,7 @@ import { FontSelector } from '@/components/theme/FontSelector';
 import { FontSizesEditor } from '@/components/theme/FontSizesEditor';
 import { FontWeightsEditor } from '@/components/theme/FontWeightsEditor';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useTheme } from '@/contexts/theme/ThemeContext';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Palette, Save, RotateCcw, Users } from 'lucide-react';

@@ -54,8 +54,13 @@ export const useThemeEffects = (
     // Check if there's a stored preference
     const hasStoredPreference = !!localStorage.getItem('themeMode');
     
-    // We'll return the detected preference but don't set mode here
-    // This allows the component using this hook to decide what to do
-    return { userPrefersDark, hasStoredPreference };
+    // Return object for component usage
+    return () => {}; // Empty cleanup function to satisfy TypeScript
   }, []);
+
+  // Return the detected preference data
+  const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const hasStoredPreference = !!localStorage.getItem('themeMode');
+  
+  return { userPrefersDark, hasStoredPreference };
 };

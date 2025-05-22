@@ -9,7 +9,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ThemeEditor from "./pages/admin/ThemeEditor";
 import BrandsManager from "./pages/admin/BrandsManager";
-import { ThemeProvider } from "./contexts/ThemeContext";
+import { ThemeProvider } from "./contexts/theme/ThemeContext";
 
 // Create a client outside the component to avoid re-creation on each render
 const queryClient = new QueryClient({
