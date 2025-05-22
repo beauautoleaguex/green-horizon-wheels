@@ -1,6 +1,6 @@
 
-import React, { createContext, useContext, useEffect } from 'react';
-import { ThemeContextType, ThemeMode, TypographyScale, FontSizes } from '../types/theme';
+import React, { createContext, useContext, useEffect, FC } from 'react';
+import { ThemeContextType, ThemeMode, TypographyScale } from '../types/theme';
 import { generateColorRamp, CurveType } from '../utils/colorUtils';
 import { useThemeStorage } from '../hooks/useThemeStorage';
 import { typographyScales } from '../constants/themeDefaults';
@@ -8,7 +8,7 @@ import { typographyScales } from '../constants/themeDefaults';
 // Create the context
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ThemeProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
   const {
     colors, 
     setColors,
@@ -71,7 +71,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       console.error('Error setting up media query listener:', error);
       return () => {}; // Empty cleanup function in case of error
     }
-  }, []);
+  }, [setMode]);
 
   // Apply theme to document when it changes
   useEffect(() => {

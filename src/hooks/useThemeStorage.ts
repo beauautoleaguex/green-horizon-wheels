@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ThemeColors, FontSizes, FontWeights, ThemeMode, TypographyScale } from '../types/theme';
 import { 
   initialColors, 
