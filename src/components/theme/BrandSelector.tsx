@@ -36,12 +36,20 @@ export const BrandSelector: React.FC<BrandSelectorProps> = ({
           onValueChange={onBrandChange}
         >
           <SelectTrigger className="w-full" id="brand-selector">
-            <SelectValue placeholder="Select a brand" />
+            <SelectValue placeholder="Select a brand">
+              {currentBrand.name}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {brands.map((brand) => (
               <SelectItem key={brand.id} value={brand.id}>
-                {brand.name}
+                <div className="flex items-center gap-2">
+                  <div 
+                    className="w-3 h-3 rounded-full" 
+                    style={{ backgroundColor: brand.primaryColor }}
+                  />
+                  {brand.name}
+                </div>
               </SelectItem>
             ))}
           </SelectContent>
@@ -78,7 +86,9 @@ export const BrandSelector: React.FC<BrandSelectorProps> = ({
           onValueChange={onFontChange}
         >
           <SelectTrigger className="w-full" id="brand-font">
-            <SelectValue placeholder="Select a font" />
+            <SelectValue placeholder="Select a font">
+              {currentBrand.font.split(',')[0]}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {fonts.map((font) => (

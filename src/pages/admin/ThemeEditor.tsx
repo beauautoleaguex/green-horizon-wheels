@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ColorRampEditor } from '@/components/theme/ColorRampEditor';
 import { FontSelector } from '@/components/theme/FontSelector';
 import { FontSizesEditor } from '@/components/theme/FontSizesEditor';
@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Palette, Save, RotateCcw, Users } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
+import { BrandSelector } from '@/components/theme/BrandSelector';
 import {
   Select,
   SelectContent,
@@ -42,7 +43,9 @@ const ThemeEditor: React.FC = () => {
     updateTypographyScale,
     switchBrand,
     saveTheme,
-    resetTheme
+    resetTheme,
+    updateBrandColor,
+    updateBrandFont
   } = useTheme();
 
   const handleSave = () => {
@@ -59,6 +62,18 @@ const ThemeEditor: React.FC = () => {
       title: "Theme reset",
       description: "Your theme has been reset to default settings."
     });
+  };
+  
+  const handleBrandChange = (brandId: string) => {
+    switchBrand(brandId);
+  };
+  
+  const handleColorChange = (color: string) => {
+    updateBrandColor(currentBrand.id, color);
+  };
+  
+  const handleFontChange = (font: string) => {
+    updateBrandFont(currentBrand.id, font);
   };
 
   return (
@@ -99,30 +114,14 @@ const ThemeEditor: React.FC = () => {
               Manage Brands
             </Link>
             
-            <div className="w-64">
-              <Select
-                value={currentBrand.id}
-                onValueChange={switchBrand}
-                defaultValue={currentBrand.id}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a brand" />
-                </SelectTrigger>
-                <SelectContent>
-                  {brands.map((brand) => (
-                    <SelectItem key={brand.id} value={brand.id}>
-                      <div className="flex items-center gap-2">
-                        <div 
-                          className="w-3 h-3 rounded-full" 
-                          style={{ backgroundColor: brand.primaryColor }}
-                        />
-                        {brand.name}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <BrandSelector 
+              brands={brands}
+              currentBrand={currentBrand}
+              fonts={fonts}
+              onBrandChange={handleBrandChange}
+              onColorChange={handleColorChange}
+              onFontChange={handleFontChange}
+            />
           </div>
         </div>
 
