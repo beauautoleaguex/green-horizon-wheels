@@ -2,6 +2,7 @@
 import React from 'react';
 import { Brand } from '@/types/theme';
 import BrandCard from './BrandCard';
+import { Separator } from '@/components/ui/separator';
 
 interface BrandListProps {
   brands: Brand[];
@@ -27,18 +28,20 @@ const BrandList: React.FC<BrandListProps> = ({
   }
 
   return (
-    <div className="space-y-3">
-      {brands.map((brand) => (
-        <BrandCard
-          key={brand.id}
-          brand={brand}
-          fonts={fonts}
-          onDelete={onDeleteBrand}
-          onColorChange={onBrandColorChange}
-          onHexInputChange={onHexInputChange}
-          onFontChange={onBrandFontChange}
-          onReset={onResetBrand}
-        />
+    <div>
+      {brands.map((brand, index) => (
+        <React.Fragment key={brand.id}>
+          <BrandCard
+            brand={brand}
+            fonts={fonts}
+            onDelete={onDeleteBrand}
+            onColorChange={onBrandColorChange}
+            onHexInputChange={onHexInputChange}
+            onFontChange={onBrandFontChange}
+            onReset={onResetBrand}
+          />
+          {index < brands.length - 1 && <Separator />}
+        </React.Fragment>
       ))}
     </div>
   );

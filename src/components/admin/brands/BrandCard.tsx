@@ -34,13 +34,13 @@ const BrandCard: React.FC<BrandCardProps> = ({
   };
 
   return (
-    <div className="p-4 border rounded-md dark:border-gray-700">
+    <div className="py-4">
       <div className="grid grid-cols-12 gap-4 items-center">
-        {/* Brand name - 3 columns */}
-        <h3 className="font-medium text-gray-900 dark:text-gray-100 text-lg col-span-2">{brand.name}</h3>
+        {/* Brand name - expanded column */}
+        <h3 className="font-medium text-gray-900 dark:text-gray-100 text-lg col-span-4">{brand.name}</h3>
         
-        {/* Color picker - 4 columns */}
-        <div className="col-span-4 flex items-center gap-2">
+        {/* Color picker - aligned to right */}
+        <div className="col-span-3 flex items-center gap-2 justify-end">
           <Label htmlFor={`color-${brand.id}`} className="whitespace-nowrap">Color:</Label>
           <div className="flex items-center space-x-2">
             <div 
@@ -68,8 +68,8 @@ const BrandCard: React.FC<BrandCardProps> = ({
           </div>
         </div>
         
-        {/* Font selector - 5 columns */}
-        <div className="col-span-5 flex items-center gap-2">
+        {/* Font selector - aligned to right */}
+        <div className="col-span-4 flex items-center gap-2 justify-end">
           <Label htmlFor={`font-${brand.id}`} className="whitespace-nowrap">Font:</Label>
           <Select
             value={brand.font}
@@ -88,15 +88,15 @@ const BrandCard: React.FC<BrandCardProps> = ({
           </Select>
         </div>
         
-        {/* Actions - 1 column */}
-        <div className="col-span-1 flex justify-end gap-1">
+        {/* Actions - neutral colors */}
+        <div className="col-span-1 flex justify-end gap-2">
           {/* Reset button */}
           {onReset && (
             <Button
               variant="ghost"
               size="icon"
               onClick={() => onReset(brand.id, brand.name)}
-              className="text-blue-500 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800/20"
               title="Reset brand"
             >
               <RotateCcw className="h-4 w-4" />
@@ -109,7 +109,7 @@ const BrandCard: React.FC<BrandCardProps> = ({
             variant="ghost"
             size="icon"
             onClick={() => onDelete(brand.id, brand.name)}
-            className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+            className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800/20"
             title="Delete brand"
           >
             <Trash className="h-4 w-4" />
