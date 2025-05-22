@@ -72,9 +72,6 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
           <div>
             <p className="text-brand-green font-bold text-lg">${vehicle.price.toLocaleString()}</p>
             <p className="text-xs text-gray-500">Drive away</p>
-            {vehicle.condition !== 'New' && (
-              <p className="text-xs text-gray-500">Est. {vehicle.mileage.toLocaleString()} miles</p>
-            )}
           </div>
           <div className="text-right">
             <p className="text-brand-green font-semibold">${weeklyPrice}/week</p>
@@ -93,6 +90,11 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
           <span className="px-2 py-1 bg-gray-50 rounded">
             {vehicle.bodyType}
           </span>
+          {vehicle.condition !== 'New' && (
+            <span className="px-2 py-1 bg-gray-50 rounded">
+              {vehicle.mileage.toLocaleString()} miles
+            </span>
+          )}
         </div>
       </div>
       
