@@ -3,7 +3,7 @@ import React from 'react';
 import { Vehicle } from '@/types/vehicle';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Heart } from 'lucide-react';
+import { Heart, Image } from 'lucide-react';
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -32,12 +32,19 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
     <Card className="overflow-hidden hover:shadow transition-shadow duration-200 bg-white border border-gray-200">
       <div className="relative">
         {/* Vehicle Image */}
-        <div className="relative pb-[60%]">
-          <img 
-            src={vehicle.imageUrl || 'https://placehold.co/600x400/e2e8f0/64748b?text=Vehicle+Image'} 
-            alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
+        <div className="relative pb-[60%] bg-gray-100">
+          {vehicle.imageUrl ? (
+            <img 
+              src={vehicle.imageUrl} 
+              alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          ) : (
+            <div className="absolute inset-0 w-full h-full flex items-center justify-center">
+              <Image className="h-16 w-16 text-gray-300" />
+            </div>
+          )}
+          
           {/* Condition badge if new */}
           {vehicle.condition === 'New' && (
             <span className="absolute top-2 left-2 bg-brand-green text-white text-xs font-semibold px-2 py-1 rounded">
@@ -45,15 +52,6 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
             </span>
           )}
         </div>
-        
-        {/* Heart/favorite button */}
-        <Button 
-          variant="outline" 
-          size="icon" 
-          className="absolute top-2 right-2 h-8 w-8 rounded-full bg-white/80 hover:bg-white"
-        >
-          <Heart className="h-4 w-4" />
-        </Button>
       </div>
       
       <div className="p-4">
@@ -62,6 +60,13 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
           <h3 className="text-base font-medium text-gray-900 line-clamp-1">
             {vehicle.year} {vehicle.make} {vehicle.model}
           </h3>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-8 w-8 p-0 text-gray-400 hover:text-brand-green hover:bg-transparent"
+          >
+            <Heart className="h-5 w-5" />
+          </Button>
         </div>
         
         {/* Vehicle Trim */}
