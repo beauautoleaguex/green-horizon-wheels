@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { SearchFilters } from './SearchFilters';
@@ -136,10 +137,9 @@ export const VehicleSearch = () => {
           {/* Main content area */}
           <div className="flex-1 w-full bg-slate-50">
             <div className="flex flex-col px-4 md:px-8 py-4">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 bg-white p-4 border border-gray-200 rounded-md">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
                 <div>
-                  <h1 className="text-xl font-semibold text-gray-900">Browse Vehicles</h1>
-                  <p className="text-gray-500 mt-1">{totalVehicles} results</p>
+                  <p className="text-gray-900 font-medium">{totalVehicles} vehicles for sale in Australia</p>
                 </div>
                 <div className="mt-3 sm:mt-0">
                   <SortDropdown onSort={handleSort} />
