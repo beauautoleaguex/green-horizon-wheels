@@ -12,7 +12,13 @@ export const Navigation = () => {
         <div className="flex justify-between h-16 items-center">
           {/* Logo and left navigation */}
           <div className="flex items-center gap-8">
-            <Link to="/" className="text-xl font-semibold text-brand-green">mymoto</Link>
+            <Link to="/" className="flex items-center">
+              <img 
+                src="/lovable-uploads/d99fbaef-645b-46ba-975c-5b747c2667b9.png" 
+                alt="mymoto" 
+                className="h-8" 
+              />
+            </Link>
             <NavigationMenu className="hidden md:flex">
               <NavigationMenuList>
                 <NavigationMenuItem>

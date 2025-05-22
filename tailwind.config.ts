@@ -64,9 +64,9 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
                 brand: {
-                    green: '#10B981',
+                    green: '#008077', // Updated brand color
                     light: '#D1FAE5',
-                    dark: '#059669'
+                    dark: '#006057'
                 },
 			},
 			borderRadius: {
