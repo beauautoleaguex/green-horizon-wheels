@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { SearchFilters } from './SearchFilters';
@@ -125,15 +124,13 @@ export const VehicleSearch = () => {
           </button>
 
           {/* Filters sidebar - fixed position and width on desktop */}
-          <div className={`md:sticky md:top-0 md:h-screen md:w-72 md:flex-shrink-0 md:overflow-y-auto md:bg-white md:border-r border-gray-200 md:block ${isFilterOpen ? 'block' : 'hidden'}`}>
-            <div className="p-4">
-              <SearchFilters 
-                onFilter={handleFilter} 
-                availableMakes={makes}
-                availableModels={models}
-                availableBodyTypes={bodyTypes}
-              />
-            </div>
+          <div className={`md:sticky md:top-0 md:h-screen md:w-72 md:flex-shrink-0 md:overflow-y-auto md:bg-white md:shadow-sm md:block ${isFilterOpen ? 'block' : 'hidden'}`}>
+            <SearchFilters 
+              onFilter={handleFilter} 
+              availableMakes={makes}
+              availableModels={models}
+              availableBodyTypes={bodyTypes}
+            />
           </div>
 
           {/* Main content area */}

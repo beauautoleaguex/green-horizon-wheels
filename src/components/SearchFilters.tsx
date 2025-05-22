@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Slider } from "@/components/ui/slider";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
 import { VehicleFilters } from '@/services/vehicleService';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Separator } from './ui/separator';
 
 interface SearchFiltersProps {
   onFilter: (filters: VehicleFilters) => void;
@@ -125,14 +125,14 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 max-h-[calc(100vh-120px)] overflow-y-auto">
+    <div className="bg-white max-h-[calc(100vh-120px)] overflow-y-auto">
       <div className="space-y-2">
-        <h2 className="text-lg font-medium text-gray-900 mb-4">Filters</h2>
+        <h2 className="text-lg font-medium text-gray-900 p-4">Filters</h2>
         
-        <Accordion type="single" collapsible defaultValue="make-model" className="space-y-2">
-          <AccordionItem value="make-model" className="border-b">
-            <AccordionTrigger className="py-3">Make and Model</AccordionTrigger>
-            <AccordionContent>
+        <Accordion type="single" collapsible defaultValue="make-model" className="space-y-0">
+          <AccordionItem value="make-model" className="border-0">
+            <AccordionTrigger className="py-3 px-4">Make and Model</AccordionTrigger>
+            <AccordionContent className="px-4">
               <div className="space-y-4 pt-2">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Make</label>
@@ -172,10 +172,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               </div>
             </AccordionContent>
           </AccordionItem>
+          <Separator />
           
-          <AccordionItem value="price" className="border-b">
-            <AccordionTrigger className="py-3">Price Range</AccordionTrigger>
-            <AccordionContent>
+          <AccordionItem value="price" className="border-0">
+            <AccordionTrigger className="py-3 px-4">Price Range</AccordionTrigger>
+            <AccordionContent className="px-4">
               <div className="pt-2">
                 <div className="text-sm text-gray-700 mb-1">
                   ${filters.minPrice?.toLocaleString()} - ${filters.maxPrice?.toLocaleString()}
@@ -194,10 +195,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               </div>
             </AccordionContent>
           </AccordionItem>
+          <Separator />
           
-          <AccordionItem value="year" className="border-b">
-            <AccordionTrigger className="py-3">Year</AccordionTrigger>
-            <AccordionContent>
+          <AccordionItem value="year" className="border-0">
+            <AccordionTrigger className="py-3 px-4">Year</AccordionTrigger>
+            <AccordionContent className="px-4">
               <div className="pt-2">
                 <div className="text-sm text-gray-700 mb-1">
                   {filters.minYear} - {filters.maxYear}
@@ -216,10 +218,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               </div>
             </AccordionContent>
           </AccordionItem>
+          <Separator />
           
-          <AccordionItem value="body-type" className="border-b">
-            <AccordionTrigger className="py-3">Body Type</AccordionTrigger>
-            <AccordionContent>
+          <AccordionItem value="body-type" className="border-0">
+            <AccordionTrigger className="py-3 px-4">Body Type</AccordionTrigger>
+            <AccordionContent className="px-4">
               <div className="pt-2">
                 <Select 
                   value={filters.bodyType} 
@@ -238,10 +241,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               </div>
             </AccordionContent>
           </AccordionItem>
+          <Separator />
           
-          <AccordionItem value="condition" className="border-b">
-            <AccordionTrigger className="py-3">Condition</AccordionTrigger>
-            <AccordionContent>
+          <AccordionItem value="condition" className="border-0">
+            <AccordionTrigger className="py-3 px-4">Condition</AccordionTrigger>
+            <AccordionContent className="px-4">
               <div className="pt-2 space-y-2">
                 {CONDITIONS.map(condition => (
                   <div key={condition} className="flex items-center space-x-2">
@@ -268,10 +272,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               </div>
             </AccordionContent>
           </AccordionItem>
+          <Separator />
           
-          <AccordionItem value="mileage" className="border-b">
-            <AccordionTrigger className="py-3">Mileage</AccordionTrigger>
-            <AccordionContent>
+          <AccordionItem value="mileage" className="border-0">
+            <AccordionTrigger className="py-3 px-4">Mileage</AccordionTrigger>
+            <AccordionContent className="px-4">
               <div className="pt-2">
                 <div className="text-sm text-gray-700 mb-1">
                   {filters.minMileage?.toLocaleString()} - {filters.maxMileage?.toLocaleString()} miles
@@ -290,10 +295,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               </div>
             </AccordionContent>
           </AccordionItem>
+          <Separator />
           
-          <AccordionItem value="transmission" className="border-b">
-            <AccordionTrigger className="py-3">Transmission</AccordionTrigger>
-            <AccordionContent>
+          <AccordionItem value="transmission" className="border-0">
+            <AccordionTrigger className="py-3 px-4">Transmission</AccordionTrigger>
+            <AccordionContent className="px-4">
               <div className="pt-2 space-y-2">
                 {TRANSMISSION_TYPES.map(transmission => (
                   <div key={transmission} className="flex items-center space-x-2">
@@ -320,10 +326,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               </div>
             </AccordionContent>
           </AccordionItem>
+          <Separator />
           
-          <AccordionItem value="fuel-type" className="border-b">
-            <AccordionTrigger className="py-3">Fuel Type</AccordionTrigger>
-            <AccordionContent>
+          <AccordionItem value="fuel-type" className="border-0">
+            <AccordionTrigger className="py-3 px-4">Fuel Type</AccordionTrigger>
+            <AccordionContent className="px-4">
               <div className="pt-2 space-y-2">
                 {FUEL_TYPES.map(fuelType => (
                   <div key={fuelType} className="flex items-center space-x-2">
@@ -350,10 +357,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               </div>
             </AccordionContent>
           </AccordionItem>
+          <Separator />
           
-          <AccordionItem value="engine" className="border-b">
-            <AccordionTrigger className="py-3">Engine Size</AccordionTrigger>
-            <AccordionContent>
+          <AccordionItem value="engine" className="border-0">
+            <AccordionTrigger className="py-3 px-4">Engine Size</AccordionTrigger>
+            <AccordionContent className="px-4">
               <div className="pt-2">
                 <Select 
                   value={filters.engineSize?.toString() || 'all'} 
@@ -376,10 +384,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               </div>
             </AccordionContent>
           </AccordionItem>
+          <Separator />
           
-          <AccordionItem value="color" className="border-b">
-            <AccordionTrigger className="py-3">Color</AccordionTrigger>
-            <AccordionContent>
+          <AccordionItem value="color" className="border-0">
+            <AccordionTrigger className="py-3 px-4">Color</AccordionTrigger>
+            <AccordionContent className="px-4">
               <div className="pt-2 grid grid-cols-2 gap-2">
                 {COLORS.map(color => (
                   <div key={color} className="flex items-center space-x-2">
@@ -406,10 +415,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               </div>
             </AccordionContent>
           </AccordionItem>
+          <Separator />
           
-          <AccordionItem value="features" className="border-b">
-            <AccordionTrigger className="py-3">Features</AccordionTrigger>
-            <AccordionContent>
+          <AccordionItem value="features" className="border-0">
+            <AccordionTrigger className="py-3 px-4">Features</AccordionTrigger>
+            <AccordionContent className="px-4">
               <div className="pt-2 grid grid-cols-1 gap-2">
                 {FEATURES.map(feature => (
                   <div key={feature} className="flex items-center space-x-2">
@@ -426,10 +436,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               </div>
             </AccordionContent>
           </AccordionItem>
+          <Separator />
           
-          <AccordionItem value="seats" className="border-b">
-            <AccordionTrigger className="py-3">Number of Seats</AccordionTrigger>
-            <AccordionContent>
+          <AccordionItem value="seats" className="border-0">
+            <AccordionTrigger className="py-3 px-4">Number of Seats</AccordionTrigger>
+            <AccordionContent className="px-4">
               <div className="pt-2 space-y-2">
                 {SEATS.map(seat => (
                   <div key={seat} className="flex items-center space-x-2">
@@ -458,7 +469,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           </AccordionItem>
         </Accordion>
         
-        <div className="flex flex-col space-y-2 pt-4">
+        <div className="flex flex-col space-y-2 p-4">
           <button
             onClick={applyFilters}
             className="w-full bg-brand-green hover:bg-brand-dark text-white py-2 px-4 rounded-md transition duration-150 ease-in-out"
