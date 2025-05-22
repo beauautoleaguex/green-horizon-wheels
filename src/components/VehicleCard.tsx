@@ -71,13 +71,14 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
         <div className="flex justify-between items-end mb-3">
           <div>
             <p className="text-brand-green font-bold text-lg">${vehicle.price.toLocaleString()}</p>
+            <p className="text-xs text-gray-500">Drive away</p>
             {vehicle.condition !== 'New' && (
               <p className="text-xs text-gray-500">Est. {vehicle.mileage.toLocaleString()} miles</p>
             )}
           </div>
           <div className="text-right">
             <p className="text-brand-green font-semibold">${weeklyPrice}/week</p>
-            <p className="text-xs text-gray-500">Finance Est*</p>
+            <p className="text-xs text-gray-500">with finance</p>
           </div>
         </div>
         
