@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, FC } from 'react';
 import { ThemeContextType, ThemeMode, TypographyScale, Brand } from '../types/theme';
 import { generateColorRamp, CurveType } from '../utils/colorUtils';
@@ -85,40 +84,47 @@ export const ThemeProvider: FC<{ children: React.ReactNode }> = ({ children }) =
     setBrands(prev => prev.filter(brand => brand.id !== brandId));
   };
 
-  // Update brand color
-  const updateBrandColor = (color: string) => {
-    // Update current brand
-    const updatedBrand = { ...currentBrand, primaryColor: color };
-    setCurrentBrand(updatedBrand);
+  // Update brand color (for current brand)
+  const updateBrandColor = (brandId: string, color: string) => {
+    // Check if updating current brand
+    const isCurrentBrand = brandId === currentBrand.id;
     
     // Update brands array
     const updatedBrands = brands.map(brand => 
-      brand.id === currentBrand.id ? updatedBrand : brand
+      brand.id === brandId ? { ...brand, primaryColor: color } : brand
     );
     setBrands(updatedBrands);
     
-    // Update brand color in color scales
-    const newColors = {...colors};
-    if (newColors.brand && newColors.brand[9]) {
-      newColors.brand[9] = color;
+    // If updating current brand, also update current brand state and color scales
+    if (isCurrentBrand) {
+      // Update current brand state
+      setCurrentBrand(prev => ({ ...prev, primaryColor: color }));
+      
+      // Update brand color in color scales
+      const newColors = {...colors};
+      if (newColors.brand && newColors.brand[9]) {
+        newColors.brand[9] = color;
+      }
+      setColors(newColors);
     }
-    setColors(newColors);
   };
 
   // Update brand font
-  const updateBrandFont = (font: string) => {
-    // Update current brand
-    const updatedBrand = { ...currentBrand, font };
-    setCurrentBrand(updatedBrand);
+  const updateBrandFont = (brandId: string, font: string) => {
+    // Check if updating current brand
+    const isCurrentBrand = brandId === currentBrand.id;
     
     // Update brands array
     const updatedBrands = brands.map(brand => 
-      brand.id === currentBrand.id ? updatedBrand : brand
+      brand.id === brandId ? { ...brand, font } : brand
     );
     setBrands(updatedBrands);
     
-    // Update current font
-    setCurrentFont(font);
+    // If updating current brand, also update current font
+    if (isCurrentBrand) {
+      setCurrentBrand(prev => ({ ...prev, font }));
+      setCurrentFont(font);
+    }
   };
 
   // Detect user's preferred color scheme on initial load

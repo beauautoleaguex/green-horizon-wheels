@@ -53,8 +53,8 @@ export interface ThemeContextType {
   updateFontWeight: (name: string, value: number) => void;
   updateTypographyScale: (scale: TypographyScale) => void;
   switchBrand: (brandId: string) => void;
-  updateBrandColor: (color: string) => void;
-  updateBrandFont: (font: string) => void;
+  updateBrandColor: (brandId: string, color: string) => void;
+  updateBrandFont: (brandId: string, font: string) => void;
   addBrand: (brand: Omit<Brand, 'id'>) => void;
   deleteBrand: (brandId: string) => void;
   saveTheme: () => void;

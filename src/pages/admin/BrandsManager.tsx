@@ -16,10 +16,9 @@ import { toast } from '@/components/ui/use-toast';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Palette, Plus, Save, Trash } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
-import { v4 as uuidv4 } from 'uuid';
 
 const BrandsManager: React.FC = () => {
-  const { brands, fonts, addBrand, deleteBrand, saveTheme } = useTheme();
+  const { brands, fonts, addBrand, deleteBrand, updateBrandColor, updateBrandFont, saveTheme } = useTheme();
   const [newBrand, setNewBrand] = useState<Omit<Brand, 'id'>>({
     name: '',
     primaryColor: '#3B82F6',
@@ -63,6 +62,16 @@ const BrandsManager: React.FC = () => {
       title: "Brands saved",
       description: "Your brand settings have been saved successfully."
     });
+  };
+
+  // Handle brand color update
+  const handleBrandColorChange = (brandId: string, color: string) => {
+    updateBrandColor(brandId, color);
+  };
+
+  // Handle brand font update
+  const handleBrandFontChange = (brandId: string, font: string) => {
+    updateBrandFont(brandId, font);
   };
 
   return (
@@ -159,7 +168,7 @@ const BrandsManager: React.FC = () => {
         </div>
         
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Your Brands</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Brands</h2>
           
           {brands.length === 0 ? (
             <p className="text-gray-500 dark:text-gray-400">No brands added yet.</p>
@@ -168,30 +177,67 @@ const BrandsManager: React.FC = () => {
               {brands.map((brand) => (
                 <div 
                   key={brand.id} 
-                  className="flex items-center justify-between p-4 border rounded-md dark:border-gray-700"
+                  className="p-4 border rounded-md dark:border-gray-700"
                 >
-                  <div className="flex items-center gap-3">
-                    <div 
-                      className="w-8 h-8 rounded-md" 
-                      style={{ backgroundColor: brand.primaryColor }}
-                    />
-                    <div>
-                      <h3 className="font-medium text-gray-900 dark:text-gray-100">{brand.name}</h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400" style={{ fontFamily: brand.font }}>
-                        {brand.font.split(',')[0]}
-                      </p>
-                    </div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-medium text-gray-900 dark:text-gray-100 text-lg">{brand.name}</h3>
+                    
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDeleteBrand(brand.id, brand.name)}
+                      className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    >
+                      <Trash className="h-4 w-4" />
+                      <span className="sr-only">Delete {brand.name}</span>
+                    </Button>
                   </div>
                   
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDeleteBrand(brand.id, brand.name)}
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
-                  >
-                    <Trash className="h-4 w-4" />
-                    <span className="sr-only">Delete {brand.name}</span>
-                  </Button>
+                  <div className="space-y-3">
+                    {/* Color picker for the brand */}
+                    <div>
+                      <Label htmlFor={`color-${brand.id}`}>Brand Color</Label>
+                      <div className="flex gap-3 items-center mt-1">
+                        <div 
+                          className="w-8 h-8 rounded-md"
+                          style={{ backgroundColor: brand.primaryColor }}
+                        />
+                        <Input
+                          id={`color-${brand.id}`}
+                          type="color"
+                          value={brand.primaryColor}
+                          onChange={(e) => handleBrandColorChange(brand.id, e.target.value)}
+                          className="w-full h-9"
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Font selector for the brand */}
+                    <div>
+                      <Label htmlFor={`font-${brand.id}`}>Brand Font</Label>
+                      <Select
+                        value={brand.font}
+                        onValueChange={(value) => handleBrandFontChange(brand.id, value)}
+                      >
+                        <SelectTrigger id={`font-${brand.id}`} className="mt-1">
+                          <SelectValue placeholder="Select a font" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {fonts.map((font) => (
+                            <SelectItem key={font} value={font} style={{ fontFamily: font }}>
+                              {font.split(',')[0]}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      
+                      <div className="mt-2 p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                        <p className="text-sm" style={{ fontFamily: brand.font }}>
+                          The quick brown fox jumps over the lazy dog.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
