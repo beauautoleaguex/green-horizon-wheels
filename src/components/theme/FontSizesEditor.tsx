@@ -28,11 +28,21 @@ export const FontSizesEditor: React.FC<FontSizesEditorProps> = ({
     onFontSizeChange(name, value);
   };
 
+  // Create a sortable array of entries
+  const fontSizesEntries = Object.entries(fontSizes).map(([name, size]) => {
+    // Extract numeric value for sorting
+    const numericValue = parseFloat(size);
+    return { name, size, numericValue };
+  });
+
+  // Sort by size (largest to smallest)
+  const sortedFontSizes = fontSizesEntries.sort((a, b) => b.numericValue - a.numericValue);
+
   return (
     <div className="p-4 border rounded-lg bg-white">
       <h3 className="font-semibold mb-3 text-lg">Font Sizes</h3>
       <div className="grid gap-4">
-        {Object.entries(fontSizes).map(([name, size]) => (
+        {sortedFontSizes.map(({ name, size }) => (
           <div key={name} className="grid grid-cols-12 gap-2 items-center">
             <Label className="col-span-2">{name}:</Label>
             <Input

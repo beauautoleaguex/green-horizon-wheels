@@ -34,7 +34,7 @@ export const FontWeightsEditor: React.FC<FontWeightsEditorProps> = ({
               <span className="text-sm w-8">{weight}</span>
             </div>
             <div 
-              className="col-span-7 overflow-hidden whitespace-nowrap text-ellipsis" 
+              className="col-span-7 overflow-hidden whitespace-nowrap text-ellipsis text-4xl" 
               style={{ 
                 fontFamily: currentFont, 
                 fontWeight: weight 
