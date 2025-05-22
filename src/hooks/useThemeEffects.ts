@@ -35,32 +35,17 @@ export const useThemeEffects = (
     });
   }, [colors, currentFont, fontSizes, fontWeights]);
   
-  // Apply dark/light mode changes
+  // Apply light mode only - we've removed dark mode
   useEffect(() => {
-    if (mode === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    // Always ensure light mode is applied
+    document.documentElement.classList.remove('dark');
     
-    // Save theme mode preference to localStorage
-    localStorage.setItem('themeMode', mode);
+    // Don't save mode preference to localStorage anymore
+    // localStorage.setItem('themeMode', mode);
   }, [mode]);
 
-  // Detect user's preferred color scheme on initial load
-  useEffect(() => {
-    const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    // Check if there's a stored preference
-    const hasStoredPreference = !!localStorage.getItem('themeMode');
-    
-    // Return object for component usage
-    return () => {}; // Empty cleanup function to satisfy TypeScript
-  }, []);
+  // We've removed the effect that detected user's preferred color scheme
 
-  // Return the detected preference data
-  const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const hasStoredPreference = !!localStorage.getItem('themeMode');
-  
-  return { userPrefersDark, hasStoredPreference };
+  // Return an empty object as we no longer need to detect preferences
+  return {};
 };

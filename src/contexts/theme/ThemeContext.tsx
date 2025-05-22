@@ -22,7 +22,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     setFontSizes,
     fontWeights,
     setFontWeights,
-    mode,
+    // We're ignoring the stored mode and always setting it to 'light'
     setMode,
     currentTypographyScale,
     setCurrentTypographyScale,
@@ -31,6 +31,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     saveTheme,
     resetTheme
   } = useThemeStorage();
+
+  // Always set mode to 'light' regardless of localStorage or system preference
+  const mode: ThemeMode = 'light';
 
   // Update functions for colors
   const updateColor = (colorName: string, step: number, value: string) => {
@@ -60,12 +63,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     setCurrentFont,
   });
 
-  // Apply theme effects
+  // Apply theme effects - but we've overridden the mode to always be 'light'
   useThemeEffects(colors, currentFont, fontSizes, fontWeights, mode);
 
   // Toggle theme mode
   const toggleMode = () => {
-    setMode(prevMode => prevMode === 'light' ? 'dark' : 'light');
+    // This is now a no-op since we always want light mode
+    // setMode is not used anymore as we've hardcoded mode to 'light'
   };
 
   // Font and typography functions

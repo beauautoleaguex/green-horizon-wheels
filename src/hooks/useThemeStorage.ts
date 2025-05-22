@@ -35,11 +35,8 @@ export const useThemeStorage = () => {
     return savedFontWeights ? JSON.parse(savedFontWeights) : initialFontWeights;
   });
   
-  // Add theme mode state
-  const [mode, setMode] = useState<ThemeMode>(() => {
-    const savedMode = localStorage.getItem(THEME_STORAGE_KEYS.MODE);
-    return (savedMode as ThemeMode) || 'light';
-  });
+  // Always set mode to 'light', ignoring any saved preference
+  const [mode, setMode] = useState<ThemeMode>('light');
 
   // Add current typography scale state
   const [currentTypographyScale, setCurrentTypographyScale] = useState<TypographyScale>(() => {
@@ -62,13 +59,14 @@ export const useThemeStorage = () => {
     return initialBrands[0];
   });
 
-  // Save theme to localStorage
+  // Save theme to localStorage - but don't save mode anymore since we always use light mode
   const saveTheme = () => {
     localStorage.setItem(THEME_STORAGE_KEYS.COLORS, JSON.stringify(colors));
     localStorage.setItem(THEME_STORAGE_KEYS.FONT, currentFont);
     localStorage.setItem(THEME_STORAGE_KEYS.FONT_SIZES, JSON.stringify(fontSizes));
     localStorage.setItem(THEME_STORAGE_KEYS.FONT_WEIGHTS, JSON.stringify(fontWeights));
-    localStorage.setItem(THEME_STORAGE_KEYS.MODE, mode);
+    // We don't save mode anymore since we always use light
+    // localStorage.setItem(THEME_STORAGE_KEYS.MODE, mode);
     localStorage.setItem(THEME_STORAGE_KEYS.TYPOGRAPHY_SCALE, currentTypographyScale);
     localStorage.setItem(THEME_STORAGE_KEYS.BRANDS, JSON.stringify(brands));
     localStorage.setItem(THEME_STORAGE_KEYS.CURRENT_BRAND, JSON.stringify(currentBrand));
