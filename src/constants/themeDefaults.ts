@@ -1,4 +1,3 @@
-
 import { ThemeColors, FontSizes, FontWeights, ThemeMode, TypographyScale, TypographyScaleDefinition, Brand } from '../types/theme';
 
 // Initial theme values
@@ -191,19 +190,19 @@ export const initialTypographyScale: TypographyScale = 'classic';
 export const initialBrands: Brand[] = [
   {
     id: 'default',
-    name: 'Default Brand',
+    name: 'MyMoto',
     primaryColor: '#008077', // Current brand color
     font: 'Lexend, sans-serif',
   },
   {
     id: 'secondary',
-    name: 'Secondary Brand',
+    name: 'Carco',
     primaryColor: '#3B82F6', // Blue color
     font: 'Poppins, sans-serif',
   },
   {
     id: 'tertiary',
-    name: 'Tertiary Brand',
+    name: 'Maddington Toyota',
     primaryColor: '#F59E0B', // Amber color
     font: 'Montserrat, sans-serif',
   }
