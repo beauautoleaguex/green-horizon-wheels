@@ -19,6 +19,7 @@ import {
   getBodyTypes
 } from '@/services/vehicleService';
 import { toast } from '@/components/ui/use-toast';
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 export const VehicleSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -108,13 +109,13 @@ export const VehicleSearch = () => {
   }, [isError]);
 
   return (
-    <div className="bg-white min-h-screen flex flex-col">
+    <div className="bg-slate-50 min-h-screen flex flex-col">
       <Navigation />
-      <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
-        <div className="flex flex-col md:flex-row gap-6">
+      <div className="w-full mx-auto px-0 py-0 flex-grow">
+        <div className="flex flex-col md:flex-row">
           {/* Mobile filter toggle */}
           <button 
-            className="md:hidden flex items-center justify-center px-4 py-2 border rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 mb-4"
+            className="md:hidden flex items-center justify-center px-4 py-2 border rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 mb-4 mx-4 mt-4"
             onClick={() => setIsFilterOpen(!isFilterOpen)}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -123,56 +124,60 @@ export const VehicleSearch = () => {
             {isFilterOpen ? 'Hide Filters' : 'Show Filters'}
           </button>
 
-          {/* Filters sidebar - fixed width and position on desktop */}
-          <div className={`md:sticky md:top-6 md:self-start md:w-72 md:flex-shrink-0 md:block ${isFilterOpen ? 'block' : 'hidden'}`}>
-            <SearchFilters 
-              onFilter={handleFilter} 
-              availableMakes={makes}
-              availableModels={models}
-              availableBodyTypes={bodyTypes}
-            />
+          {/* Filters sidebar - fixed position and width on desktop */}
+          <div className={`md:sticky md:top-0 md:h-screen md:w-72 md:flex-shrink-0 md:overflow-y-auto md:bg-white md:border-r border-gray-200 md:block ${isFilterOpen ? 'block' : 'hidden'}`}>
+            <div className="p-4">
+              <SearchFilters 
+                onFilter={handleFilter} 
+                availableMakes={makes}
+                availableModels={models}
+                availableBodyTypes={bodyTypes}
+              />
+            </div>
           </div>
 
-          {/* Main content - expanded to fill available space */}
-          <div className="flex-1 w-full">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-              <div>
-                <h1 className="text-2xl font-semibold text-gray-900">Browse Vehicles</h1>
-                <p className="text-gray-500 mt-1">Showing {totalVehicles} results</p>
+          {/* Main content area */}
+          <div className="flex-1 w-full bg-slate-50">
+            <div className="flex flex-col px-4 md:px-8 py-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 bg-white p-4 border border-gray-200 rounded-md">
+                <div>
+                  <h1 className="text-xl font-semibold text-gray-900">Browse Vehicles</h1>
+                  <p className="text-gray-500 mt-1">{totalVehicles} results</p>
+                </div>
+                <div className="mt-3 sm:mt-0">
+                  <SortDropdown onSort={handleSort} />
+                </div>
               </div>
-              <div className="mt-3 sm:mt-0">
-                <SortDropdown onSort={handleSort} />
-              </div>
+
+              {isLoading ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+                  {[...Array(8)].map((_, index) => (
+                    <div key={index} className="bg-gray-100 animate-pulse rounded-md h-64"></div>
+                  ))}
+                </div>
+              ) : vehicles.length === 0 ? (
+                <div className="bg-white p-8 rounded-md shadow-sm border border-gray-200 text-center">
+                  <h3 className="text-lg font-medium text-gray-900">No vehicles found</h3>
+                  <p className="mt-1 text-gray-500">Try adjusting your filters for more results.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 animate-fade-in">
+                  {vehicles.map((vehicle) => (
+                    <VehicleCard key={vehicle.id} vehicle={vehicle} />
+                  ))}
+                </div>
+              )}
+
+              {vehicles.length > 0 && (
+                <div className="mt-8 mb-8 bg-white p-4 border border-gray-200 rounded-md">
+                  <Pagination 
+                    currentPage={currentPage} 
+                    totalPages={totalPages} 
+                    onPageChange={handlePageChange} 
+                  />
+                </div>
+              )}
             </div>
-
-            {isLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {[...Array(8)].map((_, index) => (
-                  <div key={index} className="bg-gray-100 animate-pulse rounded-lg h-64"></div>
-                ))}
-              </div>
-            ) : vehicles.length === 0 ? (
-              <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 text-center">
-                <h3 className="text-lg font-medium text-gray-900">No vehicles found</h3>
-                <p className="mt-1 text-gray-500">Try adjusting your filters for more results.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-fade-in">
-                {vehicles.map((vehicle) => (
-                  <VehicleCard key={vehicle.id} vehicle={vehicle} />
-                ))}
-              </div>
-            )}
-
-            {vehicles.length > 0 && (
-              <div className="mt-8 mb-8">
-                <Pagination 
-                  currentPage={currentPage} 
-                  totalPages={totalPages} 
-                  onPageChange={handlePageChange} 
-                />
-              </div>
-            )}
           </div>
         </div>
       </div>

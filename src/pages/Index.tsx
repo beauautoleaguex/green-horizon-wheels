@@ -4,9 +4,7 @@ import { VehicleSearch } from '@/components/VehicleSearch';
 
 const Index = () => {
   return (
-    <div className="w-full">
-      <VehicleSearch />
-    </div>
+    <VehicleSearch />
   );
 };
 
