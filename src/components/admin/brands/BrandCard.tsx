@@ -34,7 +34,7 @@ const BrandCard: React.FC<BrandCardProps> = ({
   };
 
   return (
-    <div className="py-4">
+    <div className="py-4 px-6">
       <div className="grid grid-cols-12 gap-4 items-center">
         {/* Brand name - expanded column */}
         <h3 className="font-medium text-gray-900 dark:text-gray-100 text-lg col-span-4">{brand.name}</h3>

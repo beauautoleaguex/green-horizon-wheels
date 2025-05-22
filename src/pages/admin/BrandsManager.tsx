@@ -103,28 +103,18 @@ const BrandsManager: React.FC = () => {
             Back to Theme Editor
           </Link>
         </div>
-
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Brands</h2>
-          <Button 
-            onClick={() => setIsDialogOpen(true)}
-            className="mb-4"
-          >
-            <Plus className="h-4 w-4 mr-1" />
-            Add a new brand
-          </Button>
-          
-          {/* Modal Dialog for adding a new brand */}
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogContent>
-              <DialogTitle className="mb-4">Add New Brand</DialogTitle>
-              <AddBrandForm fonts={fonts} onAddBrand={handleAddBrand} />
-            </DialogContent>
-          </Dialog>
-        </div>
         
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Brands</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Brands</h2>
+            <Button 
+              onClick={() => setIsDialogOpen(true)}
+              size="sm"
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              Add a new brand
+            </Button>
+          </div>
           <BrandList
             brands={brands}
             fonts={fonts}
@@ -136,6 +126,14 @@ const BrandsManager: React.FC = () => {
           />
         </div>
       </div>
+      
+      {/* Modal Dialog for adding a new brand */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogTitle className="mb-4">Add New Brand</DialogTitle>
+          <AddBrandForm fonts={fonts} onAddBrand={handleAddBrand} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
