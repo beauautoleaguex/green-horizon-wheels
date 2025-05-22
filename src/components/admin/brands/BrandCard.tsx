@@ -66,13 +66,13 @@ const BrandCard: React.FC<BrandCardProps> = ({
 
   return (
     <div className="py-4 px-6">
-      <div className="grid grid-cols-12 gap-4 items-center">
-        {/* Logo - with hover edit functionality */}
+      <div className="grid grid-cols-12 gap-6 items-center">
+        {/* Logo - with fixed height of 48px while maintaining aspect ratio */}
         <div className="col-span-1 flex justify-center">
           {brand.logo ? (
             <HoverCard>
               <HoverCardTrigger>
-                <div className="relative group w-10 h-10">
+                <div className="relative group h-12 w-12">
                   <AspectRatio ratio={1/1} className="rounded-full overflow-hidden border border-gray-200 dark:border-gray-600">
                     <div 
                       className="h-full w-full cursor-pointer"
@@ -103,7 +103,7 @@ const BrandCard: React.FC<BrandCardProps> = ({
             <Button
               variant="outline"
               size="sm"
-              className="h-10 w-10 p-0"
+              className="h-12 w-12 p-0"
               onClick={() => {
                 const logoInput = document.getElementById(`logo-upload-${brand.id}`);
                 if (logoInput) logoInput.click();
@@ -124,14 +124,14 @@ const BrandCard: React.FC<BrandCardProps> = ({
         </div>
         
         {/* Brand name */}
-        <h3 className="font-medium text-gray-900 dark:text-gray-100 text-lg col-span-3">{brand.name}</h3>
+        <h3 className="font-medium text-gray-900 dark:text-gray-100 text-lg col-span-2">{brand.name}</h3>
         
         {/* Color picker - optimized width */}
-        <div className="col-span-2 flex items-center gap-2">
-          <Label htmlFor={`color-${brand.id}`} className="whitespace-nowrap text-sm">Color:</Label>
+        <div className="col-span-2 flex items-center gap-3">
+          <Label htmlFor={`color-${brand.id}`} className="whitespace-nowrap text-sm shrink-0">Color:</Label>
           <div className="flex items-center gap-2">
             <div 
-              className="w-5 h-5 rounded-md cursor-pointer border border-gray-200 dark:border-gray-600"
+              className="w-6 h-6 rounded-md cursor-pointer border border-gray-200 dark:border-gray-600"
               style={{ backgroundColor: brand.primaryColor }}
               onClick={() => {
                 const colorInput = document.getElementById(`color-${brand.id}`);
@@ -142,7 +142,7 @@ const BrandCard: React.FC<BrandCardProps> = ({
               id={`hex-${brand.id}`}
               value={brand.primaryColor}
               onChange={(e) => onHexInputChange(brand.id, e.target.value)}
-              className="w-20 font-mono text-xs px-2"
+              className="w-16 font-mono text-xs px-1.5 h-8"
               maxLength={7}
             />
             <Input
@@ -155,14 +155,14 @@ const BrandCard: React.FC<BrandCardProps> = ({
           </div>
         </div>
         
-        {/* Font selector - adjusted column width */}
-        <div className="col-span-5 flex items-center gap-2">
-          <Label htmlFor={`font-${brand.id}`} className="whitespace-nowrap text-sm">Font:</Label>
+        {/* Font selector - reduced column width */}
+        <div className="col-span-6 flex items-center gap-3">
+          <Label htmlFor={`font-${brand.id}`} className="whitespace-nowrap text-sm shrink-0">Font:</Label>
           <Select
             value={brand.font}
             onValueChange={(value) => onFontChange(brand.id, value)}
           >
-            <SelectTrigger id={`font-${brand.id}`} className="w-full">
+            <SelectTrigger id={`font-${brand.id}`} className="max-w-xs">
               <SelectValue placeholder="Select a font" />
             </SelectTrigger>
             <SelectContent>
@@ -176,7 +176,7 @@ const BrandCard: React.FC<BrandCardProps> = ({
         </div>
         
         {/* Actions */}
-        <div className="col-span-1 flex justify-end gap-1">
+        <div className="col-span-1 flex justify-end gap-2">
           {/* Reset button */}
           {onReset && (
             <Button
