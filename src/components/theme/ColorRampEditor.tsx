@@ -120,14 +120,14 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
   };
 
   return (
-    <div className="p-4 border bg-white dark:bg-gray-800 dark:border-gray-700 rounded-md">
+    <div className="p-4 border bg-white dark:bg-gray-800 dark:border-gray-700 rounded-md shadow-sm">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-semibold text-lg capitalize text-gray-900 dark:text-gray-100">{colorName}</h3>
         <div className="flex items-center gap-2">
           <Label htmlFor={`${colorName}-base`} className="text-sm text-gray-700 dark:text-gray-300">Base Color:</Label>
           <div className="flex items-center gap-1">
             <div 
-              className="w-6 h-6 border border-gray-200 dark:border-gray-600 cursor-pointer flex items-center justify-center"
+              className="w-6 h-6 border border-gray-200 dark:border-gray-600 cursor-pointer flex items-center justify-center rounded-md"
               style={{ backgroundColor: baseColor }}
               onClick={() => {
                 // Use the hidden input's click event
@@ -156,12 +156,12 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
         <div className="flex items-center justify-between">
           <Label className="text-sm text-gray-700 dark:text-gray-300">Distribution Curve:</Label>
           <Select value={selectedCurve} onValueChange={(value) => handleCurveChange(value as CurveType)}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[180px] dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
               <SelectValue placeholder="Select curve" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
               {curveOptions.map(option => (
-                <SelectItem key={option.value} value={option.value} className="flex items-center justify-between">
+                <SelectItem key={option.value} value={option.value} className="flex items-center justify-between dark:text-gray-200 dark:focus:bg-gray-600 dark:hover:bg-gray-600">
                   <span>{option.label}</span>
                   {(option.value === 'accessibility-AA' || option.value === 'accessibility-AAA') && (
                     <CheckCircle2 className="h-4 w-4 ml-2 text-green-500" />
@@ -177,14 +177,14 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
       </div>
       
       {/* Color Ramp Display */}
-      <div className="flex w-full">
+      <div className="flex w-full rounded-md overflow-hidden">
         {sortedEntries.map(({ step, color }) => (
           <div 
             key={`${colorName}-${step}`} 
             className="flex-1 flex flex-col items-center"
           >
             <div 
-              className="w-full h-10 border-t border-b border-r first:border-l cursor-pointer relative group overflow-hidden"
+              className="w-full h-10 border-t border-b border-r first:border-l cursor-pointer relative group overflow-hidden dark:border-gray-600"
               style={{ backgroundColor: color }}
               onClick={() => {
                 // Use the hidden input's click event
@@ -194,8 +194,8 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
                 }
               }}
             >
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10">
-                <Palette className="w-4 h-4 text-white" />
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10 dark:bg-white/10">
+                <Palette className="w-4 h-4 text-white dark:text-gray-200" />
               </div>
             </div>
             <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{step}</div>
@@ -219,7 +219,7 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
             <Label className="text-xs text-gray-600 dark:text-gray-400">Text Color:</Label>
             <div className="flex items-center gap-2 mt-1">
               <div 
-                className="w-6 h-6 border border-gray-200 dark:border-gray-600 cursor-pointer"
+                className="w-6 h-6 border border-gray-200 dark:border-gray-600 cursor-pointer rounded-md"
                 style={{ backgroundColor: contrastTestColors.foreground }}
                 onClick={() => {
                   const input = document.getElementById(`${colorName}-contrast-fg`);
@@ -235,12 +235,13 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
                     setContrastTestColors(prev => ({...prev, foreground: scale[step]}));
                   }
                 }}
+                className="dark:bg-gray-700 rounded-md overflow-hidden"
               >
                 {sortedEntries.map(({ step, color }) => (
                   <ToggleGroupItem 
                     key={`fg-${step}`} 
                     value={step.toString()} 
-                    className="w-6 h-6 p-0 m-0"
+                    className="w-6 h-6 p-0 m-0 dark:data-[state=on]:bg-gray-600 dark:hover:bg-gray-600 dark:text-gray-300"
                     aria-label={`Use step ${step} as foreground`}
                   >
                     <span className="text-xs">{step}</span>
@@ -261,7 +262,7 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
             <Label className="text-xs text-gray-600 dark:text-gray-400">Background Color:</Label>
             <div className="flex items-center gap-2 mt-1">
               <div 
-                className="w-6 h-6 border border-gray-200 dark:border-gray-600 cursor-pointer"
+                className="w-6 h-6 border border-gray-200 dark:border-gray-600 cursor-pointer rounded-md"
                 style={{ backgroundColor: contrastTestColors.background }}
                 onClick={() => {
                   const input = document.getElementById(`${colorName}-contrast-bg`);
@@ -277,12 +278,13 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
                     setContrastTestColors(prev => ({...prev, background: scale[step]}));
                   }
                 }}
+                className="dark:bg-gray-700 rounded-md overflow-hidden"
               >
                 {sortedEntries.map(({ step, color }) => (
                   <ToggleGroupItem 
                     key={`bg-${step}`} 
                     value={step.toString()} 
-                    className="w-6 h-6 p-0 m-0"
+                    className="w-6 h-6 p-0 m-0 dark:data-[state=on]:bg-gray-600 dark:hover:bg-gray-600 dark:text-gray-300"
                     aria-label={`Use step ${step} as background`}
                   >
                     <span className="text-xs">{step}</span>
@@ -301,17 +303,17 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
         </div>
         
         {/* Preview and contrast ratio */}
-        <div className="mt-4 flex items-stretch">
+        <div className="mt-4 flex items-stretch rounded-md overflow-hidden shadow-sm">
           <div 
-            className="flex-1 p-3 flex items-center justify-center border rounded-l"
+            className="flex-1 p-3 flex items-center justify-center border rounded-l dark:border-gray-700"
             style={{ backgroundColor: contrastTestColors.background, color: contrastTestColors.foreground }}
           >
             <span className="text-sm font-medium">Sample Text</span>
           </div>
-          <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-r flex items-center">
+          <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-r flex items-center border-t border-r border-b dark:border-gray-600">
             <div>
               <div className="flex items-center gap-1">
-                <span className="text-sm font-medium">Contrast:</span>
+                <span className="text-sm font-medium dark:text-gray-300">Contrast:</span>
                 <span className={`text-sm ${contrastRatio >= 7 ? 'text-green-600 dark:text-green-400 font-bold' : contrastRatio >= 4.5 ? 'text-yellow-600 dark:text-yellow-400' : 'text-red-600 dark:text-red-400'}`}>
                   {contrastRatio.toFixed(2)}:1
                 </span>
@@ -336,4 +338,3 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
     </div>
   );
 };
-

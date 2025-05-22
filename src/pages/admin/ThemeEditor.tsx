@@ -48,7 +48,7 @@ const ThemeEditor: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-10">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm py-4">
+      <header className="bg-white dark:bg-gray-800 shadow-sm py-4 border-b dark:border-gray-700">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
