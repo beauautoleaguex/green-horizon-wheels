@@ -1,3 +1,2 @@
 
-import { useBrandManagement } from './brands/useBrandManagement';
-export { useBrandManagement };
+export { useBrandManagement } from './brands/useBrandManagement';
