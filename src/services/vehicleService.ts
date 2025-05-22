@@ -76,7 +76,7 @@ export const initializeDatabase = async (vehicles: Vehicle[]): Promise<void> => 
   } else {
     // Store the vehicles in memory for mock data
     console.log("Using mock data instead of Supabase");
-    mockVehicleData = vehicles;
+    mockVehicleData = [...vehicles]; // Make a copy to ensure we preserve all 100 vehicles
   }
 };
 
@@ -280,29 +280,10 @@ export const _getVehiclesFromMock = (
   filters: VehicleFilters = {},
   sortOption: SortOption = { column: 'id', order: 'asc' }
 ): { data: Vehicle[]; count: number } => {
-  // If mockVehicleData is empty, generate 100 mock vehicles
-  if (mockVehicleData.length === 0) {
-    mockVehicleData = [...Array(100)].map((_, i) => ({
-      id: (i + 1).toString(),
-      make: `Make ${i % 10}`,
-      model: `Model ${i % 5}`,
-      year: 2010 + (i % 12),
-      price: 15000 + (i * 1000),
-      bodyType: ['Sedan', 'SUV', 'Truck', 'Hatchback'][i % 4],
-      transmission: ['Automatic', 'Manual'][i % 2],
-      fuelType: ['Gasoline', 'Diesel', 'Electric'][i % 3],
-      exteriorColor: ['Red', 'Blue', 'White', 'Black'][i % 4],
-      interiorColor: ['Black', 'Beige', 'Grey'][i % 3],
-      condition: ['New', 'Used', 'Demo'][i % 3],
-      engineSize: `${2.0 + (i % 3) * 0.5}L`,
-      features: ['Navigation', 'Sunroof', 'Leather Seats'],
-      mileage: 50000 + (i * 5000),
-      seats: '5'
-    }));
-  }
-
+  // We'll use mockVehicleData directly now instead of generating vehicles here
   let filteredData = [...mockVehicleData];
 
+  // Apply all filters
   if (filters.make) {
     filteredData = filteredData.filter(v => v.make === filters.make);
   }
@@ -371,11 +352,8 @@ export const _getVehiclesFromMock = (
     );
   }
   
-  const startIndex = (page - 1) * limit;
-  const paginatedData = filteredData.slice(startIndex, startIndex + limit);
-
-  // Apply sorting
-  paginatedData.sort((a, b) => {
+  // Apply sorting first
+  filteredData.sort((a, b) => {
     const column = sortOption.column;
     const order = sortOption.order;
 
@@ -399,6 +377,11 @@ export const _getVehiclesFromMock = (
     return 0;
   });
 
+  // Then apply pagination
+  const startIndex = (page - 1) * limit;
+  const paginatedData = filteredData.slice(startIndex, startIndex + limit);
+
+  // Return the paginated data and the total count for pagination controls
   return { data: paginatedData, count: filteredData.length };
 };
 

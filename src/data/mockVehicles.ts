@@ -1,260 +1,69 @@
 
 import { Vehicle } from '@/types/vehicle';
 
-export const mockVehicles: Vehicle[] = [
-  {
-    id: '1',
-    make: 'Toyota',
-    model: 'Camry',
-    year: 2023,
-    price: 28500,
-    mileage: 5000,
-    fuelType: 'Gasoline',
-    transmission: 'Automatic',
-    bodyType: 'Sedan',
-    condition: 'New',
-    imageUrl: 'https://placehold.co/600x400/e2e8f0/64748b?text=Toyota+Camry',
-    exteriorColor: 'Silver',
-    interiorColor: 'Black',
-    engineSize: '2.5L 4-Cylinder',
-    features: ['Bluetooth', 'Navigation', 'Backup Camera', 'Sunroof']
-  },
-  {
-    id: '2',
-    make: 'Honda',
-    model: 'Civic',
-    year: 2022,
-    price: 24500,
-    mileage: 12000,
-    fuelType: 'Gasoline',
-    transmission: 'CVT',
-    bodyType: 'Sedan',
-    condition: 'Used',
-    imageUrl: 'https://placehold.co/600x400/e2e8f0/64748b?text=Honda+Civic',
-    exteriorColor: 'Blue',
-    interiorColor: 'Gray',
-    engineSize: '1.5L Turbo 4-Cylinder',
-    features: ['Apple CarPlay', 'Android Auto', 'Bluetooth', 'Alloy Wheels']
-  },
-  {
-    id: '3',
-    make: 'Ford',
-    model: 'F-150',
-    year: 2023,
-    price: 45000,
-    mileage: 7500,
-    fuelType: 'Gasoline',
-    transmission: 'Automatic',
-    bodyType: 'Truck',
-    condition: 'Used',
-    imageUrl: 'https://placehold.co/600x400/e2e8f0/64748b?text=Ford+F-150',
-    exteriorColor: 'Red',
-    interiorColor: 'Tan',
-    engineSize: '3.5L V6 EcoBoost',
-    features: ['4x4', 'Towing Package', 'Leather Seats', 'Navigation']
-  },
-  {
-    id: '4',
-    make: 'Tesla',
-    model: 'Model 3',
-    year: 2023,
-    price: 52000,
-    mileage: 3000,
-    fuelType: 'Electric',
-    transmission: 'Automatic',
-    bodyType: 'Sedan',
-    condition: 'New',
-    imageUrl: 'https://placehold.co/600x400/e2e8f0/64748b?text=Tesla+Model+3',
-    exteriorColor: 'White',
-    interiorColor: 'Black',
-    engineSize: 'Electric',
-    features: ['Autopilot', 'All-Glass Roof', 'Dual Motor', 'Premium Audio']
-  },
-  {
-    id: '5',
-    make: 'BMW',
-    model: '3 Series',
-    year: 2022,
-    price: 45000,
-    mileage: 15000,
-    fuelType: 'Gasoline',
-    transmission: 'Automatic',
-    bodyType: 'Sedan',
-    condition: 'Used',
-    imageUrl: 'https://placehold.co/600x400/e2e8f0/64748b?text=BMW+3+Series',
-    exteriorColor: 'Black',
-    interiorColor: 'Black',
-    engineSize: '2.0L Turbo 4-Cylinder',
-    features: ['Leather Seats', 'Navigation', 'Premium Sound', 'Sunroof']
-  },
-  {
-    id: '6',
-    make: 'Honda',
-    model: 'CR-V',
-    year: 2021,
-    price: 32000,
-    mileage: 18000,
-    fuelType: 'Gasoline',
-    transmission: 'CVT',
-    bodyType: 'SUV',
-    condition: 'Used',
-    imageUrl: 'https://placehold.co/600x400/e2e8f0/64748b?text=Honda+CR-V',
-    exteriorColor: 'Green',
-    interiorColor: 'Beige',
-    engineSize: '1.5L Turbo 4-Cylinder',
-    features: ['AWD', 'Backup Camera', 'Bluetooth', 'Heated Seats']
-  },
-  {
-    id: '7',
-    make: 'Toyota',
-    model: 'RAV4',
-    year: 2022,
-    price: 34000,
-    mileage: 12500,
-    fuelType: 'Hybrid',
-    transmission: 'Automatic',
-    bodyType: 'SUV',
-    condition: 'Used',
-    imageUrl: 'https://placehold.co/600x400/e2e8f0/64748b?text=Toyota+RAV4',
-    exteriorColor: 'Blue',
-    interiorColor: 'Black',
-    engineSize: '2.5L Hybrid',
-    features: ['All-Wheel Drive', 'Lane Departure Warning', 'Adaptive Cruise Control']
-  },
-  {
-    id: '8',
-    make: 'Mercedes',
-    model: 'C-Class',
-    year: 2023,
-    price: 55000,
-    mileage: 5000,
-    fuelType: 'Gasoline',
-    transmission: 'Automatic',
-    bodyType: 'Sedan',
-    condition: 'New',
-    imageUrl: 'https://placehold.co/600x400/e2e8f0/64748b?text=Mercedes+C-Class',
-    exteriorColor: 'Silver',
-    interiorColor: 'Black',
-    engineSize: '2.0L Turbo 4-Cylinder',
-    features: ['Leather Seats', 'Premium Audio', 'Navigation', 'Heated Seats']
-  },
-  {
-    id: '9',
-    make: 'Audi',
-    model: 'A4',
-    year: 2022,
-    price: 48000,
-    mileage: 10000,
-    fuelType: 'Gasoline',
-    transmission: 'Automatic',
-    bodyType: 'Sedan',
-    condition: 'Used',
-    imageUrl: 'https://placehold.co/600x400/e2e8f0/64748b?text=Audi+A4',
-    exteriorColor: 'Gray',
-    interiorColor: 'Brown',
-    engineSize: '2.0L Turbo 4-Cylinder',
-    features: ['Quattro AWD', 'Sunroof', 'Navigation', 'Parking Sensors']
-  },
-  {
-    id: '10',
-    make: 'Ford',
-    model: 'Mustang',
-    year: 2023,
-    price: 42000,
-    mileage: 8000,
-    fuelType: 'Gasoline',
-    transmission: 'Automatic',
-    bodyType: 'Coupe',
-    condition: 'Used',
-    imageUrl: 'https://placehold.co/600x400/e2e8f0/64748b?text=Ford+Mustang',
-    exteriorColor: 'Red',
-    interiorColor: 'Black',
-    engineSize: '5.0L V8',
-    features: ['Rear-Wheel Drive', 'Premium Sound', 'Leather Seats', 'Backup Camera']
-  },
-  {
-    id: '11',
-    make: 'Tesla',
-    model: 'Model Y',
-    year: 2023,
-    price: 65000,
-    mileage: 2000,
-    fuelType: 'Electric',
-    transmission: 'Automatic',
-    bodyType: 'SUV',
-    condition: 'New',
-    imageUrl: 'https://placehold.co/600x400/e2e8f0/64748b?text=Tesla+Model+Y',
-    exteriorColor: 'Black',
-    interiorColor: 'White',
-    engineSize: 'Electric',
-    features: ['Full Self-Driving', 'All-Wheel Drive', 'Premium Interior', 'Glass Roof']
-  },
-  {
-    id: '12',
-    make: 'Toyota',
-    model: 'Corolla',
-    year: 2021,
-    price: 22000,
-    mileage: 25000,
-    fuelType: 'Gasoline',
-    transmission: 'CVT',
-    bodyType: 'Sedan',
-    condition: 'Used',
-    imageUrl: 'https://placehold.co/600x400/e2e8f0/64748b?text=Toyota+Corolla',
-    exteriorColor: 'White',
-    interiorColor: 'Gray',
-    engineSize: '1.8L 4-Cylinder',
-    features: ['Bluetooth', 'Backup Camera', 'Lane Departure Warning', 'Adaptive Cruise Control']
-  },
-  {
-    id: '13',
-    make: 'BMW',
-    model: 'X5',
-    year: 2022,
-    price: 68000,
-    mileage: 12000,
-    fuelType: 'Gasoline',
-    transmission: 'Automatic',
-    bodyType: 'SUV',
-    condition: 'Used',
-    imageUrl: 'https://placehold.co/600x400/e2e8f0/64748b?text=BMW+X5',
-    exteriorColor: 'Blue',
-    interiorColor: 'Cream',
-    engineSize: '3.0L Turbo 6-Cylinder',
-    features: ['All-Wheel Drive', 'Panoramic Roof', 'Premium Sound', 'Heads-Up Display']
-  },
-  {
-    id: '14',
-    make: 'Honda',
-    model: 'Accord',
-    year: 2022,
-    price: 31000,
-    mileage: 18000,
-    fuelType: 'Gasoline',
-    transmission: 'Automatic',
-    bodyType: 'Sedan',
-    condition: 'Used',
-    imageUrl: 'https://placehold.co/600x400/e2e8f0/64748b?text=Honda+Accord',
-    exteriorColor: 'Silver',
-    interiorColor: 'Black',
-    engineSize: '1.5L Turbo 4-Cylinder',
-    features: ['Apple CarPlay', 'Android Auto', 'Heated Seats', 'Sunroof']
-  },
-  {
-    id: '15',
-    make: 'Audi',
-    model: 'Q5',
-    year: 2023,
-    price: 56000,
-    mileage: 5000,
-    fuelType: 'Gasoline',
-    transmission: 'Automatic',
-    bodyType: 'SUV',
-    condition: 'New',
-    imageUrl: 'https://placehold.co/600x400/e2e8f0/64748b?text=Audi+Q5',
-    exteriorColor: 'Gray',
-    interiorColor: 'Black',
-    engineSize: '2.0L Turbo 4-Cylinder',
-    features: ['Quattro AWD', 'Panoramic Sunroof', 'Navigation', 'Premium Sound']
+// Create a function that generates 100 mock vehicles
+const generateMockVehicles = (): Vehicle[] => {
+  const vehicles: Vehicle[] = [];
+  const makes = ['Toyota', 'Honda', 'Ford', 'Tesla', 'BMW', 'Audi', 'Mercedes', 'Chevrolet', 'Nissan', 'Hyundai'];
+  const models = ['Sedan', 'SUV', 'Hatchback', 'Coupe', 'Truck', 'Wagon', 'Convertible', 'Van'];
+  const fuelTypes = ['Gasoline', 'Diesel', 'Electric', 'Hybrid'];
+  const transmissions = ['Automatic', 'Manual', 'CVT'];
+  const bodyTypes = ['Sedan', 'SUV', 'Truck', 'Hatchback', 'Coupe', 'Wagon', 'Convertible', 'Van'];
+  const conditions = ['New', 'Used', 'Demo'];
+  const colors = ['Red', 'Blue', 'Black', 'White', 'Silver', 'Gray', 'Green', 'Yellow', 'Orange', 'Brown'];
+  const features = ['Bluetooth', 'Navigation', 'Backup Camera', 'Sunroof', 'Leather Seats', 'Heated Seats', 
+                   'Apple CarPlay', 'Android Auto', 'Premium Sound', 'Alloy Wheels', 'Keyless Entry', 
+                   'Push Button Start', 'Blind Spot Monitor', 'Lane Departure Warning'];
+  
+  for (let i = 1; i <= 100; i++) {
+    const makeIndex = i % makes.length;
+    const modelIndex = i % models.length;
+    const year = 2015 + (i % 9); // Years from 2015 to 2023
+    const price = 15000 + (i * 1000);
+    const mileage = i % 3 === 0 ? 0 : 5000 + (i * 500); // Some cars are new (0 miles)
+    const fuelIndex = i % fuelTypes.length;
+    const transIndex = i % transmissions.length;
+    const bodyIndex = i % bodyTypes.length;
+    const conditionIndex = i % conditions.length;
+    const exteriorColorIndex = i % colors.length;
+    const interiorColorIndex = (i + 3) % colors.length; // Offset for variety
+    
+    // Select 3-5 random features for each vehicle
+    const numFeatures = 3 + (i % 3);
+    const vehicleFeatures: string[] = [];
+    const featureIndices = new Set<number>();
+    
+    while (featureIndices.size < numFeatures) {
+      featureIndices.add(Math.floor(Math.random() * features.length));
+    }
+    
+    featureIndices.forEach(index => {
+      vehicleFeatures.push(features[index]);
+    });
+    
+    vehicles.push({
+      id: i.toString(),
+      make: makes[makeIndex],
+      model: `${models[modelIndex]} ${String.fromCharCode(65 + (i % 26))}`, // Add a letter suffix for variety
+      year: year,
+      price: price,
+      mileage: mileage,
+      fuelType: fuelTypes[fuelIndex],
+      transmission: transmissions[transIndex],
+      bodyType: bodyTypes[bodyIndex],
+      condition: conditions[conditionIndex],
+      imageUrl: `https://placehold.co/600x400/e2e8f0/64748b?text=${makes[makeIndex]}+${models[modelIndex]}`,
+      exteriorColor: colors[exteriorColorIndex],
+      interiorColor: colors[interiorColorIndex],
+      engineSize: `${(1.5 + (i % 5) * 0.5).toFixed(1)}L`,
+      features: vehicleFeatures,
+      trim: i % 4 === 0 ? 'Premium' : i % 4 === 1 ? 'Sport' : i % 4 === 2 ? 'Limited' : 'Base',
+      seats: String(4 + (i % 4)) // Vehicles with 4-7 seats
+    });
   }
-];
+  
+  return vehicles;
+};
+
+// Generate 100 vehicles
+export const mockVehicles: Vehicle[] = generateMockVehicles();

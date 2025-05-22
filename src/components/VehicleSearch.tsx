@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { SearchFilters } from './SearchFilters';
@@ -28,10 +29,11 @@ export const VehicleSearch = () => {
   const [filters, setFilters] = useState<VehicleFilters>({});
   const [sortOption, setSortOption] = useState<SortOption>({ column: 'id', order: 'asc' });
   const [searchQuery, setSearchQuery] = useState('');
-  const vehiclesPerPage = 48; // Changed from 12 to 48
+  const vehiclesPerPage = 48;
   
   // Initialize database with mock data on component mount
   useEffect(() => {
+    console.log(`Initializing with ${mockVehicles.length} vehicles`);
     initializeDatabase(mockVehicles).catch(console.error);
   }, []);
 
