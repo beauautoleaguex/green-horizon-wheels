@@ -22,6 +22,11 @@ export const BrandSelector: React.FC<BrandSelectorProps> = ({
   onColorChange,
   onFontChange
 }) => {
+  // Log for debugging
+  React.useEffect(() => {
+    console.log("BrandSelector received currentBrand:", currentBrand);
+  }, [currentBrand]);
+
   return (
     <div className="p-4 border rounded-lg bg-white dark:bg-gray-800 dark:border-gray-700">
       <h3 className="font-semibold mb-3 text-lg text-gray-900 dark:text-gray-100">Brand Selection</h3>
@@ -36,9 +41,7 @@ export const BrandSelector: React.FC<BrandSelectorProps> = ({
           onValueChange={onBrandChange}
         >
           <SelectTrigger className="w-full" id="brand-selector">
-            <SelectValue placeholder="Select a brand">
-              {currentBrand.name}
-            </SelectValue>
+            <SelectValue placeholder="Select a brand" />
           </SelectTrigger>
           <SelectContent>
             {brands.map((brand) => (
@@ -86,9 +89,7 @@ export const BrandSelector: React.FC<BrandSelectorProps> = ({
           onValueChange={onFontChange}
         >
           <SelectTrigger className="w-full" id="brand-font">
-            <SelectValue placeholder="Select a font">
-              {currentBrand.font.split(',')[0]}
-            </SelectValue>
+            <SelectValue placeholder="Select a font" />
           </SelectTrigger>
           <SelectContent>
             {fonts.map((font) => (

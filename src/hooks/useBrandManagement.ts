@@ -20,25 +20,64 @@ export const useBrandManagement = ({
   updateColorRamp,
   setCurrentFont
 }: UseBrandManagementProps) => {
-  // Check if the MyMoto brand has a logo. If not, add it
-  const brandsWithMyMotoLogo = initialBrands.map(brand => {
-    if (brand.name === 'MyMoto' && !brand.logo) {
+  // Initialize brands state from localStorage, ensuring all logos are preserved
+  const [brands, setBrands] = useState<Brand[]>(() => {
+    const savedBrands = localStorage.getItem('themeStorageBrands');
+    
+    // If we have saved brands, use them
+    if (savedBrands) {
+      const parsedBrands = JSON.parse(savedBrands) as Brand[];
+      
+      // Ensure MyMoto has its logo if one isn't already saved
+      return parsedBrands.map(brand => {
+        if (brand.name === 'MyMoto' && !brand.logo) {
+          return {
+            ...brand,
+            logo: '/lovable-uploads/d99fbaef-645b-46ba-975c-5b747c2667b9.png'
+          };
+        }
+        return brand;
+      });
+    }
+    
+    // If no saved brands, use initialBrands with MyMoto logo
+    return initialBrands.map(brand => {
+      if (brand.name === 'MyMoto' && !brand.logo) {
+        return {
+          ...brand,
+          logo: '/lovable-uploads/d99fbaef-645b-46ba-975c-5b747c2667b9.png'
+        };
+      }
+      return brand;
+    });
+  });
+  
+  // Initialize currentBrand from localStorage
+  const [currentBrand, setCurrentBrand] = useState<Brand>(() => {
+    const savedCurrentBrand = localStorage.getItem('themeStorageCurrentBrand');
+    
+    if (savedCurrentBrand) {
+      const parsedBrand = JSON.parse(savedCurrentBrand) as Brand;
+      // Make sure the MyMoto brand has its logo
+      if (parsedBrand.name === 'MyMoto' && !parsedBrand.logo) {
+        return {
+          ...parsedBrand,
+          logo: '/lovable-uploads/d99fbaef-645b-46ba-975c-5b747c2667b9.png'
+        };
+      }
+      return parsedBrand;
+    }
+    
+    // Default to initialCurrentBrand with logo if it's MyMoto
+    if (initialCurrentBrand.name === 'MyMoto' && !initialCurrentBrand.logo) {
       return {
-        ...brand,
+        ...initialCurrentBrand,
         logo: '/lovable-uploads/d99fbaef-645b-46ba-975c-5b747c2667b9.png'
       };
     }
-    return brand;
+    
+    return initialCurrentBrand;
   });
-
-  const [brands, setBrands] = useState<Brand[]>(brandsWithMyMotoLogo);
-  
-  // Make sure the current brand also has the logo if it's MyMoto
-  const currentBrandWithLogo = initialCurrentBrand.name === 'MyMoto' && !initialCurrentBrand.logo
-    ? { ...initialCurrentBrand, logo: '/lovable-uploads/d99fbaef-645b-46ba-975c-5b747c2667b9.png' }
-    : initialCurrentBrand;
-  
-  const [currentBrand, setCurrentBrand] = useState<Brand>(currentBrandWithLogo);
   
   // Store the original color ramps for each brand
   const [brandColors, setBrandColors] = useState<Record<string, Record<number, string>>>({});
@@ -172,7 +211,7 @@ export const useBrandManagement = ({
     );
     setBrands(updatedBrands);
     
-    // Save brands to localStorage immediately after updating a brand logo
+    // Save brands to localStorage immediately
     localStorage.setItem('themeStorageBrands', JSON.stringify(updatedBrands));
     
     // If updating current brand, also update current brand state
@@ -183,6 +222,10 @@ export const useBrandManagement = ({
       // Save current brand to localStorage
       localStorage.setItem('themeStorageCurrentBrand', JSON.stringify(updatedCurrentBrand));
     }
+    
+    // Log for debugging
+    console.log(`Brand logo updated for ${brandId}:`, logo);
+    console.log("Updated brands:", updatedBrands);
   };
 
   // Store brand color ramp after generation
@@ -241,22 +284,17 @@ export const useBrandManagement = ({
       localStorage.setItem('themeStorageCurrentBrand', JSON.stringify(updatedCurrentBrand));
     }
   };
-  
-  // Sync current brand from localStorage on mount and when brands change
-  useEffect(() => {
-    // Load current brand from localStorage
-    const savedCurrentBrand = localStorage.getItem('themeStorageCurrentBrand');
-    if (savedCurrentBrand) {
-      const parsedBrand = JSON.parse(savedCurrentBrand);
-      // Make sure the brand still exists in our brands array
-      const brandExists = brands.some(b => b.id === parsedBrand.id);
-      if (brandExists) {
-        setCurrentBrand(parsedBrand);
-        setCurrentFont(parsedBrand.font);
-      }
-    }
-  }, []);
 
+  // Add effect to sync changes with localStorage and log for debugging
+  useEffect(() => {
+    // Log current brands state for debugging
+    console.log("Current brands state:", brands);
+    
+    // Save current state to localStorage whenever it changes
+    localStorage.setItem('themeStorageBrands', JSON.stringify(brands));
+    localStorage.setItem('themeStorageCurrentBrand', JSON.stringify(currentBrand));
+  }, [brands, currentBrand]);
+  
   return {
     brands,
     setBrands,

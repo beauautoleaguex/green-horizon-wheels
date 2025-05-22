@@ -5,12 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Trash, RotateCcw, Upload, Plus, Edit } from 'lucide-react';
-import BrandPreview from './BrandPreview';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { Trash, RotateCcw, Plus, Edit } from 'lucide-react';
 
 interface BrandCardProps {
   brand: Brand;
@@ -35,10 +30,8 @@ const BrandCard: React.FC<BrandCardProps> = ({
 }) => {
   // Log to debug the brand information
   React.useEffect(() => {
-    if (brand.name === 'MyMoto') {
-      console.log("MyMoto brand in BrandCard:", brand);
-      console.log("MyMoto logo URL:", brand.logo);
-    }
+    console.log(`BrandCard rendering for ${brand.name}:`, brand);
+    console.log(`Logo URL for ${brand.name}:`, brand.logo);
   }, [brand]);
 
   // Handle color picker change
@@ -56,6 +49,7 @@ const BrandCard: React.FC<BrandCardProps> = ({
       reader.onloadend = () => {
         // When file is loaded, pass the data URL to the handler
         if (typeof reader.result === 'string') {
+          console.log(`Logo upload for ${brand.name}:`, reader.result.substring(0, 50) + '...');
           onLogoChange(brand.id, reader.result);
         }
       };
