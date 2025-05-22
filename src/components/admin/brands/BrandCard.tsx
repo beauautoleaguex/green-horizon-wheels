@@ -67,43 +67,32 @@ const BrandCard: React.FC<BrandCardProps> = ({
   return (
     <div className="py-4 px-6">
       <div className="grid grid-cols-12 gap-6 items-center">
-        {/* Logo - with fixed height of 48px while maintaining aspect ratio */}
+        {/* Logo - with fixed height of 48px */}
         <div className="col-span-1 flex justify-center">
           {brand.logo ? (
-            <HoverCard>
-              <HoverCardTrigger>
-                <div className="relative group h-12 w-12">
-                  <AspectRatio ratio={1/1} className="rounded-full overflow-hidden border border-gray-200 dark:border-gray-600">
-                    <div 
-                      className="h-full w-full cursor-pointer"
-                      onClick={() => {
-                        const logoInput = document.getElementById(`logo-upload-${brand.id}`);
-                        if (logoInput) logoInput.click();
-                      }}
-                    >
-                      <img 
-                        src={brand.logo} 
-                        alt={`${brand.name} logo`} 
-                        className="h-full w-full object-contain"
-                      />
-                    </div>
-                  </AspectRatio>
-                  
-                  {/* Edit overlay that appears on hover */}
-                  <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                    <Edit className="h-4 w-4 text-white" />
-                  </div>
+            <div className="relative group">
+              <div className="h-12 w-auto" style={{ maxWidth: '100px' }}>
+                <img 
+                  src={brand.logo} 
+                  alt={`${brand.name} logo`}
+                  className="h-12 w-auto object-contain cursor-pointer"
+                  onClick={() => {
+                    const logoInput = document.getElementById(`logo-upload-${brand.id}`);
+                    if (logoInput) logoInput.click();
+                  }}
+                />
+                
+                {/* Edit overlay that appears on hover */}
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                  <Edit className="h-4 w-4 text-white" />
                 </div>
-              </HoverCardTrigger>
-              <HoverCardContent side="right" className="w-auto p-2">
-                <p className="text-xs">Click to change logo</p>
-              </HoverCardContent>
-            </HoverCard>
+              </div>
+            </div>
           ) : (
             <Button
               variant="outline"
               size="sm"
-              className="h-12 w-12 p-0"
+              className="h-12 w-auto"
               onClick={() => {
                 const logoInput = document.getElementById(`logo-upload-${brand.id}`);
                 if (logoInput) logoInput.click();
