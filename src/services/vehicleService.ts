@@ -2,8 +2,8 @@ import { createClient } from '@supabase/supabase-js';
 import { Vehicle } from '@/types/vehicle';
 import { Database } from '@/types/supabase';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 const supabase = createClient<Database>(supabaseUrl, supabaseKey);
 
 export interface VehicleFilters {
@@ -20,7 +20,10 @@ export interface VehicleFilters {
   engineSize?: string;
   features?: string[];
   seats?: string;
-  search?: string; // Add the search property to fix the TypeScript error
+  search?: string;
+  condition?: string;
+  minMileage?: number;
+  maxMileage?: number;
 }
 
 export interface SortOption {
@@ -67,16 +70,16 @@ export const getVehicleMakes = async (): Promise<string[]> => {
     try {
         const { data, error } = await supabase
             .from('vehicles')
-            .select('make')
-            .distinct()
-            .order('make', { ascending: true });
+            .select('make');
 
         if (error) {
             console.error("Error fetching vehicle makes:", error);
             return [];
         }
 
-        return data.map(item => item.make);
+        // Extract unique makes manually
+        const uniqueMakes = Array.from(new Set(data.map(item => item.make)));
+        return uniqueMakes.sort();
     } catch (error) {
         console.error("Failed to fetch vehicle makes:", error);
         return [];
@@ -88,9 +91,7 @@ export const getVehicleModels = async (make?: string): Promise<string[]> => {
     try {
         let query = supabase
             .from('vehicles')
-            .select('model')
-            .distinct()
-            .order('model', { ascending: true });
+            .select('model');
 
         if (make) {
             query = query.eq('make', make);
@@ -103,7 +104,9 @@ export const getVehicleModels = async (make?: string): Promise<string[]> => {
             return [];
         }
 
-        return data.map(item => item.model);
+        // Extract unique models manually
+        const uniqueModels = Array.from(new Set(data.map(item => item.model)));
+        return uniqueModels.sort();
     } catch (error) {
         console.error("Failed to fetch vehicle models:", error);
         return [];
@@ -115,16 +118,16 @@ export const getBodyTypes = async (): Promise<string[]> => {
     try {
         const { data, error } = await supabase
             .from('vehicles')
-            .select('body_type')
-            .distinct()
-            .order('body_type', { ascending: true });
+            .select('body_type');
 
         if (error) {
             console.error("Error fetching body types:", error);
             return [];
         }
 
-        return data.map(item => item.body_type);
+        // Extract unique body types manually
+        const uniqueBodyTypes = Array.from(new Set(data.map(item => item.body_type)));
+        return uniqueBodyTypes.sort();
     } catch (error) {
         console.error("Failed to fetch body types:", error);
         return [];
@@ -188,6 +191,18 @@ export const getVehicles = async (
     query = query.eq('seats', filters.seats);
   }
 
+  if (filters.condition && filters.condition !== 'all') {
+    query = query.eq('condition', filters.condition);
+  }
+
+  if (filters.minMileage !== undefined) {
+    query = query.gte('mileage', filters.minMileage!);
+  }
+
+  if (filters.maxMileage !== undefined) {
+    query = query.lte('mileage', filters.maxMileage!);
+  }
+
   // Add support for the search field
   if (filters.search && filters.search.trim() !== '') {
     query = query.or(`make.ilike.%${filters.search}%,model.ilike.%${filters.search}%`);
@@ -216,26 +231,21 @@ export const _getVehiclesFromMock = (
   sortOption: SortOption = { column: 'id', order: 'asc' }
 ): { data: Vehicle[]; count: number } => {
   let filteredData = [...Array(100)].map((_, i) => ({
-    id: i + 1,
+    id: (i + 1).toString(),
     make: `Make ${i % 10}`,
     model: `Model ${i % 5}`,
     year: 2010 + (i % 12),
     price: 15000 + (i * 1000),
-    body_type: ['Sedan', 'SUV', 'Truck', 'Hatchback'][i % 4],
+    bodyType: ['Sedan', 'SUV', 'Truck', 'Hatchback'][i % 4],
     transmission: ['Automatic', 'Manual'][i % 2],
-    fuel_type: ['Gasoline', 'Diesel', 'Electric'][i % 3],
+    fuelType: ['Gasoline', 'Diesel', 'Electric'][i % 3],
     exteriorColor: ['Red', 'Blue', 'White', 'Black'][i % 4],
+    interiorColor: ['Black', 'Beige', 'Grey'][i % 3],
+    condition: ['New', 'Used', 'Demo'][i % 3],
     engineSize: `${2.0 + (i % 3) * 0.5}L`,
     features: ['Navigation', 'Sunroof', 'Leather Seats'],
     mileage: 50000 + (i * 5000),
-    images: [],
-    description: '',
-    registration_date: new Date(),
-    owners: 1,
-    vin: '',
-    is_new: true,
-    seats: '5',
-    // Add other properties as needed
+    seats: '5'
   }));
 
   if (filters.make) {
@@ -245,7 +255,7 @@ export const _getVehiclesFromMock = (
     filteredData = filteredData.filter(v => v.model === filters.model);
   }
   if (filters.bodyType) {
-    filteredData = filteredData.filter(v => v.body_type === filters.bodyType);
+    filteredData = filteredData.filter(v => v.bodyType === filters.bodyType);
   }
   if (filters.minYear) {
     filteredData = filteredData.filter(v => v.year >= filters.minYear);
@@ -263,7 +273,7 @@ export const _getVehiclesFromMock = (
     filteredData = filteredData.filter(v => v.transmission === filters.transmission);
   }
   if (filters.fuelType) {
-    filteredData = filteredData.filter(v => v.fuel_type === filters.fuelType);
+    filteredData = filteredData.filter(v => v.fuelType === filters.fuelType);
   }
   
   if (filters.color && filters.color !== 'all') {
@@ -282,6 +292,18 @@ export const _getVehiclesFromMock = (
   
   if (filters.seats) {
     filteredData = filteredData.filter(v => v.seats === filters.seats);
+  }
+
+  if (filters.condition && filters.condition !== 'all') {
+    filteredData = filteredData.filter(v => v.condition === filters.condition);
+  }
+
+  if (filters.minMileage !== undefined) {
+    filteredData = filteredData.filter(v => v.mileage >= filters.minMileage!);
+  }
+
+  if (filters.maxMileage !== undefined) {
+    filteredData = filteredData.filter(v => v.mileage <= filters.maxMileage!);
   }
   
   // Add support for the search field
@@ -329,16 +351,16 @@ export const getAllColors = async (): Promise<string[]> => {
   try {
       const { data, error } = await supabase
           .from('vehicles')
-          .select('exterior_color')
-          .distinct()
-          .order('exterior_color', { ascending: true });
+          .select('exterior_color');
 
       if (error) {
           console.error("Error fetching colors:", error);
           return [];
       }
 
-      return data.map(item => item.exterior_color);
+      // Extract unique colors manually
+      const uniqueColors = Array.from(new Set(data.map(item => item.exterior_color)));
+      return uniqueColors.sort();
   } catch (error) {
       console.error("Failed to fetch colors:", error);
       return [];
