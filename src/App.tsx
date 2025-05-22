@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ThemeEditor from "./pages/admin/ThemeEditor";
+import BrandsManager from "./pages/admin/BrandsManager";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
 // Create a client outside the component to avoid re-creation on each render
@@ -31,6 +32,7 @@ const App: React.FC = () => {
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/admin/theme" element={<ThemeEditor />} />
+              <Route path="/admin/brands" element={<BrandsManager />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

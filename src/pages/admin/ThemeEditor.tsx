@@ -5,12 +5,18 @@ import { FontSelector } from '@/components/theme/FontSelector';
 import { FontSizesEditor } from '@/components/theme/FontSizesEditor';
 import { FontWeightsEditor } from '@/components/theme/FontWeightsEditor';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
-import { BrandSelector } from '@/components/theme/BrandSelector';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Palette, Save, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Palette, Save, RotateCcw, Users } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Tabs,
   TabsContent,
@@ -35,8 +41,6 @@ const ThemeEditor: React.FC = () => {
     updateFontWeight,
     updateTypographyScale,
     switchBrand,
-    updateBrandColor,
-    updateBrandFont,
     saveTheme,
     resetTheme
   } = useTheme();
@@ -83,30 +87,49 @@ const ThemeEditor: React.FC = () => {
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-6">
+        <div className="mb-6 flex items-center justify-between">
           <Link to="/" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center gap-1">
             <ArrowLeft className="h-4 w-4" />
             Back to Homepage
           </Link>
+          
+          <div className="flex items-center gap-4">
+            <Link to="/admin/brands" className="flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
+              <Users className="h-4 w-4" />
+              Manage Brands
+            </Link>
+            
+            <div className="w-64">
+              <Select
+                value={currentBrand.id}
+                onValueChange={switchBrand}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a brand" />
+                </SelectTrigger>
+                <SelectContent>
+                  {brands.map((brand) => (
+                    <SelectItem key={brand.id} value={brand.id}>
+                      <div className="flex items-center gap-2">
+                        <div 
+                          className="w-3 h-3 rounded-full" 
+                          style={{ backgroundColor: brand.primaryColor }}
+                        />
+                        {brand.name}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </div>
 
-        <Tabs defaultValue="brand">
+        <Tabs defaultValue="colors">
           <TabsList className="mb-6">
-            <TabsTrigger value="brand">Brand</TabsTrigger>
             <TabsTrigger value="colors">Color Ramps</TabsTrigger>
             <TabsTrigger value="typography">Typography</TabsTrigger>
           </TabsList>
-          
-          <TabsContent value="brand">
-            <BrandSelector
-              brands={brands}
-              currentBrand={currentBrand}
-              fonts={fonts}
-              onBrandChange={switchBrand}
-              onColorChange={updateBrandColor}
-              onFontChange={updateBrandFont}
-            />
-          </TabsContent>
           
           <TabsContent value="colors">
             <div className="grid grid-cols-1 gap-6">

@@ -55,6 +55,8 @@ export interface ThemeContextType {
   switchBrand: (brandId: string) => void;
   updateBrandColor: (color: string) => void;
   updateBrandFont: (font: string) => void;
+  addBrand: (brand: Omit<Brand, 'id'>) => void;
+  deleteBrand: (brandId: string) => void;
   saveTheme: () => void;
   resetTheme: () => void;
 }

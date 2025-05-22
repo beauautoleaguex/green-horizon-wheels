@@ -4,6 +4,7 @@ import { ThemeContextType, ThemeMode, TypographyScale, Brand } from '../types/th
 import { generateColorRamp, CurveType } from '../utils/colorUtils';
 import { useThemeStorage } from '../hooks/useThemeStorage';
 import { typographyScales } from '../constants/themeDefaults';
+import { v4 as uuidv4 } from 'uuid';
 
 // Create the context
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -52,6 +53,36 @@ export const ThemeProvider: FC<{ children: React.ReactNode }> = ({ children }) =
       // Update font
       setCurrentFont(selectedBrand.font);
     }
+  };
+
+  // Add new brand
+  const addBrand = (brandData: Omit<Brand, 'id'>) => {
+    const newBrand: Brand = {
+      id: uuidv4(),
+      ...brandData
+    };
+    
+    setBrands(prev => [...prev, newBrand]);
+  };
+
+  // Delete brand
+  const deleteBrand = (brandId: string) => {
+    // Prevent deleting the last brand
+    if (brands.length <= 1) {
+      console.warn("Cannot delete the last brand");
+      return;
+    }
+    
+    // If deleting the current brand, switch to another brand first
+    if (currentBrand.id === brandId) {
+      const otherBrand = brands.find(b => b.id !== brandId);
+      if (otherBrand) {
+        switchBrand(otherBrand.id);
+      }
+    }
+    
+    // Remove the brand
+    setBrands(prev => prev.filter(brand => brand.id !== brandId));
   };
 
   // Update brand color
@@ -238,6 +269,8 @@ export const ThemeProvider: FC<{ children: React.ReactNode }> = ({ children }) =
       switchBrand,
       updateBrandColor,
       updateBrandFont,
+      addBrand,
+      deleteBrand,
       saveTheme,
       resetTheme
     }}>
