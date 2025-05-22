@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -19,7 +20,7 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				sans: ['Lexend', 'sans-serif'],
+				sans: ['var(--font-family)', 'Lexend', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -66,10 +67,45 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
                 brand: {
-                    green: '#008077', // Updated brand color
-                    light: '#D1FAE5',
-                    dark: '#006057'
+                    green: 'var(--color-brand-9)',
+                    light: 'var(--color-brand-2)',
+                    dark: 'var(--color-brand-11)'
                 },
+                gray: {
+                    50: 'var(--color-gray-1)',
+                    100: 'var(--color-gray-2)',
+                    200: 'var(--color-gray-3)',
+                    300: 'var(--color-gray-4)',
+                    400: 'var(--color-gray-5)',
+                    500: 'var(--color-gray-6)',
+                    600: 'var(--color-gray-7)',
+                    700: 'var(--color-gray-8)',
+                    800: 'var(--color-gray-9)',
+                    900: 'var(--color-gray-10)',
+                }
+			},
+			fontSize: {
+				'xs': 'var(--font-size-xs)',
+				'sm': 'var(--font-size-sm)',
+				'base': 'var(--font-size-base)',
+				'lg': 'var(--font-size-lg)',
+				'xl': 'var(--font-size-xl)',
+				'2xl': 'var(--font-size-2xl)',
+				'3xl': 'var(--font-size-3xl)',
+				'4xl': 'var(--font-size-4xl)',
+				'5xl': 'var(--font-size-5xl)',
+				'6xl': 'var(--font-size-6xl)',
+			},
+			fontWeight: {
+				thin: 'var(--font-weight-thin)',
+				extralight: 'var(--font-weight-extralight)',
+				light: 'var(--font-weight-light)',
+				normal: 'var(--font-weight-normal)',
+				medium: 'var(--font-weight-medium)',
+				semibold: 'var(--font-weight-semibold)',
+				bold: 'var(--font-weight-bold)',
+				extrabold: 'var(--font-weight-extrabold)',
+				black: 'var(--font-weight-black)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
