@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { SearchFilters } from './SearchFilters';
@@ -29,28 +28,37 @@ export const VehicleSearch = () => {
   const [filters, setFilters] = useState<VehicleFilters>({});
   const [sortOption, setSortOption] = useState<SortOption>({ column: 'id', order: 'asc' });
   const [searchQuery, setSearchQuery] = useState('');
+  const [isInitialized, setIsInitialized] = useState(false);
   const vehiclesPerPage = 48;
   
   // Initialize database with mock data on component mount
   useEffect(() => {
-    console.log(`Initializing with ${mockVehicles.length} vehicles`);
-    initializeDatabase(mockVehicles).catch(console.error);
+    const initialize = async () => {
+      console.log(`Initializing with ${mockVehicles.length} vehicles`);
+      await initializeDatabase(mockVehicles);
+      setIsInitialized(true);
+    };
+    
+    initialize().catch(console.error);
   }, []);
 
   // Fetch available filter options
   const { data: makes = [] } = useQuery({
     queryKey: ['vehicleMakes'],
     queryFn: () => getVehicleMakes(),
+    enabled: isInitialized,
   });
 
   const { data: models = [] } = useQuery({
     queryKey: ['vehicleModels', filters.make],
     queryFn: () => getVehicleModels(filters.make),
+    enabled: isInitialized && filters.make !== undefined,
   });
 
   const { data: bodyTypes = [] } = useQuery({
     queryKey: ['bodyTypes'],
     queryFn: () => getBodyTypes(),
+    enabled: isInitialized,
   });
 
   // Fetch vehicles with filters and pagination
@@ -62,6 +70,7 @@ export const VehicleSearch = () => {
   } = useQuery({
     queryKey: ['vehicles', currentPage, vehiclesPerPage, filters, sortOption, searchQuery],
     queryFn: () => getVehicles(currentPage, vehiclesPerPage, { ...filters, search: searchQuery }, sortOption),
+    enabled: isInitialized,
   });
 
   const { data: vehicles = [], count: totalVehicles = 0 } = vehiclesData;
