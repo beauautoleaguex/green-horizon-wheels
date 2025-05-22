@@ -16,6 +16,7 @@ import { toast } from '@/components/ui/use-toast';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Palette, Plus, Save, Trash } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { ColorSwatch } from '@/components/theme/ColorSwatch';
 
 const BrandsManager: React.FC = () => {
   const { brands, fonts, addBrand, deleteBrand, updateBrandColor, updateBrandFont, saveTheme } = useTheme();
@@ -67,6 +68,17 @@ const BrandsManager: React.FC = () => {
   // Handle brand color update
   const handleBrandColorChange = (brandId: string, color: string) => {
     updateBrandColor(brandId, color);
+  };
+
+  // Handle hex input change
+  const handleHexInputChange = (brandId: string, hex: string) => {
+    // Validate hex code format
+    if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hex)) {
+      updateBrandColor(brandId, hex);
+    } else if (hex.length <= 7) {
+      // Allow typing but don't update color until valid
+      // This allows users to type without validation errors interrupting
+    }
   };
 
   // Handle brand font update
@@ -121,17 +133,29 @@ const BrandsManager: React.FC = () => {
             <div>
               <Label htmlFor="brand-color">Brand Color</Label>
               <div className="flex gap-3 items-center mt-1">
-                <div 
-                  className="w-10 h-10 rounded-md border dark:border-gray-600"
-                  style={{ backgroundColor: newBrand.primaryColor }}
-                />
-                <Input
-                  id="brand-color"
-                  type="color"
-                  value={newBrand.primaryColor}
-                  onChange={(e) => setNewBrand(prev => ({ ...prev, primaryColor: e.target.value }))}
-                  className="w-full h-10"
-                />
+                <div className="flex items-center space-x-3 w-full">
+                  <div 
+                    className="w-10 h-10 rounded-md border cursor-pointer dark:border-gray-600"
+                    style={{ backgroundColor: newBrand.primaryColor }}
+                    onClick={() => {
+                      const colorInput = document.getElementById('brand-color');
+                      if (colorInput) colorInput.click();
+                    }}
+                  />
+                  <Input
+                    value={newBrand.primaryColor}
+                    onChange={(e) => setNewBrand(prev => ({ ...prev, primaryColor: e.target.value }))}
+                    className="w-32 font-mono"
+                    maxLength={7}
+                  />
+                  <Input
+                    id="brand-color"
+                    type="color"
+                    value={newBrand.primaryColor}
+                    onChange={(e) => setNewBrand(prev => ({ ...prev, primaryColor: e.target.value }))}
+                    className="w-0 h-0 p-0 border-0 absolute opacity-0"
+                  />
+                </div>
               </div>
             </div>
             
@@ -197,17 +221,28 @@ const BrandsManager: React.FC = () => {
                     {/* Color picker for the brand */}
                     <div>
                       <Label htmlFor={`color-${brand.id}`}>Brand Color</Label>
-                      <div className="flex gap-3 items-center mt-1">
+                      <div className="flex items-center space-x-3 mt-1">
                         <div 
-                          className="w-8 h-8 rounded-md"
+                          className="w-8 h-8 rounded-md cursor-pointer"
                           style={{ backgroundColor: brand.primaryColor }}
+                          onClick={() => {
+                            const colorInput = document.getElementById(`color-${brand.id}`);
+                            if (colorInput) colorInput.click();
+                          }}
+                        />
+                        <Input
+                          id={`hex-${brand.id}`}
+                          value={brand.primaryColor}
+                          onChange={(e) => handleHexInputChange(brand.id, e.target.value)}
+                          className="w-32 font-mono"
+                          maxLength={7}
                         />
                         <Input
                           id={`color-${brand.id}`}
                           type="color"
                           value={brand.primaryColor}
                           onChange={(e) => handleBrandColorChange(brand.id, e.target.value)}
-                          className="w-full h-9"
+                          className="w-0 h-0 p-0 border-0 absolute opacity-0"
                         />
                       </div>
                     </div>
