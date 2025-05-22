@@ -18,6 +18,7 @@ const ThemeEditor: React.FC = () => {
     fontSizes, 
     fontWeights,
     updateColor,
+    updateColorRamp,
     updateFont,
     updateFontSize,
     updateFontWeight,
@@ -83,6 +84,7 @@ const ThemeEditor: React.FC = () => {
                 colorName={colorName}
                 scale={scale}
                 onColorChange={updateColor}
+                onRampChange={updateColorRamp}
               />
             ))}
           </div>
