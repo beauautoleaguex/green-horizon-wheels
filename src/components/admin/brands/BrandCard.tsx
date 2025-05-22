@@ -1,13 +1,14 @@
-
 import React from 'react';
 import { Brand } from '@/types/theme';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Trash, RotateCcw, Upload, Plus } from 'lucide-react';
+import { Trash, RotateCcw, Upload, Plus, Edit } from 'lucide-react';
 import BrandPreview from './BrandPreview';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 
 interface BrandCardProps {
   brand: Brand;
@@ -56,16 +57,30 @@ const BrandCard: React.FC<BrandCardProps> = ({
   return (
     <div className="py-4 px-6">
       <div className="grid grid-cols-12 gap-4 items-center">
-        {/* Logo - new column */}
+        {/* Logo - with hover edit functionality */}
         <div className="col-span-1">
           {brand.logo ? (
-            <Avatar className="h-10 w-10 cursor-pointer border border-gray-200 dark:border-gray-600" onClick={() => {
-              const logoInput = document.getElementById(`logo-upload-${brand.id}`);
-              if (logoInput) logoInput.click();
-            }}>
-              <AvatarImage src={brand.logo} alt={`${brand.name} logo`} />
-              <AvatarFallback>{brand.name.charAt(0)}</AvatarFallback>
-            </Avatar>
+            <HoverCard>
+              <HoverCardTrigger>
+                <div className="relative group">
+                  <Avatar className="h-10 w-10 border border-gray-200 dark:border-gray-600" onClick={() => {
+                    const logoInput = document.getElementById(`logo-upload-${brand.id}`);
+                    if (logoInput) logoInput.click();
+                  }}>
+                    <AvatarImage src={brand.logo} alt={`${brand.name} logo`} />
+                    <AvatarFallback>{brand.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  
+                  {/* Edit overlay that appears on hover */}
+                  <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                    <Edit className="h-4 w-4 text-white" />
+                  </div>
+                </div>
+              </HoverCardTrigger>
+              <HoverCardContent side="right" className="w-auto p-2">
+                <p className="text-xs">Click to change logo</p>
+              </HoverCardContent>
+            </HoverCard>
           ) : (
             <Button
               variant="outline"
@@ -75,6 +90,7 @@ const BrandCard: React.FC<BrandCardProps> = ({
                 const logoInput = document.getElementById(`logo-upload-${brand.id}`);
                 if (logoInput) logoInput.click();
               }}
+              title="Add logo"
             >
               <Plus className="h-4 w-4" />
               <span className="sr-only">Add logo</span>
