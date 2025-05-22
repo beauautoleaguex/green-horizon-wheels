@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink } from "@/components/ui/navigation-menu";
-import { Heart, MapPin, Plus } from "lucide-react";
+import { Heart, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -58,7 +58,6 @@ export const Navigation = () => {
           <div className="hidden md:flex items-center gap-4">
             <Link to="/tradein" className="flex items-center">
               <Button variant="outline" className="border-brand-green text-brand-green hover:bg-brand-light hover:text-brand-green">
-                <Plus className="h-4 w-4" />
                 <span>Add trade-in</span>
               </Button>
             </Link>

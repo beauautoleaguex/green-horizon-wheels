@@ -29,6 +29,47 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setMode(prevMode => prevMode === 'light' ? 'dark' : 'light');
   };
 
+  // Detect user's preferred color scheme on initial load
+  useEffect(() => {
+    const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // Set theme based on user's preference if there's no stored preference
+    if (!localStorage.getItem('themeMode')) {
+      setMode(userPrefersDark ? 'dark' : 'light');
+    }
+
+    // Add listener for changes in color scheme preference
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (!localStorage.getItem('themeMode')) {
+        setMode(e.matches ? 'dark' : 'light');
+      }
+    };
+
+    try {
+      // Add listener (using the standard method first, then falling back to deprecated method)
+      if (mediaQuery.addEventListener) {
+        mediaQuery.addEventListener('change', handleChange);
+      } else {
+        // @ts-ignore - Fallback for older browsers
+        mediaQuery.addListener(handleChange);
+      }
+
+      // Cleanup function
+      return () => {
+        if (mediaQuery.removeEventListener) {
+          mediaQuery.removeEventListener('change', handleChange);
+        } else {
+          // @ts-ignore - Fallback for older browsers
+          mediaQuery.removeListener(handleChange);
+        }
+      };
+    } catch (error) {
+      console.error('Error setting up media query listener:', error);
+      return () => {}; // Empty cleanup function in case of error
+    }
+  }, []);
+
   // Apply theme to document when it changes
   useEffect(() => {
     // Create CSS variables for colors
