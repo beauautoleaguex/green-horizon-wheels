@@ -131,7 +131,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
         
         <Accordion type="single" collapsible defaultValue="make-model" className="space-y-0">
           <AccordionItem value="make-model" className="border-0">
-            <AccordionTrigger className="py-3 px-4">Make and Model</AccordionTrigger>
+            <AccordionTrigger className="py-3 px-4 text-gray-800 font-medium">Make and Model</AccordionTrigger>
             <AccordionContent className="px-4">
               <div className="space-y-4 pt-2">
                 <div>
@@ -175,7 +175,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <Separator />
           
           <AccordionItem value="price" className="border-0">
-            <AccordionTrigger className="py-3 px-4">Price Range</AccordionTrigger>
+            <AccordionTrigger className="py-3 px-4 text-gray-800 font-medium">Price Range</AccordionTrigger>
             <AccordionContent className="px-4">
               <div className="pt-2">
                 <div className="text-sm text-gray-700 mb-1">
@@ -198,7 +198,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <Separator />
           
           <AccordionItem value="year" className="border-0">
-            <AccordionTrigger className="py-3 px-4">Year</AccordionTrigger>
+            <AccordionTrigger className="py-3 px-4 text-gray-800 font-medium">Year</AccordionTrigger>
             <AccordionContent className="px-4">
               <div className="pt-2">
                 <div className="text-sm text-gray-700 mb-1">
@@ -221,7 +221,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <Separator />
           
           <AccordionItem value="body-type" className="border-0">
-            <AccordionTrigger className="py-3 px-4">Body Type</AccordionTrigger>
+            <AccordionTrigger className="py-3 px-4 text-gray-800 font-medium">Body Type</AccordionTrigger>
             <AccordionContent className="px-4">
               <div className="pt-2">
                 <Select 
@@ -244,7 +244,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <Separator />
           
           <AccordionItem value="condition" className="border-0">
-            <AccordionTrigger className="py-3 px-4">Condition</AccordionTrigger>
+            <AccordionTrigger className="py-3 px-4 text-gray-800 font-medium">Condition</AccordionTrigger>
             <AccordionContent className="px-4">
               <div className="pt-2 space-y-2">
                 {CONDITIONS.map(condition => (
@@ -275,7 +275,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <Separator />
           
           <AccordionItem value="mileage" className="border-0">
-            <AccordionTrigger className="py-3 px-4">Mileage</AccordionTrigger>
+            <AccordionTrigger className="py-3 px-4 text-gray-800 font-medium">Mileage</AccordionTrigger>
             <AccordionContent className="px-4">
               <div className="pt-2">
                 <div className="text-sm text-gray-700 mb-1">
@@ -298,7 +298,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <Separator />
           
           <AccordionItem value="transmission" className="border-0">
-            <AccordionTrigger className="py-3 px-4">Transmission</AccordionTrigger>
+            <AccordionTrigger className="py-3 px-4 text-gray-800 font-medium">Transmission</AccordionTrigger>
             <AccordionContent className="px-4">
               <div className="pt-2 space-y-2">
                 {TRANSMISSION_TYPES.map(transmission => (
@@ -329,7 +329,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <Separator />
           
           <AccordionItem value="fuel-type" className="border-0">
-            <AccordionTrigger className="py-3 px-4">Fuel Type</AccordionTrigger>
+            <AccordionTrigger className="py-3 px-4 text-gray-800 font-medium">Fuel Type</AccordionTrigger>
             <AccordionContent className="px-4">
               <div className="pt-2 space-y-2">
                 {FUEL_TYPES.map(fuelType => (
@@ -360,7 +360,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <Separator />
           
           <AccordionItem value="engine" className="border-0">
-            <AccordionTrigger className="py-3 px-4">Engine Size</AccordionTrigger>
+            <AccordionTrigger className="py-3 px-4 text-gray-800 font-medium">Engine Size</AccordionTrigger>
             <AccordionContent className="px-4">
               <div className="pt-2">
                 <Select 
@@ -387,7 +387,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <Separator />
           
           <AccordionItem value="color" className="border-0">
-            <AccordionTrigger className="py-3 px-4">Color</AccordionTrigger>
+            <AccordionTrigger className="py-3 px-4 text-gray-800 font-medium">Color</AccordionTrigger>
             <AccordionContent className="px-4">
               <div className="pt-2 grid grid-cols-2 gap-2">
                 {COLORS.map(color => (
@@ -418,7 +418,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <Separator />
           
           <AccordionItem value="features" className="border-0">
-            <AccordionTrigger className="py-3 px-4">Features</AccordionTrigger>
+            <AccordionTrigger className="py-3 px-4 text-gray-800 font-medium">Features</AccordionTrigger>
             <AccordionContent className="px-4">
               <div className="pt-2 grid grid-cols-1 gap-2">
                 {FEATURES.map(feature => (
@@ -439,7 +439,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           <Separator />
           
           <AccordionItem value="seats" className="border-0">
-            <AccordionTrigger className="py-3 px-4">Number of Seats</AccordionTrigger>
+            <AccordionTrigger className="py-3 px-4 text-gray-800 font-medium">Number of Seats</AccordionTrigger>
             <AccordionContent className="px-4">
               <div className="pt-2 space-y-2">
                 {SEATS.map(seat => (
