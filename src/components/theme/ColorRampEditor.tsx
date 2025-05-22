@@ -3,9 +3,7 @@ import React from 'react';
 import { ColorScale } from '@/contexts/ThemeContext';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+import { ColorPicker } from "lucide-react";
 
 interface ColorRampEditorProps {
   colorName: string;
@@ -126,40 +124,66 @@ export const ColorRampEditor: React.FC<ColorRampEditorProps> = ({
   };
 
   return (
-    <div className="p-4 border rounded-lg bg-white">
+    <div className="p-4 border bg-white">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-semibold text-lg capitalize">{colorName}</h3>
         <div className="flex items-center gap-2">
           <Label htmlFor={`${colorName}-base`} className="text-sm">Base Color:</Label>
           <div className="flex items-center gap-1">
             <div 
-              className="w-6 h-6 rounded-md border border-gray-200"
+              className="w-6 h-6 border border-gray-200 cursor-pointer flex items-center justify-center"
               style={{ backgroundColor: baseColor }}
-            />
+              onClick={() => {
+                // Use the hidden input's click event
+                const input = document.getElementById(`${colorName}-base`);
+                if (input) {
+                  input.click();
+                }
+              }}
+            >
+              <ColorPicker className="w-3 h-3 text-white opacity-50 hover:opacity-100" />
+            </div>
             <Input
               id={`${colorName}-base`}
               type="color"
               value={baseColor}
               onChange={(e) => handleBaseColorChange(e.target.value)}
-              className="w-8 h-6 p-0 overflow-hidden"
+              className="w-0 h-0 p-0 overflow-hidden absolute opacity-0"
+              aria-label={`Choose base color for ${colorName}`}
             />
           </div>
         </div>
       </div>
       
-      <div className="grid grid-cols-12 gap-2">
+      <div className="flex w-full">
         {sortedEntries.map(({ step, color }) => (
-          <div key={`${colorName}-${step}`} className="flex flex-col items-center">
+          <div 
+            key={`${colorName}-${step}`} 
+            className="flex-1 flex flex-col items-center"
+          >
             <div 
-              className="w-10 h-10 rounded-md mb-1 border border-gray-200"
+              className="w-full h-10 border-t border-b border-r first:border-l cursor-pointer relative group overflow-hidden"
               style={{ backgroundColor: color }}
-            />
-            <div className="text-xs text-gray-600 mb-1">{step}</div>
+              onClick={() => {
+                // Use the hidden input's click event
+                const input = document.getElementById(`${colorName}-color-${step}`);
+                if (input) {
+                  input.click();
+                }
+              }}
+            >
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10">
+                <ColorPicker className="w-4 h-4 text-white" />
+              </div>
+            </div>
+            <div className="text-xs text-gray-600 mt-1">{step}</div>
             <Input
+              id={`${colorName}-color-${step}`}
               type="color"
               value={color}
               onChange={(e) => onColorChange(colorName, step, e.target.value)}
-              className="w-8 h-6 p-0 overflow-hidden"
+              className="w-0 h-0 p-0 overflow-hidden absolute opacity-0"
+              aria-label={`Choose color for ${colorName} step ${step}`}
             />
           </div>
         ))}
