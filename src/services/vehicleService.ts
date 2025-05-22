@@ -1,10 +1,20 @@
+
 import { createClient } from '@supabase/supabase-js';
 import { Vehicle } from '@/types/vehicle';
 import { Database } from '@/types/supabase';
 
+// Try to get Supabase URL and key from environment variables
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-const supabase = createClient<Database>(supabaseUrl, supabaseKey);
+
+// Create a flag to determine if we should use Supabase or mock data
+const useSupabase = supabaseUrl && supabaseKey;
+
+// Only create Supabase client if URL and key are available
+const supabase = useSupabase ? createClient<Database>(supabaseUrl, supabaseKey) : null;
+
+// In-memory storage for mock data
+let mockVehicleData: Vehicle[] = [];
 
 export interface VehicleFilters {
   make?: string;
@@ -33,105 +43,133 @@ export interface SortOption {
 
 // Initialize the database with mock vehicles
 export const initializeDatabase = async (vehicles: Vehicle[]): Promise<void> => {
-  try {
-    // Check if the vehicles table is empty
-    const { data, error, count } = await supabase
-      .from('vehicles')
-      .select('*', { count: 'exact', head: true });
-
-    if (error) {
-      console.error("Error checking vehicles table:", error);
-      throw error;
-    }
-
-    if (count === 0) {
-      // If the table is empty, insert the mock vehicles
-      const { error: insertError } = await supabase
+  if (useSupabase) {
+    try {
+      // Check if the vehicles table is empty
+      const { data, error, count } = await supabase!
         .from('vehicles')
-        .insert(vehicles);
+        .select('*', { count: 'exact', head: true });
 
-      if (insertError) {
-        console.error("Error inserting mock vehicles:", insertError);
-        throw insertError;
+      if (error) {
+        console.error("Error checking vehicles table:", error);
+        throw error;
       }
 
-      console.log("Database initialized with mock vehicles.");
-    } else {
-      console.log("Database already contains vehicles. Skipping initialization.");
+      if (count === 0) {
+        // If the table is empty, insert the mock vehicles
+        const { error: insertError } = await supabase!
+          .from('vehicles')
+          .insert(vehicles);
+
+        if (insertError) {
+          console.error("Error inserting mock vehicles:", insertError);
+          throw insertError;
+        }
+
+        console.log("Database initialized with mock vehicles.");
+      } else {
+        console.log("Database already contains vehicles. Skipping initialization.");
+      }
+    } catch (error) {
+      console.error("Failed to initialize Supabase database, falling back to mock data:", error);
+      mockVehicleData = vehicles;
     }
-  } catch (error) {
-    console.error("Failed to initialize database:", error);
-    throw error;
+  } else {
+    // Store the vehicles in memory for mock data
+    console.log("Using mock data instead of Supabase");
+    mockVehicleData = vehicles;
   }
 };
 
 // Get unique vehicle makes
 export const getVehicleMakes = async (): Promise<string[]> => {
-    try {
-        const { data, error } = await supabase
-            .from('vehicles')
-            .select('make');
+  try {
+    if (useSupabase && supabase) {
+      const { data, error } = await supabase
+        .from('vehicles')
+        .select('make');
 
-        if (error) {
-            console.error("Error fetching vehicle makes:", error);
-            return [];
-        }
-
-        // Extract unique makes manually
-        const uniqueMakes = Array.from(new Set(data.map(item => item.make)));
-        return uniqueMakes.sort();
-    } catch (error) {
-        console.error("Failed to fetch vehicle makes:", error);
+      if (error) {
+        console.error("Error fetching vehicle makes:", error);
         return [];
+      }
+
+      // Extract unique makes manually
+      const uniqueMakes = Array.from(new Set(data.map(item => item.make)));
+      return uniqueMakes.sort();
+    } else {
+      // Use mock data
+      const uniqueMakes = Array.from(new Set(mockVehicleData.map(item => item.make)));
+      return uniqueMakes.sort();
     }
+  } catch (error) {
+    console.error("Failed to fetch vehicle makes:", error);
+    return [];
+  }
 };
 
 // Get vehicle models by make
 export const getVehicleModels = async (make?: string): Promise<string[]> => {
-    try {
-        let query = supabase
-            .from('vehicles')
-            .select('model');
+  try {
+    if (useSupabase && supabase) {
+      let query = supabase
+        .from('vehicles')
+        .select('model');
 
-        if (make) {
-            query = query.eq('make', make);
-        }
+      if (make) {
+        query = query.eq('make', make);
+      }
 
-        const { data, error } = await query;
+      const { data, error } = await query;
 
-        if (error) {
-            console.error("Error fetching vehicle models:", error);
-            return [];
-        }
-
-        // Extract unique models manually
-        const uniqueModels = Array.from(new Set(data.map(item => item.model)));
-        return uniqueModels.sort();
-    } catch (error) {
-        console.error("Failed to fetch vehicle models:", error);
+      if (error) {
+        console.error("Error fetching vehicle models:", error);
         return [];
+      }
+
+      // Extract unique models manually
+      const uniqueModels = Array.from(new Set(data.map(item => item.model)));
+      return uniqueModels.sort();
+    } else {
+      // Use mock data
+      let filteredData = mockVehicleData;
+      if (make) {
+        filteredData = filteredData.filter(vehicle => vehicle.make === make);
+      }
+      const uniqueModels = Array.from(new Set(filteredData.map(item => item.model)));
+      return uniqueModels.sort();
     }
+  } catch (error) {
+    console.error("Failed to fetch vehicle models:", error);
+    return [];
+  }
 };
 
 // Get unique body types
 export const getBodyTypes = async (): Promise<string[]> => {
-    try {
-        const { data, error } = await supabase
-            .from('vehicles')
-            .select('body_type');
+  try {
+    if (useSupabase && supabase) {
+      const { data, error } = await supabase
+        .from('vehicles')
+        .select('body_type');
 
-        if (error) {
-            console.error("Error fetching body types:", error);
-            return [];
-        }
-
-        // Extract unique body types manually
-        const uniqueBodyTypes = Array.from(new Set(data.map(item => item.body_type)));
-        return uniqueBodyTypes.sort();
-    } catch (error) {
-        console.error("Failed to fetch body types:", error);
+      if (error) {
+        console.error("Error fetching body types:", error);
         return [];
+      }
+
+      // Extract unique body types manually
+      const uniqueBodyTypes = Array.from(new Set(data.map(item => item.body_type)));
+      return uniqueBodyTypes.sort();
+    } else {
+      // Use mock data
+      const uniqueBodyTypes = Array.from(new Set(mockVehicleData.map(item => item.bodyType)));
+      return uniqueBodyTypes.sort();
     }
+  } catch (error) {
+    console.error("Failed to fetch body types:", error);
+    return [];
+  }
 };
 
 // Get vehicles with pagination and filters
@@ -141,86 +179,99 @@ export const getVehicles = async (
   filters: VehicleFilters = {},
   sortOption: SortOption = { column: 'id', order: 'asc' }
 ): Promise<{ data: Vehicle[]; count: number }> => {
-  let query = supabase
-    .from('vehicles')
-    .select('*', { count: 'exact' });
+  // If Supabase is configured and available, use it
+  if (useSupabase && supabase) {
+    try {
+      let query = supabase
+        .from('vehicles')
+        .select('*', { count: 'exact' });
 
-  if (filters.make) {
-    query = query.eq('make', filters.make);
-  }
-  if (filters.model) {
-    query = query.eq('model', filters.model);
-  }
-  if (filters.bodyType) {
-    query = query.eq('body_type', filters.bodyType);
-  }
-  if (filters.minYear) {
-    query = query.gte('year', filters.minYear);
-  }
-  if (filters.maxYear) {
-    query = query.lte('year', filters.maxYear);
-  }
-  if (filters.minPrice) {
-    query = query.gte('price', filters.minPrice);
-  }
-  if (filters.maxPrice) {
-    query = query.lte('price', filters.maxPrice);
-  }
-  if (filters.transmission) {
-    query = query.eq('transmission', filters.transmission);
-  }
-  if (filters.fuelType) {
-    query = query.eq('fuel_type', filters.fuelType);
-  }
+      if (filters.make) {
+        query = query.eq('make', filters.make);
+      }
+      if (filters.model) {
+        query = query.eq('model', filters.model);
+      }
+      if (filters.bodyType) {
+        query = query.eq('body_type', filters.bodyType);
+      }
+      if (filters.minYear) {
+        query = query.gte('year', filters.minYear);
+      }
+      if (filters.maxYear) {
+        query = query.lte('year', filters.maxYear);
+      }
+      if (filters.minPrice) {
+        query = query.gte('price', filters.minPrice);
+      }
+      if (filters.maxPrice) {
+        query = query.lte('price', filters.maxPrice);
+      }
+      if (filters.transmission) {
+        query = query.eq('transmission', filters.transmission);
+      }
+      if (filters.fuelType) {
+        query = query.eq('fuel_type', filters.fuelType);
+      }
 
-  if (filters.color) {
-    query = query.eq('exterior_color', filters.color);
+      if (filters.color) {
+        query = query.eq('exterior_color', filters.color);
+      }
+
+      if (filters.engineSize) {
+        query = query.eq('engine_size', filters.engineSize);
+      }
+
+      if (filters.features && filters.features.length > 0) {
+        filters.features.forEach(feature => {
+          query = query.like('features', `%${feature}%`);
+        });
+      }
+
+      if (filters.seats) {
+        query = query.eq('seats', filters.seats);
+      }
+
+      if (filters.condition && filters.condition !== 'all') {
+        query = query.eq('condition', filters.condition);
+      }
+
+      if (filters.minMileage !== undefined) {
+        query = query.gte('mileage', filters.minMileage!);
+      }
+
+      if (filters.maxMileage !== undefined) {
+        query = query.lte('mileage', filters.maxMileage!);
+      }
+
+      // Add support for the search field
+      if (filters.search && filters.search.trim() !== '') {
+        query = query.or(`make.ilike.%${filters.search}%,model.ilike.%${filters.search}%`);
+      }
+        
+      query = query.order(sortOption.column, { ascending: sortOption.order === 'asc' });
+
+      const startIndex = (page - 1) * limit;
+      query = query.range(startIndex, startIndex + limit - 1);
+
+      const { data, error, count } = await query;
+
+      if (error) {
+        console.error("Error fetching vehicles from Supabase:", error);
+        // Fall back to mock data if Supabase fails
+        return _getVehiclesFromMock(page, limit, filters, sortOption);
+      }
+
+      return { data: data as Vehicle[], count: count || 0 };
+    } catch (error) {
+      console.error("Failed to fetch vehicles from Supabase:", error);
+      // Fall back to mock data if Supabase fails
+      return _getVehiclesFromMock(page, limit, filters, sortOption);
+    }
+  } else {
+    // If Supabase is not configured, use mock data
+    return _getVehiclesFromMock(page, limit, filters, sortOption);
   }
-
-  if (filters.engineSize) {
-    query = query.eq('engine_size', filters.engineSize);
-  }
-
-  if (filters.features && filters.features.length > 0) {
-    filters.features.forEach(feature => {
-      query = query.like('features', `%${feature}%`);
-    });
-  }
-
-  if (filters.seats) {
-    query = query.eq('seats', filters.seats);
-  }
-
-  if (filters.condition && filters.condition !== 'all') {
-    query = query.eq('condition', filters.condition);
-  }
-
-  if (filters.minMileage !== undefined) {
-    query = query.gte('mileage', filters.minMileage!);
-  }
-
-  if (filters.maxMileage !== undefined) {
-    query = query.lte('mileage', filters.maxMileage!);
-  }
-
-  // Add support for the search field
-  if (filters.search && filters.search.trim() !== '') {
-    query = query.or(`make.ilike.%${filters.search}%,model.ilike.%${filters.search}%`);
-  }
-    
-  query = query.order(sortOption.column, { ascending: sortOption.order === 'asc' });
-
-  const startIndex = (page - 1) * limit;
-  query = query.range(startIndex, startIndex + limit - 1);
-
-  const { data, error, count } = await query;
-
-  if (error) {
-    console.error("Error fetching vehicles:", error);
-    return { data: [], count: 0 };
-  }
-
-  return { data: data as Vehicle[], count: count || 0 };
 };
 
 // Mock implementation for local testing
@@ -230,23 +281,28 @@ export const _getVehiclesFromMock = (
   filters: VehicleFilters = {},
   sortOption: SortOption = { column: 'id', order: 'asc' }
 ): { data: Vehicle[]; count: number } => {
-  let filteredData = [...Array(100)].map((_, i) => ({
-    id: (i + 1).toString(),
-    make: `Make ${i % 10}`,
-    model: `Model ${i % 5}`,
-    year: 2010 + (i % 12),
-    price: 15000 + (i * 1000),
-    bodyType: ['Sedan', 'SUV', 'Truck', 'Hatchback'][i % 4],
-    transmission: ['Automatic', 'Manual'][i % 2],
-    fuelType: ['Gasoline', 'Diesel', 'Electric'][i % 3],
-    exteriorColor: ['Red', 'Blue', 'White', 'Black'][i % 4],
-    interiorColor: ['Black', 'Beige', 'Grey'][i % 3],
-    condition: ['New', 'Used', 'Demo'][i % 3],
-    engineSize: `${2.0 + (i % 3) * 0.5}L`,
-    features: ['Navigation', 'Sunroof', 'Leather Seats'],
-    mileage: 50000 + (i * 5000),
-    seats: '5'
-  }));
+  // If mockVehicleData is empty, generate some mock data
+  if (mockVehicleData.length === 0) {
+    mockVehicleData = [...Array(100)].map((_, i) => ({
+      id: (i + 1).toString(),
+      make: `Make ${i % 10}`,
+      model: `Model ${i % 5}`,
+      year: 2010 + (i % 12),
+      price: 15000 + (i * 1000),
+      bodyType: ['Sedan', 'SUV', 'Truck', 'Hatchback'][i % 4],
+      transmission: ['Automatic', 'Manual'][i % 2],
+      fuelType: ['Gasoline', 'Diesel', 'Electric'][i % 3],
+      exteriorColor: ['Red', 'Blue', 'White', 'Black'][i % 4],
+      interiorColor: ['Black', 'Beige', 'Grey'][i % 3],
+      condition: ['New', 'Used', 'Demo'][i % 3],
+      engineSize: `${2.0 + (i % 3) * 0.5}L`,
+      features: ['Navigation', 'Sunroof', 'Leather Seats'],
+      mileage: 50000 + (i * 5000),
+      seats: '5'
+    }));
+  }
+
+  let filteredData = [...mockVehicleData];
 
   if (filters.make) {
     filteredData = filteredData.filter(v => v.make === filters.make);
@@ -349,20 +405,26 @@ export const _getVehiclesFromMock = (
 
 export const getAllColors = async (): Promise<string[]> => {
   try {
+    if (useSupabase && supabase) {
       const { data, error } = await supabase
-          .from('vehicles')
-          .select('exterior_color');
+        .from('vehicles')
+        .select('exterior_color');
 
       if (error) {
-          console.error("Error fetching colors:", error);
-          return [];
+        console.error("Error fetching colors:", error);
+        return [];
       }
 
       // Extract unique colors manually
       const uniqueColors = Array.from(new Set(data.map(item => item.exterior_color)));
       return uniqueColors.sort();
+    } else {
+      // Use mock data
+      const uniqueColors = Array.from(new Set(mockVehicleData.map(item => item.exteriorColor)));
+      return uniqueColors.sort();
+    }
   } catch (error) {
-      console.error("Failed to fetch colors:", error);
-      return [];
+    console.error("Failed to fetch colors:", error);
+    return [];
   }
 };
