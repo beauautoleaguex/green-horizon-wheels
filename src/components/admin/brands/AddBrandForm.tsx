@@ -94,7 +94,10 @@ const AddBrandForm: React.FC<AddBrandFormProps> = ({ fonts, onAddBrand }) => {
         </Select>
         
         <div className="mt-3">
-          <BrandPreview font={newBrand.font} color={newBrand.primaryColor} />
+          <Label className="text-sm text-gray-500 dark:text-gray-400">Preview:</Label>
+          <div className="mt-1 border p-2 rounded-md dark:border-gray-700">
+            <BrandPreview font={newBrand.font} color={newBrand.primaryColor} />
+          </div>
         </div>
       </div>
       
