@@ -1,5 +1,6 @@
 
 // Theme-related type definitions
+import { CurveType } from '../utils/colorUtils';
 
 export interface ColorScale {
   [key: number]: string; // 1-12 scale values
@@ -28,10 +29,11 @@ export interface ThemeContextType {
   mode: ThemeMode;
   toggleMode: () => void;
   updateColor: (colorName: string, step: number, value: string) => void;
-  updateColorRamp: (colorName: string, baseColor: string) => void;
+  updateColorRamp: (colorName: string, baseColor: string, curveType?: CurveType) => void;
   updateFont: (font: string) => void;
   updateFontSize: (name: string, value: string) => void;
   updateFontWeight: (name: string, value: number) => void;
   saveTheme: () => void;
   resetTheme: () => void;
 }
+

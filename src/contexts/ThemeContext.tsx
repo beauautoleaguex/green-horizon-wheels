@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useEffect } from 'react';
 import { ThemeContextType, ThemeMode } from '../types/theme';
-import { generateColorRamp } from '../utils/colorUtils';
+import { generateColorRamp, CurveType } from '../utils/colorUtils';
 import { useThemeStorage } from '../hooks/useThemeStorage';
 
 // Create the context
@@ -119,8 +119,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }));
   };
   
-  const updateColorRamp = (colorName: string, baseColor: string) => {
-    const newRamp = generateColorRamp(baseColor);
+  const updateColorRamp = (colorName: string, baseColor: string, curveType: CurveType = 'linear') => {
+    const newRamp = generateColorRamp(baseColor, curveType);
     setColors(prev => ({
       ...prev,
       [colorName]: newRamp
