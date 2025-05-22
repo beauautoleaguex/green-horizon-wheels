@@ -10,10 +10,17 @@ import NotFound from "./pages/NotFound";
 import ThemeEditor from "./pages/admin/ThemeEditor";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
-// Create a client
-const queryClient = new QueryClient();
+// Create a client outside the component to avoid re-creation on each render
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000, // 1 minute
+      retry: 1,
+    },
+  },
+});
 
-const App = () => {
+const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
