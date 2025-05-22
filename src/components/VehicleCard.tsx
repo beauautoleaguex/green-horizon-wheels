@@ -1,14 +1,32 @@
 
 import React from 'react';
 import { Vehicle } from '@/types/vehicle';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
+import { Heart } from 'lucide-react';
 
 interface VehicleCardProps {
   vehicle: Vehicle;
 }
 
 export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
+  // Normalize fuel type to one of the specified options
+  const normalizedFuelType = (): string => {
+    const fuelType = vehicle.fuelType.toLowerCase();
+    if (fuelType.includes('petrol') || fuelType.includes('gas') || fuelType.includes('gasoline')) {
+      return 'Petrol';
+    } else if (fuelType.includes('electric')) {
+      return 'Electric';
+    } else if (fuelType.includes('hybrid')) {
+      return 'Hybrid';
+    } else if (fuelType.includes('diesel')) {
+      return 'Diesel';
+    }
+    return 'Petrol'; // Default fallback
+  };
+
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
+    <Card className="overflow-hidden hover:shadow-md transition-shadow duration-200">
       <div className="relative pb-[60%]">
         <img 
           src={vehicle.imageUrl || 'https://placehold.co/600x400/e2e8f0/64748b?text=Vehicle+Image'} 
@@ -22,13 +40,19 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
         )}
       </div>
       
-      <div className="p-4">
+      <CardHeader className="p-4 pb-0">
         <div className="flex justify-between items-start">
-          <h3 className="text-lg font-medium text-gray-900 truncate">
+          <h3 className="text-base font-medium text-gray-900 truncate">
             {vehicle.year} {vehicle.make} {vehicle.model}
           </h3>
-          <p className="text-brand-green font-semibold">${vehicle.price.toLocaleString()}</p>
+          <Button variant="outline" size="icon" className="h-8 w-8 rounded-full">
+            <Heart className="h-4 w-4" />
+          </Button>
         </div>
+      </CardHeader>
+      
+      <CardContent className="p-4 pt-2">
+        <p className="text-brand-green font-semibold text-lg mt-1">${vehicle.price.toLocaleString()}</p>
         
         <div className="mt-2 text-sm text-gray-500">
           <div className="flex justify-between mt-1">
@@ -37,22 +61,17 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
           </div>
           
           <div className="flex justify-between mt-1">
-            <span>{vehicle.fuelType}</span>
+            <span>{normalizedFuelType()}</span>
             <span>{vehicle.bodyType}</span>
           </div>
         </div>
-        
-        <div className="mt-4 flex space-x-2">
-          <button className="flex-1 bg-brand-green hover:bg-brand-dark text-white py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">
-            View Details
-          </button>
-          <button className="flex-none w-10 h-10 rounded-md border border-gray-300 flex items-center justify-center hover:bg-gray-50">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
+      </CardContent>
+      
+      <CardFooter className="p-4 pt-0">
+        <Button className="w-full bg-brand-green hover:bg-brand-dark text-white">
+          View Details
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
