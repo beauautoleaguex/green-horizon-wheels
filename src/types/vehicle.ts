@@ -15,4 +15,5 @@ export interface Vehicle {
   interiorColor: string;
   engineSize: string;
   features: string[];
+  trim?: string; // Added trim as an optional property
 }
