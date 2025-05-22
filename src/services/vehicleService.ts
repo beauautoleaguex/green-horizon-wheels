@@ -42,8 +42,14 @@ export interface SortOption {
 
 // Initialize the database with mock vehicles
 export const initializeDatabase = async (vehicles: Vehicle[]): Promise<void> => {
+  console.log("Initialize database called with", vehicles.length, "vehicles");
+  
+  // Always populate the mock data for fallback
+  mockVehicleData = [...vehicles];
+  
   if (useSupabase) {
     try {
+      console.log("Using Supabase for initialization");
       // Check if the vehicles table is empty
       const { data, error, count } = await supabase!
         .from('vehicles')
@@ -71,13 +77,13 @@ export const initializeDatabase = async (vehicles: Vehicle[]): Promise<void> => 
       }
     } catch (error) {
       console.error("Failed to initialize Supabase database, falling back to mock data:", error);
-      mockVehicleData = vehicles;
     }
   } else {
     // Store the vehicles in memory for mock data
     console.log("Using mock data instead of Supabase");
-    mockVehicleData = [...vehicles]; // Make a copy to ensure we preserve all 100 vehicles
   }
+  
+  console.log("Mock data array now has", mockVehicleData.length, "vehicles");
 };
 
 // Get unique vehicle makes
@@ -178,6 +184,8 @@ export const getVehicles = async (
   filters: VehicleFilters = {},
   sortOption: SortOption = { column: 'id', order: 'asc' }
 ): Promise<{ data: Vehicle[]; count: number }> => {
+  console.log("getVehicles called with page:", page, "limit:", limit, "filters:", filters);
+  
   // If Supabase is configured and available, use it
   if (useSupabase && supabase) {
     try {
@@ -261,6 +269,7 @@ export const getVehicles = async (
         return _getVehiclesFromMock(page, limit, filters, sortOption);
       }
 
+      console.log("Fetched data from Supabase:", data?.length, "vehicles");
       return { data: data as Vehicle[], count: count || 0 };
     } catch (error) {
       console.error("Failed to fetch vehicles from Supabase:", error);
@@ -269,6 +278,7 @@ export const getVehicles = async (
     }
   } else {
     // If Supabase is not configured, use mock data
+    console.log("Using mock data for getVehicles");
     return _getVehiclesFromMock(page, limit, filters, sortOption);
   }
 };
@@ -280,9 +290,17 @@ export const _getVehiclesFromMock = (
   filters: VehicleFilters = {},
   sortOption: SortOption = { column: 'id', order: 'asc' }
 ): { data: Vehicle[]; count: number } => {
-  // We'll use mockVehicleData directly now instead of generating vehicles here
+  console.log("_getVehiclesFromMock called with mockVehicleData.length:", mockVehicleData.length);
+  
+  // Check if we have data
+  if (mockVehicleData.length === 0) {
+    console.warn("No mock vehicle data available!");
+    return { data: [], count: 0 };
+  }
+  
+  // We'll use mockVehicleData directly now
   let filteredData = [...mockVehicleData];
-
+  
   // Apply all filters
   if (filters.make) {
     filteredData = filteredData.filter(v => v.make === filters.make);
@@ -380,6 +398,8 @@ export const _getVehiclesFromMock = (
   // Then apply pagination
   const startIndex = (page - 1) * limit;
   const paginatedData = filteredData.slice(startIndex, startIndex + limit);
+  
+  console.log("Filtered data:", filteredData.length, "Paginated data:", paginatedData.length);
 
   // Return the paginated data and the total count for pagination controls
   return { data: paginatedData, count: filteredData.length };

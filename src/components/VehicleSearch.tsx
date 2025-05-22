@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { SearchFilters } from './SearchFilters';
@@ -34,18 +35,33 @@ export const VehicleSearch = () => {
   // Initialize database with mock data on component mount
   useEffect(() => {
     const initialize = async () => {
-      console.log(`Initializing with ${mockVehicles.length} vehicles`);
-      await initializeDatabase(mockVehicles);
-      setIsInitialized(true);
+      try {
+        console.log(`Initializing database with ${mockVehicles.length} vehicles`);
+        await initializeDatabase(mockVehicles);
+        console.log("Database initialization completed successfully");
+        setIsInitialized(true);
+      } catch (error) {
+        console.error("Failed to initialize database:", error);
+        // Even if there's an error, we'll set initialized to true so queries can run
+        // This allows the mock data fallback to work
+        setIsInitialized(true);
+        toast({
+          title: "Warning",
+          description: "Using local data - could not connect to database",
+          variant: "destructive"
+        });
+      }
     };
     
-    initialize().catch(console.error);
+    initialize();
   }, []);
+
+  console.log("Is initialized:", isInitialized); // Debug log
 
   // Fetch available filter options
   const { data: makes = [] } = useQuery({
     queryKey: ['vehicleMakes'],
-    queryFn: () => getVehicleMakes(),
+    queryFn: getVehicleMakes,
     enabled: isInitialized,
   });
 
@@ -57,7 +73,7 @@ export const VehicleSearch = () => {
 
   const { data: bodyTypes = [] } = useQuery({
     queryKey: ['bodyTypes'],
-    queryFn: () => getBodyTypes(),
+    queryFn: getBodyTypes,
     enabled: isInitialized,
   });
 
@@ -73,7 +89,16 @@ export const VehicleSearch = () => {
     enabled: isInitialized,
   });
 
+  useEffect(() => {
+    if (isInitialized) {
+      console.log("Fetching vehicles with filters:", filters);
+      refetch();
+    }
+  }, [isInitialized, refetch]);
+
   const { data: vehicles = [], count: totalVehicles = 0 } = vehiclesData;
+  console.log("Vehicles data:", vehicles.length, "Total:", totalVehicles); // Debug log
+
   const totalPages = Math.ceil(totalVehicles / vehiclesPerPage);
 
   const handlePageChange = (pageNumber: number) => {
