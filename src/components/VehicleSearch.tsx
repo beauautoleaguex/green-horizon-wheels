@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { SearchFilters } from './SearchFilters';
+import { SearchFilters } from './filters';
 import { Pagination } from './Pagination';
 import { Navigation } from './Navigation';
 import { Footer } from './Footer';
