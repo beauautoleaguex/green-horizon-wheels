@@ -135,8 +135,13 @@ export const VehicleSearch = () => {
                   <Search className="h-4 w-4 text-gray-400" />
                 </div>
               </div>
-              <Button type="submit" className="bg-brand-green hover:bg-brand-dark">
-                Search
+              <Button 
+                type="submit" 
+                size="icon" 
+                variant="ghost" 
+                className="bg-[#F1F0FB] hover:bg-gray-200"
+              >
+                <Search className="h-5 w-5 text-[#8E9196]" />
               </Button>
             </form>
           </div>
@@ -168,8 +173,13 @@ export const VehicleSearch = () => {
                     <Search className="h-4 w-4 text-gray-400" />
                   </div>
                 </div>
-                <Button type="submit" className="bg-brand-green hover:bg-brand-dark">
-                  Search
+                <Button 
+                  type="submit" 
+                  size="icon" 
+                  variant="ghost" 
+                  className="bg-[#F1F0FB] hover:bg-gray-200"
+                >
+                  <Search className="h-5 w-5 text-[#8E9196]" />
                 </Button>
               </form>
             </div>
