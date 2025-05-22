@@ -7,6 +7,9 @@ import { useTheme } from '@/contexts/theme/ThemeContext';
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
   const { currentBrand } = useTheme();
+  
+  // Convert brand name to lowercase and remove spaces for use in email domain
+  const brandDomain = currentBrand.name.toLowerCase().replace(/\s+/g, '');
 
   return (
     <footer className="bg-gray-50 border-t border-gray-100 w-full">
@@ -24,13 +27,13 @@ export const Footer = () => {
               ) : (
                 <img 
                   src="/lovable-uploads/d99fbaef-645b-46ba-975c-5b747c2667b9.png" 
-                  alt="mymoto" 
+                  alt={currentBrand.name} 
                   className="h-8" 
                 />
               )}
             </Link>
             <p className="text-gray-500 text-sm mt-4">
-              Find your perfect ride with mymoto, your trusted partner in automotive excellence.
+              Find your perfect ride with {currentBrand.name}, your trusted partner in automotive excellence.
             </p>
           </div>
 
@@ -104,7 +107,7 @@ export const Footer = () => {
               Need help finding your ideal vehicle?
             </p>
             <p className="text-gray-500 text-sm">
-              Email: <a href="mailto:contact@mymoto.com" className="text-brand-green hover:underline">contact@mymoto.com</a>
+              Email: <a href={`mailto:contact@${brandDomain}.com`} className="text-brand-green hover:underline">contact@{brandDomain}.com</a>
             </p>
             <p className="text-gray-500 text-sm mt-1">
               Phone: <a href="tel:+1234567890" className="text-brand-green hover:underline">+1 (234) 567-890</a>
