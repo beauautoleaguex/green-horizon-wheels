@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { SearchFilters } from './SearchFilters';
@@ -19,13 +18,16 @@ import {
   getBodyTypes
 } from '@/services/vehicleService';
 import { toast } from '@/components/ui/use-toast';
-import { ChevronUp, ChevronDown } from "lucide-react";
+import { ChevronUp, ChevronDown, Search } from "lucide-react";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 export const VehicleSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState<VehicleFilters>({});
   const [sortOption, setSortOption] = useState<SortOption>({ column: 'id', order: 'asc' });
+  const [searchQuery, setSearchQuery] = useState('');
   const vehiclesPerPage = 12;
   
   // Initialize database with mock data on component mount
@@ -56,8 +58,8 @@ export const VehicleSearch = () => {
     isError,
     refetch
   } = useQuery({
-    queryKey: ['vehicles', currentPage, vehiclesPerPage, filters, sortOption],
-    queryFn: () => getVehicles(currentPage, vehiclesPerPage, filters, sortOption),
+    queryKey: ['vehicles', currentPage, vehiclesPerPage, filters, sortOption, searchQuery],
+    queryFn: () => getVehicles(currentPage, vehiclesPerPage, { ...filters, search: searchQuery }, sortOption),
   });
 
   const { data: vehicles = [], count: totalVehicles = 0 } = vehiclesData;
@@ -97,6 +99,12 @@ export const VehicleSearch = () => {
     setCurrentPage(1);
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setCurrentPage(1);
+    refetch();
+  };
+
   // Show error toast if query fails
   useEffect(() => {
     if (isError) {
@@ -113,9 +121,29 @@ export const VehicleSearch = () => {
       <Navigation />
       <div className="w-full mx-auto px-0 py-0 flex-grow">
         <div className="flex flex-col md:flex-row">
+          {/* Search bar - visible on all screen sizes */}
+          <div className="w-full md:hidden px-4 py-4 bg-white">
+            <form onSubmit={handleSearch} className="flex gap-2">
+              <div className="flex-1 relative">
+                <Input 
+                  className="pr-10 rounded-md border border-gray-300 w-full"
+                  placeholder="Search makes, models, or keywords"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <Search className="h-4 w-4 text-gray-400" />
+                </div>
+              </div>
+              <Button type="submit" className="bg-brand-green hover:bg-brand-dark">
+                Search
+              </Button>
+            </form>
+          </div>
+
           {/* Mobile filter toggle */}
           <button 
-            className="md:hidden flex items-center justify-center px-4 py-2 border rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 mb-4 mx-4 mt-4"
+            className="md:hidden flex items-center justify-center px-4 py-2 border rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 mb-4 mx-4 mt-0"
             onClick={() => setIsFilterOpen(!isFilterOpen)}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -126,6 +154,25 @@ export const VehicleSearch = () => {
 
           {/* Filters sidebar - fixed position and width on desktop */}
           <div className={`md:sticky md:top-0 md:h-screen md:w-72 md:flex-shrink-0 md:overflow-y-auto md:bg-white md:shadow-sm md:block ${isFilterOpen ? 'block' : 'hidden'}`}>
+            {/* Search bar on desktop - above filters */}
+            <div className="hidden md:block p-4 border-b border-gray-100">
+              <form onSubmit={handleSearch} className="flex gap-2">
+                <div className="flex-1 relative">
+                  <Input 
+                    className="pr-10 rounded-md border border-gray-300 w-full"
+                    placeholder="Search makes, models, or keywords"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <Search className="h-4 w-4 text-gray-400" />
+                  </div>
+                </div>
+                <Button type="submit" className="bg-brand-green hover:bg-brand-dark">
+                  Search
+                </Button>
+              </form>
+            </div>
             <SearchFilters 
               onFilter={handleFilter} 
               availableMakes={makes}
@@ -145,7 +192,7 @@ export const VehicleSearch = () => {
                   <SortDropdown onSort={handleSort} />
                 </div>
               </div>
-
+            
               {isLoading ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
                   {[...Array(8)].map((_, index) => (
