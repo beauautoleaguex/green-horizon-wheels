@@ -25,6 +25,12 @@ const BrandCard: React.FC<BrandCardProps> = ({
   onHexInputChange,
   onFontChange
 }) => {
+  // Handle color picker change
+  const handleColorChange = (color: string) => {
+    // Use the color change handler which now uses updateColorRamp internally
+    onColorChange(brand.id, color);
+  };
+
   return (
     <div className="p-4 border rounded-md dark:border-gray-700">
       <div className="flex items-center justify-between mb-3">
@@ -65,7 +71,7 @@ const BrandCard: React.FC<BrandCardProps> = ({
               id={`color-${brand.id}`}
               type="color"
               value={brand.primaryColor}
-              onChange={(e) => onColorChange(brand.id, e.target.value)}
+              onChange={(e) => handleColorChange(e.target.value)}
               className="w-0 h-0 p-0 border-0 absolute opacity-0"
             />
           </div>

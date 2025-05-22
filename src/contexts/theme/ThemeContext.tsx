@@ -56,6 +56,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     initialBrands,
     initialCurrentBrand,
     updateColors: updateColor,
+    updateColorRamp, // Pass updateColorRamp to the brand management hook
     setCurrentFont,
   });
 

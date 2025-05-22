@@ -2,11 +2,13 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Brand } from '@/types/theme';
+import { CurveType } from '@/utils/colorUtils';
 
 interface UseBrandManagementProps {
   initialBrands: Brand[];
   initialCurrentBrand: Brand;
   updateColors: (colorName: string, step: number, value: string) => void;
+  updateColorRamp: (colorName: string, baseColor: string, curveType?: CurveType) => void;
   setCurrentFont: (font: string) => void;
 }
 
@@ -14,6 +16,7 @@ export const useBrandManagement = ({
   initialBrands,
   initialCurrentBrand,
   updateColors,
+  updateColorRamp,
   setCurrentFont
 }: UseBrandManagementProps) => {
   const [brands, setBrands] = useState<Brand[]>(initialBrands);
@@ -28,8 +31,8 @@ export const useBrandManagement = ({
       // Update font
       setCurrentFont(selectedBrand.font);
       
-      // Update primary color in brand color scale
-      updateColors('brand', 9, selectedBrand.primaryColor);
+      // Update primary color in brand color ramp (using updateColorRamp instead of updateColors)
+      updateColorRamp('brand', selectedBrand.primaryColor);
     }
   };
 
@@ -79,8 +82,8 @@ export const useBrandManagement = ({
       // Update current brand state
       setCurrentBrand(prev => ({ ...prev, primaryColor: color }));
       
-      // Update brand color in color scales
-      updateColors('brand', 9, color);
+      // Update brand color in color scales (using updateColorRamp instead of updateColors)
+      updateColorRamp('brand', color);
     }
   };
 
