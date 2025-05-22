@@ -2,7 +2,7 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { FontWeights } from '@/contexts/ThemeContext';
+import { FontWeights } from '@/types/theme';
 import { Slider } from '@/components/ui/slider';
 
 interface FontWeightsEditorProps {

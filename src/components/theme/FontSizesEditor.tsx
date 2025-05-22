@@ -2,7 +2,7 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { FontSizes } from '@/contexts/ThemeContext';
+import { FontSizes } from '@/types/theme';
 
 interface FontSizesEditorProps {
   fontSizes: FontSizes;
