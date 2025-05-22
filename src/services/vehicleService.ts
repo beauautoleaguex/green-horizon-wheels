@@ -1,3 +1,4 @@
+
 import { supabase } from '@/lib/supabase';
 import { Vehicle } from '@/types/vehicle';
 import { mockVehicles } from '@/data/mockVehicles';
@@ -12,6 +13,15 @@ export interface VehicleFilters {
   maxYear?: number;
   bodyType?: string;
   condition?: string;
+  // Add the missing properties that are causing TypeScript errors
+  minMileage?: number;
+  maxMileage?: number;
+  transmission?: string;
+  fuelType?: string;
+  color?: string;
+  engineSize?: string;
+  features?: string[];
+  seats?: string;
 }
 
 export interface SortOption {
@@ -70,6 +80,43 @@ export async function getVehicles(
     
     if (filters.condition && filters.condition !== 'all') {
       query = query.eq('condition', filters.condition);
+    }
+    
+    // Add support for the new filter properties
+    if (filters.minMileage) {
+      query = query.gte('mileage', filters.minMileage);
+    }
+    
+    if (filters.maxMileage) {
+      query = query.lte('mileage', filters.maxMileage);
+    }
+    
+    if (filters.transmission && filters.transmission !== 'all') {
+      query = query.eq('transmission', filters.transmission);
+    }
+    
+    if (filters.fuelType && filters.fuelType !== 'all') {
+      query = query.eq('fuelType', filters.fuelType);
+    }
+    
+    if (filters.color && filters.color !== 'all') {
+      query = query.eq('exteriorColor', filters.color);
+    }
+    
+    if (filters.engineSize && filters.engineSize !== 'all') {
+      query = query.eq('engineSize', filters.engineSize);
+    }
+    
+    if (filters.features && filters.features.length > 0) {
+      // This assumes features are stored in an array column
+      // For each feature in the filter, check if it's contained in the vehicle's features array
+      filters.features.forEach(feature => {
+        query = query.contains('features', [feature]);
+      });
+    }
+    
+    if (filters.seats && filters.seats !== 'all') {
+      query = query.eq('seats', filters.seats);
     }
     
     // Apply sorting
@@ -139,6 +186,42 @@ function getMockVehicles(
     
     if (filters.condition && filters.condition !== 'all') {
       filteredData = filteredData.filter(v => v.condition === filters.condition);
+    }
+    
+    // Add support for the new filter properties
+    if (filters.minMileage) {
+      filteredData = filteredData.filter(v => v.mileage >= filters.minMileage!);
+    }
+    
+    if (filters.maxMileage) {
+      filteredData = filteredData.filter(v => v.mileage <= filters.maxMileage!);
+    }
+    
+    if (filters.transmission && filters.transmission !== 'all') {
+      filteredData = filteredData.filter(v => v.transmission === filters.transmission);
+    }
+    
+    if (filters.fuelType && filters.fuelType !== 'all') {
+      filteredData = filteredData.filter(v => v.fuelType === filters.fuelType);
+    }
+    
+    if (filters.color && filters.color !== 'all') {
+      filteredData = filteredData.filter(v => v.exteriorColor === filters.color);
+    }
+    
+    if (filters.engineSize && filters.engineSize !== 'all') {
+      filteredData = filteredData.filter(v => v.engineSize === filters.engineSize);
+    }
+    
+    if (filters.features && filters.features.length > 0) {
+      filteredData = filteredData.filter(v => 
+        filters.features!.every(feature => v.features.includes(feature))
+      );
+    }
+    
+    if (filters.seats && filters.seats !== 'all') {
+      // This assumes that seats might be stored as a string in your mock data
+      filteredData = filteredData.filter(v => v.features.includes(filters.seats + " Seats"));
     }
     
     // Apply sorting
