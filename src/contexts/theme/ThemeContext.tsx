@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext } from 'react';
 import { ThemeContextValue, ThemeProviderProps } from './types';
 import { ThemeMode, TypographyScale } from '@/types/theme';
 import { useThemeStorage } from '@/hooks/useThemeStorage';
@@ -29,7 +29,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     brands: initialBrands,
     currentBrand: initialCurrentBrand,
     saveTheme,
-    resetTheme
+    resetTheme,
+    isLoading,
+    userId
   } = useThemeStorage();
 
   // Always set mode to 'light' regardless of localStorage or system preference
@@ -63,13 +65,12 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     setCurrentFont,
   });
 
-  // Apply theme effects - but we've overridden the mode to always be 'light'
-  useThemeEffects(colors, currentFont, fontSizes, fontWeights, mode);
+  // Apply theme effects - pass loading state to prevent flicker
+  useThemeEffects(colors, currentFont, fontSizes, fontWeights, mode, isLoading);
 
   // Toggle theme mode
   const toggleMode = () => {
     // This is now a no-op since we always want light mode
-    // setMode is not used anymore as we've hardcoded mode to 'light'
   };
 
   // Font and typography functions
@@ -102,15 +103,44 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     }
   };
 
-  // Wrap saveTheme to include current brand state
-  const saveThemeWithBrands = () => {
-    // Ensure we save the latest brands and current brand data
-    localStorage.setItem('themeStorageBrands', JSON.stringify(brandManagement.brands));
-    localStorage.setItem('themeStorageCurrentBrand', JSON.stringify(brandManagement.currentBrand));
-    
-    // Call the original saveTheme function
-    saveTheme();
+  // Modified to wrap original saveTheme (which now handles Supabase)
+  const saveThemeWithBrands = async () => {
+    await saveTheme();
   };
+
+  // If still loading, show minimal context (optional)
+  if (isLoading) {
+    return (
+      <ThemeContext.Provider value={{
+        colors,
+        fonts,
+        currentFont,
+        fontSizes,
+        fontWeights,
+        mode,
+        currentTypographyScale,
+        brands: brandManagement.brands,
+        currentBrand: brandManagement.currentBrand,
+        toggleMode,
+        updateColor,
+        updateColorRamp,
+        updateFont,
+        updateFontSize,
+        updateFontWeight,
+        updateTypographyScale,
+        switchBrand: () => {},
+        updateBrandColor: () => {},
+        updateBrandFont: () => {},
+        addBrand: () => {},
+        deleteBrand: () => {},
+        saveTheme: () => {},
+        resetTheme: () => {},
+        isLoading
+      }}>
+        {children}
+      </ThemeContext.Provider>
+    );
+  }
 
   return (
     <ThemeContext.Provider value={{
@@ -140,7 +170,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       storeBrandColorRamp: brandManagement.storeBrandColorRamp,
       resetBrandColorRamp: brandManagement.resetBrandColorRamp,
       saveTheme: saveThemeWithBrands,
-      resetTheme
+      resetTheme,
+      isLoading,
+      userId
     }}>
       {children}
     </ThemeContext.Provider>

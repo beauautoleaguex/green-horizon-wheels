@@ -34,4 +34,6 @@ export interface ThemeContextValue {
   resetBrandColorRamp?: (brandId: string) => void;
   saveTheme: () => void;
   resetTheme: () => void;
+  isLoading?: boolean;
+  userId?: string;
 }

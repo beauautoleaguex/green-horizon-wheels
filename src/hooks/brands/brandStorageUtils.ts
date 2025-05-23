@@ -1,17 +1,75 @@
 
 import { Brand } from '@/types/theme';
+import { supabase } from '@/lib/supabase';
+import { getCurrentUserId } from '@/services/themeStorageService';
 
-// Save brands to localStorage
-export const saveBrandsToStorage = (brands: Brand[]): void => {
-  localStorage.setItem('themeStorageBrands', JSON.stringify(brands));
+// Save brands to Supabase and fallback to localStorage
+export const saveBrandsToStorage = async (brands: Brand[]): Promise<void> => {
+  // Try to save to Supabase first
+  const userId = await getCurrentUserId();
+  
+  if (userId) {
+    try {
+      const { error } = await supabase
+        .from('user_themes')
+        .upsert({
+          user_id: userId,
+          brands,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id'
+        });
+        
+      if (error) {
+        console.error('Error saving brands to Supabase:', error);
+        // Fallback to localStorage
+        localStorage.setItem('themeStorageBrands', JSON.stringify(brands));
+      }
+    } catch (err) {
+      console.error('Failed to save brands to Supabase:', err);
+      // Fallback to localStorage
+      localStorage.setItem('themeStorageBrands', JSON.stringify(brands));
+    }
+  } else {
+    // No user ID, use localStorage
+    localStorage.setItem('themeStorageBrands', JSON.stringify(brands));
+  }
 };
 
-// Save current brand to localStorage
-export const saveCurrentBrandToStorage = (brand: Brand): void => {
-  localStorage.setItem('themeStorageCurrentBrand', JSON.stringify(brand));
+// Save current brand to Supabase and fallback to localStorage
+export const saveCurrentBrandToStorage = async (brand: Brand): Promise<void> => {
+  // Try to save to Supabase first
+  const userId = await getCurrentUserId();
+  
+  if (userId) {
+    try {
+      const { error } = await supabase
+        .from('user_themes')
+        .upsert({
+          user_id: userId,
+          current_brand: brand,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id'
+        });
+        
+      if (error) {
+        console.error('Error saving current brand to Supabase:', error);
+        // Fallback to localStorage
+        localStorage.setItem('themeStorageCurrentBrand', JSON.stringify(brand));
+      }
+    } catch (err) {
+      console.error('Failed to save current brand to Supabase:', err);
+      // Fallback to localStorage
+      localStorage.setItem('themeStorageCurrentBrand', JSON.stringify(brand));
+    }
+  } else {
+    // No user ID, use localStorage
+    localStorage.setItem('themeStorageCurrentBrand', JSON.stringify(brand));
+  }
 };
 
-// Load brands from localStorage with logo handling
+// Load brands from storage with logo handling
 export const loadBrandsFromStorage = (initialBrands: Brand[]): Brand[] => {
   const savedBrands = localStorage.getItem('themeStorageBrands');
   
@@ -43,7 +101,7 @@ export const loadBrandsFromStorage = (initialBrands: Brand[]): Brand[] => {
   });
 };
 
-// Load current brand from localStorage with logo handling
+// Load current brand from storage with logo handling
 export const loadCurrentBrandFromStorage = (initialCurrentBrand: Brand): Brand => {
   const savedCurrentBrand = localStorage.getItem('themeStorageCurrentBrand');
   

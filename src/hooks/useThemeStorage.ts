@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ThemeColors, FontSizes, FontWeights, ThemeMode, TypographyScale, Brand } from '../types/theme';
 import { 
   initialColors, 
@@ -10,66 +10,113 @@ import {
   initialBrands,
   THEME_STORAGE_KEYS 
 } from '../constants/themeDefaults';
+import {
+  saveThemeToSupabase,
+  fetchThemeFromSupabase,
+  getThemeFromLocalStorage,
+  getCurrentUserId
+} from '@/services/themeStorageService';
+import { useToast } from '@/hooks/use-toast';
 
 export const useThemeStorage = () => {
-  // Load from localStorage or use initial values
-  const [colors, setColors] = useState<ThemeColors>(() => {
-    const savedColors = localStorage.getItem(THEME_STORAGE_KEYS.COLORS);
-    return savedColors ? JSON.parse(savedColors) : initialColors;
-  });
+  const { toast } = useToast();
+  const [userId, setUserId] = useState<string | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
   
+  // Initialize with defaults, will be updated after fetching
+  const [colors, setColors] = useState<ThemeColors>(initialColors);
   const [fonts] = useState<string[]>(initialFonts);
-  
-  const [currentFont, setCurrentFont] = useState<string>(() => {
-    const savedFont = localStorage.getItem(THEME_STORAGE_KEYS.FONT);
-    return savedFont || initialFonts[0];
-  });
-  
-  const [fontSizes, setFontSizes] = useState<FontSizes>(() => {
-    const savedFontSizes = localStorage.getItem(THEME_STORAGE_KEYS.FONT_SIZES);
-    return savedFontSizes ? JSON.parse(savedFontSizes) : initialFontSizes;
-  });
-  
-  const [fontWeights, setFontWeights] = useState<FontWeights>(() => {
-    const savedFontWeights = localStorage.getItem(THEME_STORAGE_KEYS.FONT_WEIGHTS);
-    return savedFontWeights ? JSON.parse(savedFontWeights) : initialFontWeights;
-  });
-  
+  const [currentFont, setCurrentFont] = useState<string>(initialFonts[0]);
+  const [fontSizes, setFontSizes] = useState<FontSizes>(initialFontSizes);
+  const [fontWeights, setFontWeights] = useState<FontWeights>(initialFontWeights);
   // Always set mode to 'light', ignoring any saved preference
   const [mode, setMode] = useState<ThemeMode>('light');
+  const [currentTypographyScale, setCurrentTypographyScale] = useState<TypographyScale>(initialTypographyScale);
+  const [brands, setBrands] = useState<Brand[]>(initialBrands);
+  const [currentBrand, setCurrentBrand] = useState<Brand>(initialBrands[0]);
 
-  // Add current typography scale state
-  const [currentTypographyScale, setCurrentTypographyScale] = useState<TypographyScale>(() => {
-    const savedScale = localStorage.getItem(THEME_STORAGE_KEYS.TYPOGRAPHY_SCALE);
-    return (savedScale as TypographyScale) || initialTypographyScale;
-  });
+  // Fetch user ID and theme data on first load
+  useEffect(() => {
+    const init = async () => {
+      setIsLoading(true);
+      try {
+        // Get current user ID
+        const uid = await getCurrentUserId();
+        setUserId(uid);
+        
+        // If we have a user ID, fetch theme from Supabase
+        if (uid) {
+          const themeData = await fetchThemeFromSupabase(uid);
+          if (themeData) {
+            setColors(themeData.colors);
+            setCurrentFont(themeData.currentFont);
+            setFontSizes(themeData.fontSizes);
+            setFontWeights(themeData.fontWeights);
+            setCurrentTypographyScale(themeData.typographyScale);
+            setBrands(themeData.brands);
+            setCurrentBrand(themeData.currentBrand);
+          } else {
+            // If no Supabase data, try localStorage
+            const localTheme = getThemeFromLocalStorage();
+            setColors(localTheme.colors);
+            setCurrentFont(localTheme.currentFont);
+            setFontSizes(localTheme.fontSizes);
+            setFontWeights(localTheme.fontWeights);
+            setCurrentTypographyScale(localTheme.typographyScale);
+            setBrands(localTheme.brands);
+            setCurrentBrand(localTheme.currentBrand);
+          }
+        } else {
+          // No user ID, use localStorage
+          const localTheme = getThemeFromLocalStorage();
+          setColors(localTheme.colors);
+          setCurrentFont(localTheme.currentFont);
+          setFontSizes(localTheme.fontSizes);
+          setFontWeights(localTheme.fontWeights);
+          setCurrentTypographyScale(localTheme.typographyScale);
+          setBrands(localTheme.brands);
+          setCurrentBrand(localTheme.currentBrand);
+        }
+      } catch (error) {
+        console.error('Error initializing theme:', error);
+        toast({
+          title: "Error loading theme",
+          description: "Falling back to default theme",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    init();
+  }, [toast]);
 
-  // Add brands state
-  const [brands, setBrands] = useState<Brand[]>(() => {
-    const savedBrands = localStorage.getItem(THEME_STORAGE_KEYS.BRANDS);
-    return savedBrands ? JSON.parse(savedBrands) : initialBrands;
-  });
-
-  // Add current brand state
-  const [currentBrand, setCurrentBrand] = useState<Brand>(() => {
-    const savedCurrentBrand = localStorage.getItem(THEME_STORAGE_KEYS.CURRENT_BRAND);
-    if (savedCurrentBrand) {
-      return JSON.parse(savedCurrentBrand);
+  // Save theme to Supabase and localStorage
+  const saveTheme = async () => {
+    try {
+      await saveThemeToSupabase(
+        userId,
+        colors,
+        currentFont,
+        fontSizes,
+        fontWeights,
+        currentTypographyScale,
+        brands,
+        currentBrand
+      );
+      toast({
+        title: "Theme saved",
+        description: userId ? "Your theme has been saved to your account" : "Theme saved to local storage",
+      });
+    } catch (error) {
+      console.error('Error saving theme:', error);
+      toast({
+        title: "Error saving theme",
+        description: "Please try again later",
+        variant: "destructive"
+      });
     }
-    return initialBrands[0];
-  });
-
-  // Save theme to localStorage - but don't save mode anymore since we always use light mode
-  const saveTheme = () => {
-    localStorage.setItem(THEME_STORAGE_KEYS.COLORS, JSON.stringify(colors));
-    localStorage.setItem(THEME_STORAGE_KEYS.FONT, currentFont);
-    localStorage.setItem(THEME_STORAGE_KEYS.FONT_SIZES, JSON.stringify(fontSizes));
-    localStorage.setItem(THEME_STORAGE_KEYS.FONT_WEIGHTS, JSON.stringify(fontWeights));
-    // We don't save mode anymore since we always use light
-    // localStorage.setItem(THEME_STORAGE_KEYS.MODE, mode);
-    localStorage.setItem(THEME_STORAGE_KEYS.TYPOGRAPHY_SCALE, currentTypographyScale);
-    localStorage.setItem(THEME_STORAGE_KEYS.BRANDS, JSON.stringify(brands));
-    localStorage.setItem(THEME_STORAGE_KEYS.CURRENT_BRAND, JSON.stringify(currentBrand));
   };
 
   // Reset theme to initial values
@@ -102,6 +149,8 @@ export const useThemeStorage = () => {
     currentBrand,
     setCurrentBrand,
     saveTheme,
-    resetTheme
+    resetTheme,
+    isLoading,
+    userId
   };
 };

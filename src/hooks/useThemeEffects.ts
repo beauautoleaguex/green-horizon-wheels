@@ -7,10 +7,15 @@ export const useThemeEffects = (
   currentFont: string,
   fontSizes: Record<string, string>,
   fontWeights: Record<string | number, number>,
-  mode: ThemeMode
+  mode: ThemeMode,
+  isLoading?: boolean
 ) => {
-  // Apply theme to document when it changes
+  // Skip applying theme if data is still loading
   useEffect(() => {
+    if (isLoading) {
+      return; // Don't apply theme while loading
+    }
+
     // Create CSS variables for colors
     Object.entries(colors).forEach(([colorName, scale]) => {
       Object.entries(scale).forEach(([step, value]) => {
@@ -33,18 +38,17 @@ export const useThemeEffects = (
     Object.entries(fontWeights).forEach(([name, weight]) => {
       document.documentElement.style.setProperty(`--font-weight-${name}`, weight.toString());
     });
-  }, [colors, currentFont, fontSizes, fontWeights]);
+  }, [colors, currentFont, fontSizes, fontWeights, isLoading]);
   
   // Apply light mode only - we've removed dark mode
   useEffect(() => {
+    if (isLoading) {
+      return; // Don't apply theme mode while loading
+    }
+    
     // Always ensure light mode is applied
     document.documentElement.classList.remove('dark');
-    
-    // Don't save mode preference to localStorage anymore
-    // localStorage.setItem('themeMode', mode);
-  }, [mode]);
-
-  // We've removed the effect that detected user's preferred color scheme
+  }, [mode, isLoading]);
 
   // Return an empty object as we no longer need to detect preferences
   return {};
