@@ -1,14 +1,16 @@
+
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '@/contexts/theme/ThemeContext';
 import { Brand } from '@/types/theme';
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, AlertTriangle } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 import Header from '@/components/admin/brands/Header';
 import BrandList from '@/components/admin/brands/BrandList';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import AddBrandForm from '@/components/admin/brands/AddBrandForm';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const BrandsManager: React.FC = () => {
   const { 
@@ -20,9 +22,33 @@ const BrandsManager: React.FC = () => {
     updateBrandFont,
     updateBrandLogo,
     saveTheme,
-    resetBrandColorRamp 
+    resetBrandColorRamp,
+    isAdmin,
+    userId
   } = useTheme();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // Redirect non-admin users or show a warning
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
+        <div className="container mx-auto">
+          <Alert variant="destructive" className="mb-6">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Access Denied</AlertTitle>
+            <AlertDescription>
+              You need administrator privileges to access this page.
+            </AlertDescription>
+          </Alert>
+          
+          <Link to="/admin/theme" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center gap-1">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Theme Editor
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   // Log to debug if the MyMoto brand has a logo
   React.useEffect(() => {
@@ -74,32 +100,26 @@ const BrandsManager: React.FC = () => {
     saveTheme();
     toast({
       title: "Brands saved",
-      description: "Your brand settings have been saved successfully."
+      description: "Your brand settings have been saved successfully and will be available to all users."
     });
   };
 
-  // Handle brand color update
   const handleBrandColorChange = (brandId: string, color: string) => {
     updateBrandColor(brandId, color);
   };
 
-  // Handle hex input change
   const handleHexInputChange = (brandId: string, hex: string) => {
-    // Validate hex code format
     if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hex)) {
       updateBrandColor(brandId, hex);
     } else if (hex.length <= 7) {
       // Allow typing but don't update color until valid
-      // This allows users to type without validation errors interrupting
     }
   };
 
-  // Handle brand font update
   const handleBrandFontChange = (brandId: string, font: string) => {
     updateBrandFont(brandId, font);
   };
 
-  // Handle brand logo update
   const handleBrandLogoChange = (brandId: string, logo: string) => {
     if (updateBrandLogo) {
       updateBrandLogo(brandId, logo);
@@ -121,6 +141,13 @@ const BrandsManager: React.FC = () => {
             Back to Theme Editor
           </Link>
         </div>
+        
+        <Alert className="mb-6">
+          <AlertTitle>Admin Mode</AlertTitle>
+          <AlertDescription>
+            You are in administrator mode. Changes made here will affect all users of the application.
+          </AlertDescription>
+        </Alert>
         
         <div>
           <div className="flex justify-between items-center mb-4">

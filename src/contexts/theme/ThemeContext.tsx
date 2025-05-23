@@ -31,14 +31,20 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     saveTheme,
     resetTheme,
     isLoading,
-    userId
+    userId,
+    isAdmin // Get admin status from storage
   } = useThemeStorage();
 
   // Always set mode to 'light' regardless of localStorage or system preference
   const mode: ThemeMode = 'light';
 
-  // Update functions for colors
+  // Update functions for colors - only available to admins
   const updateColor = (colorName: string, step: number, value: string) => {
+    if (!isAdmin) {
+      console.warn('Only admins can update colors');
+      return;
+    }
+    
     setColors(prev => ({
       ...prev,
       [colorName]: {
@@ -49,6 +55,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   };
   
   const updateColorRamp = (colorName: string, baseColor: string, curveType: CurveType = 'linear') => {
+    if (!isAdmin) {
+      console.warn('Only admins can update color ramps');
+      return;
+    }
+    
     const newRamp = generateColorRamp(baseColor, curveType);
     setColors(prev => ({
       ...prev,
@@ -56,29 +67,40 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     }));
   };
 
-  // Use brand management hook
+  // Use brand management hook with admin status
   const brandManagement = useBrandManagement({
     initialBrands,
     initialCurrentBrand,
     updateColors: updateColor,
     updateColorRamp,
     setCurrentFont,
+    isAdmin  // Pass admin status to brand management
   });
 
   // Apply theme effects - pass loading state to prevent flicker
   useThemeEffects(colors, currentFont, fontSizes, fontWeights, mode, isLoading);
 
-  // Toggle theme mode
+  // Toggle theme mode - disabled as we're always in light mode
   const toggleMode = () => {
     // This is now a no-op since we always want light mode
   };
 
-  // Font and typography functions
+  // Font and typography functions - only available to admins
   const updateFont = (font: string) => {
+    if (!isAdmin) {
+      console.warn('Only admins can update fonts');
+      return;
+    }
+    
     setCurrentFont(font);
   };
 
   const updateFontSize = (name: string, value: string) => {
+    if (!isAdmin) {
+      console.warn('Only admins can update font sizes');
+      return;
+    }
+    
     setFontSizes(prev => ({
       ...prev,
       [name]: value
@@ -86,6 +108,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   };
 
   const updateFontWeight = (name: string, value: number) => {
+    if (!isAdmin) {
+      console.warn('Only admins can update font weights');
+      return;
+    }
+    
     setFontWeights(prev => ({
       ...prev,
       [name]: value
@@ -93,6 +120,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   };
 
   const updateTypographyScale = (scale: TypographyScale) => {
+    if (!isAdmin) {
+      console.warn('Only admins can update typography scales');
+      return;
+    }
+    
     // Find the selected scale definition
     const selectedScale = typographyScales.find(s => s.name === scale);
     
@@ -103,12 +135,12 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     }
   };
 
-  // Modified to wrap original saveTheme (which now handles Supabase)
+  // Modified to wrap original saveTheme with admin check
   const saveThemeWithBrands = async () => {
     await saveTheme();
   };
 
-  // If still loading, show minimal context (optional)
+  // If still loading, show minimal context
   if (isLoading) {
     return (
       <ThemeContext.Provider value={{
@@ -161,18 +193,19 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       updateFontSize,
       updateFontWeight,
       updateTypographyScale,
-      switchBrand: brandManagement.switchBrand,
-      updateBrandColor: brandManagement.updateBrandColor,
-      updateBrandFont: brandManagement.updateBrandFont,
-      updateBrandLogo: brandManagement.updateBrandLogo,
-      addBrand: brandManagement.addBrand,
-      deleteBrand: brandManagement.deleteBrand,
-      storeBrandColorRamp: brandManagement.storeBrandColorRamp,
-      resetBrandColorRamp: brandManagement.resetBrandColorRamp,
-      saveTheme: saveThemeWithBrands,
-      resetTheme,
+      switchBrand: brandManagement.switchBrand, // Everyone can switch brands
+      updateBrandColor: brandManagement.updateBrandColor, // Only admins can change brand colors
+      updateBrandFont: brandManagement.updateBrandFont, // Only admins can change brand fonts
+      updateBrandLogo: brandManagement.updateBrandLogo, // Only admins can change brand logos
+      addBrand: brandManagement.addBrand, // Only admins can add brands
+      deleteBrand: brandManagement.deleteBrand, // Only admins can delete brands
+      storeBrandColorRamp: brandManagement.storeBrandColorRamp, // Only admins can store brand color ramps
+      resetBrandColorRamp: brandManagement.resetBrandColorRamp, // Only admins can reset brand color ramps
+      saveTheme: saveThemeWithBrands, // Admins save all, users save only brand preference
+      resetTheme, // Only affects admins
       isLoading,
-      userId
+      userId,
+      isAdmin: brandManagement.isAdmin || isAdmin // Expose admin status to consumers
     }}>
       {children}
     </ThemeContext.Provider>

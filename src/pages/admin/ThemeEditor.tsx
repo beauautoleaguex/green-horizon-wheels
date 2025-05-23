@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ColorRampEditor } from '@/components/theme/ColorRampEditor';
 import { FontSelector } from '@/components/theme/FontSelector';
 import { FontSizesEditor } from '@/components/theme/FontSizesEditor';
@@ -24,6 +24,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const ThemeEditor: React.FC = () => {
   const { 
@@ -45,14 +46,17 @@ const ThemeEditor: React.FC = () => {
     saveTheme,
     resetTheme,
     updateBrandColor,
-    updateBrandFont
+    updateBrandFont,
+    isAdmin
   } = useTheme();
 
   const handleSave = () => {
     saveTheme();
     toast({
       title: "Theme saved",
-      description: "Your theme settings have been saved successfully."
+      description: isAdmin 
+        ? "Theme settings have been saved for all users" 
+        : "Your brand preference has been saved"
     });
   };
 
@@ -88,13 +92,15 @@ const ThemeEditor: React.FC = () => {
             </div>
             <div className="flex gap-2 items-center">
               <ThemeToggle />
-              <Button variant="outline" onClick={handleReset} className="gap-1 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700">
-                <RotateCcw className="h-4 w-4" />
-                Reset
-              </Button>
+              {isAdmin && (
+                <Button variant="outline" onClick={handleReset} className="gap-1 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700">
+                  <RotateCcw className="h-4 w-4" />
+                  Reset
+                </Button>
+              )}
               <Button onClick={handleSave} className="gap-1">
                 <Save className="h-4 w-4" />
-                Save Theme
+                {isAdmin ? "Save Theme" : "Save Preference"}
               </Button>
             </div>
           </div>
@@ -109,10 +115,12 @@ const ThemeEditor: React.FC = () => {
           </Link>
           
           <div className="flex items-center gap-4">
-            <Link to="/admin/brands" className="flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
-              <Users className="h-4 w-4" />
-              Manage Brands
-            </Link>
+            {isAdmin && (
+              <Link to="/admin/brands" className="flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
+                <Users className="h-4 w-4" />
+                Manage Brands
+              </Link>
+            )}
             
             <BrandSelector 
               brands={brands}
@@ -125,50 +133,94 @@ const ThemeEditor: React.FC = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="colors">
-          <TabsList className="mb-6">
-            <TabsTrigger value="colors">Color Ramps</TabsTrigger>
-            <TabsTrigger value="typography">Typography</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="colors">
-            <div className="grid grid-cols-1 gap-6">
-              {Object.entries(colors).map(([colorName, scale]) => (
-                <ColorRampEditor
-                  key={colorName}
-                  colorName={colorName}
-                  scale={scale}
-                  onColorChange={updateColor}
-                  onRampChange={updateColorRamp}
+        {isAdmin ? (
+          <Alert className="mb-6">
+            <AlertTitle>Admin Mode</AlertTitle>
+            <AlertDescription>
+              You are in administrator mode. Changes made here will affect all users of the application.
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <Alert className="mb-6">
+            <AlertTitle>User Mode</AlertTitle>
+            <AlertDescription>
+              You can select a brand theme, but cannot modify brand settings or color ramps.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {isAdmin ? (
+          <Tabs defaultValue="colors">
+            <TabsList className="mb-6">
+              <TabsTrigger value="colors">Color Ramps</TabsTrigger>
+              <TabsTrigger value="typography">Typography</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="colors">
+              <div className="grid grid-cols-1 gap-6">
+                {Object.entries(colors).map(([colorName, scale]) => (
+                  <ColorRampEditor
+                    key={colorName}
+                    colorName={colorName}
+                    scale={scale}
+                    onColorChange={updateColor}
+                    onRampChange={updateColorRamp}
+                  />
+                ))}
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="typography">
+              <div className="grid grid-cols-1 gap-6">
+                <FontSelector 
+                  fonts={fonts}
+                  currentFont={currentFont}
+                  onFontChange={updateFont}
                 />
-              ))}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="typography">
-            <div className="grid grid-cols-1 gap-6">
-              <FontSelector 
-                fonts={fonts}
-                currentFont={currentFont}
-                onFontChange={updateFont}
-              />
+                
+                <FontSizesEditor
+                  fontSizes={fontSizes}
+                  onFontSizeChange={updateFontSize}
+                  currentFont={currentFont}
+                  currentTypographyScale={currentTypographyScale}
+                  onTypographyScaleChange={updateTypographyScale}
+                />
+                
+                <FontWeightsEditor
+                  fontWeights={fontWeights}
+                  onFontWeightChange={updateFontWeight}
+                  currentFont={currentFont}
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
+        ) : (
+          // For non-admin users, just show their selected brand
+          <div className="mt-6 p-6 border rounded-lg bg-white dark:bg-gray-800">
+            <h3 className="text-lg font-medium mb-4">Selected Brand Theme</h3>
+            
+            <div className="flex items-center gap-4">
+              {currentBrand.logo && (
+                <img 
+                  src={currentBrand.logo} 
+                  alt={`${currentBrand.name} logo`} 
+                  className="w-16 h-16 object-contain"
+                />
+              )}
               
-              <FontSizesEditor
-                fontSizes={fontSizes}
-                onFontSizeChange={updateFontSize}
-                currentFont={currentFont}
-                currentTypographyScale={currentTypographyScale}
-                onTypographyScaleChange={updateTypographyScale}
-              />
-              
-              <FontWeightsEditor
-                fontWeights={fontWeights}
-                onFontWeightChange={updateFontWeight}
-                currentFont={currentFont}
-              />
+              <div>
+                <p className="font-semibold">{currentBrand.name}</p>
+                <div className="flex items-center gap-2 mt-2">
+                  <div 
+                    className="w-4 h-4 rounded-full"
+                    style={{ backgroundColor: currentBrand.primaryColor }}
+                  />
+                  <span className="text-sm">{currentBrand.primaryColor}</span>
+                </div>
+              </div>
             </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+        )}
       </div>
     </div>
   );

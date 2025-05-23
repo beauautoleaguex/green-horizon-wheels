@@ -8,19 +8,20 @@ import {
   initialFontWeights, 
   initialTypographyScale,
   initialBrands,
-  THEME_STORAGE_KEYS 
 } from '../constants/themeDefaults';
 import {
   saveThemeToSupabase,
   fetchThemeFromSupabase,
   getThemeFromLocalStorage,
-  getCurrentUserId
+  getCurrentUserId,
+  checkIfUserIsAdmin
 } from '@/services/themeStorageService';
 import { useToast } from '@/hooks/use-toast';
 
 export const useThemeStorage = () => {
   const { toast } = useToast();
   const [userId, setUserId] = useState<string | undefined>(undefined);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
   
   // Initialize with defaults, will be updated after fetching
@@ -55,6 +56,7 @@ export const useThemeStorage = () => {
             setCurrentTypographyScale(themeData.typographyScale);
             setBrands(themeData.brands);
             setCurrentBrand(themeData.currentBrand);
+            setIsAdmin(themeData.isAdmin);
           } else {
             // If no Supabase data, try localStorage
             const localTheme = getThemeFromLocalStorage();
@@ -65,6 +67,10 @@ export const useThemeStorage = () => {
             setCurrentTypographyScale(localTheme.typographyScale);
             setBrands(localTheme.brands);
             setCurrentBrand(localTheme.currentBrand);
+            
+            // Check if user is admin
+            const adminStatus = await checkIfUserIsAdmin(uid);
+            setIsAdmin(adminStatus);
           }
         } else {
           // No user ID, use localStorage
@@ -103,11 +109,15 @@ export const useThemeStorage = () => {
         fontWeights,
         currentTypographyScale,
         brands,
-        currentBrand
+        currentBrand,
+        isAdmin // Pass admin status to save correctly
       );
+      
       toast({
         title: "Theme saved",
-        description: userId ? "Your theme has been saved to your account" : "Theme saved to local storage",
+        description: isAdmin 
+          ? "Theme configuration has been saved for all users" 
+          : "Your brand preference has been saved",
       });
     } catch (error) {
       console.error('Error saving theme:', error);
@@ -119,8 +129,13 @@ export const useThemeStorage = () => {
     }
   };
 
-  // Reset theme to initial values
+  // Reset theme to initial values - only affects admins
   const resetTheme = () => {
+    if (!isAdmin) {
+      console.warn('Only admins can reset the theme');
+      return;
+    }
+    
     setColors(initialColors);
     setCurrentFont(initialFonts[0]);
     setFontSizes(initialFontSizes);
@@ -151,6 +166,7 @@ export const useThemeStorage = () => {
     saveTheme,
     resetTheme,
     isLoading,
-    userId
+    userId,
+    isAdmin
   };
 };

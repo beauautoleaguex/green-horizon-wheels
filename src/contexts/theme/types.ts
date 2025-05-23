@@ -36,4 +36,5 @@ export interface ThemeContextValue {
   resetTheme: () => void;
   isLoading?: boolean;
   userId?: string;
+  isAdmin?: boolean; // Added to track if current user is admin
 }
